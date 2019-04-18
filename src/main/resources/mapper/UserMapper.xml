@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.senti.dao.UserDao">
+  <resultMap id="BaseResultMap" type="com.senti.model.User">
+    <id column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+  </resultMap>
+  <select id="Login" parameterType="com.senti.model.User" resultType="com.senti.model.User">
+        select *from user where name=#{name,jdbcType=VARCHAR} and password=#{password,jdbcType=VARCHAR}
+  </select>
+</mapper>

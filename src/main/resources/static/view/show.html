@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/local/common.js"></script>
+    <script src="/js/echarts.js"></script>
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/SidebarNav.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/custom.css" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+</head>
+<body>
+
+
+<div id="Senti">
+    <aside class="sidebar-left">
+        <nav class="navbar navbar-inverse">
+            <div class="navbar-header">
+                <h1><a class="navbar-brand" href="/view/show.html"><span class="fa fa-area-chart"></span> Senti</a></h1>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="sidebar-menu">
+                    <li class="header">GITHUB ANALYSE</li>
+                    <li class="treeview">
+                        <a type="button" id="showCommit" v-on:click="commitSenti">
+                            <i class="fa fa-dashboard"></i> <span>CommitSenti</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a type="button" id="showCode" v-on:click="codeSenti">
+                            <i class="fa fa-pie-chart"></i>
+                            <span>CodeSenti</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                </ul>
+            </div>
+
+        </nav>
+    </aside>
+
+    <div id="page-wrapper">
+        <div class="main-page">
+            <div class="row-one widgettable">
+                <div id="CommitMessage" style=" margin-left:280px; width: 1200px; height: 800px;display:none;"></div>
+
+                <div id="CodeSentis" style=" margin-left:280px;  display:none;">
+                    <select v-model="selectClass" @change="getValue">
+                        <option v-for="Aclass in classes">{{ Aclass.name }}</option>
+                    </select>
+                    <div id="CodeComment" style="width: 1200px; height: 800px;"></div>
+                    <textarea style="width: 1200px;height: 600px;" readonly="readonly" id="codes"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="/js/local/show.js"></script>
+</body>
+</html>

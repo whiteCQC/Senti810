@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>search</title>
+    <script src="/js/local/common.js"></script>
+    <script src="/js/local/main.js"></script>
+
+    <link rel="stylesheet" href="/css/main.css" type="text/css" />
+</head>
+<body>
+<div id="toSearch" class="dowebok">
+    <div class="gitLogo"></div>
+    <form v-on:submit.prevent="searchProject" >
+        <div class="form-item">
+            <input type="text" autocomplete="off" placeholder="所有者" v-model="search.owner">
+        </div>
+        <div class="form-item">
+            <input type="text" autocomplete="off" placeholder="项目名" v-model="search.repo">
+        </div>
+        <div class="form-item">
+            <button id="submit">搜索</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
