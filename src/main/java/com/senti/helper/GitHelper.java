@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class GitHelper {
-    private final static String loaclPathprefix = "F:\\F\\Git\\projects\\";
+    private final static String loaclPathprefix = "..\\Git\\projects\\";
     private final static String urlprefix = "https://github.com/";
 
 //	public final static int NotExist=-1;
