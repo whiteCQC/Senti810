@@ -7,12 +7,22 @@ public class ClassSenti implements Serializable {
     private double high;
     private double low;
     private String date;
+    private String comment;
 
-    public ClassSenti(String name, double high, double low, String date) {
+    public ClassSenti(String name, double high, double low, String date,String comment) {
         this.name = name;
         this.high = high;
         this.low = low;
         this.date = date;
+        this.comment=comment;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getName() {

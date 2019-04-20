@@ -54,6 +54,7 @@ public class GitController {
         List<String> Commitdates=new ArrayList<>();
         List<String> highs=new ArrayList<>();
         List<String> lows=new ArrayList<>();
+        List<String> messages=new ArrayList<>();
 
         MessageSenti m=null;
         for(int i=0;i<mlist.size();i++) {
@@ -61,12 +62,13 @@ public class GitController {
             Commitdates.add(m.getDate());
             highs.add(String.valueOf(m.getHigh()));
             lows.add(String.valueOf(m.getLow()));
-
+            messages.add(m.getComment());
         }
         Map<String,List<String>> res=new HashMap<>();
         res.put("Commitdates",Commitdates);
         res.put("highs",highs);
         res.put("lows",lows);
+        res.put("commitMessage",messages);
 
         return res;
     }
@@ -81,9 +83,6 @@ public class GitController {
 
         Map<String, List<ClassSenti>> map1=gitService.getClassSenti(owner, repo);
         Map<String, List<String>> map2=gitService.getClassCode(owner, repo);
-
-        System.out.println(map1.keySet().size());
-        System.out.println(map2.keySet().size());
 
         session.setAttribute("Allcodes",map2);
         session.setAttribute("ClassSenti",map1);
@@ -106,12 +105,14 @@ public class GitController {
 
         selectClass=selectClass.replace(".java","");
         selectClass=selectClass.replace(".","/")+".java";
+
         Map<String, List<ClassSenti>> map=(Map<String, List<ClassSenti>>)session.getAttribute("ClassSenti");
 
         Map<String,List<String>> res=new HashMap<>();
         List<String> dates=new ArrayList<>();
         List<String> highs=new ArrayList<>();
         List<String> lows=new ArrayList<>();
+        List<String> codeComments=new ArrayList<>();
 
         List<ClassSenti> lcs=map.get(selectClass);
 
@@ -119,11 +120,13 @@ public class GitController {
             dates.add(c.getDate());
             highs.add(String.valueOf(c.getHigh()));
             lows.add(String.valueOf(c.getLow()));
+            codeComments.add(c.getComment());
         }
 
         res.put("dates",dates);
-        res.put("highs",highs);
-        res.put("lows",lows);
+        res.put("codeHighs",highs);
+        res.put("codeLows",lows);
+        res.put("codeComments",codeComments);
 
         Map<String, List<String>> allCodes=(Map<String, List<String>>)session.getAttribute("Allcodes");
         List<String> codes=allCodes.get(selectClass.replace("/","\\"));

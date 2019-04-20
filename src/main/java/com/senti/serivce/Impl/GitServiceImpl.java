@@ -39,43 +39,49 @@ public class GitServiceImpl implements GitService {
 
         List<MessageSenti> mlist = new ArrayList<>();
 
-        Timestamp t1 = clist.get(clist.size() - 1).getDate();
-        long mon = 30 * 24 * 60 * 60 * 1000l;
+//        Timestamp t1 = clist.get(clist.size() - 1).getDate();
+//        long mon = 30 * 24 * 60 * 60 * 1000l;
 
         int count = 0;
-        long time = t1.getTime() + mon;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
+//        long time = t1.getTime() + mon;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
         double high = 0;
         double low = 0;
         int[] score;
 
-        for (int i = clist.size() - 1; i >= 0;) {
+        for (int i = clist.size() - 1; i >= 0;i--) {
             Commits c = clist.get(i);
             long target = c.getDate().getTime();
-            if (target <= time) {
-                count++;
-                score = sc.senti_strength(c.getMessage());
-                high += score[0];
-                low += score[1];
+            score = sc.senti_strength(c.getMessage());
+            high = score[0];
+            low = score[1];
+            String date=sdf.format(target);
+            mlist.add(new MessageSenti(high, low, count, date,c.getMessage()));
 
-                i--;
-            } else {
-                if (count != 0) {
-                    Timestamp t = new Timestamp(time + mon / 2);
-                    mlist.add(new MessageSenti(f(high / count), f(low / count), count, sdf.format(t)));
-                    high = 0;
-                    low = 0;
-                    count = 0;
-                }
-                time += mon;
-            }
+//            if (target <= time) {
+//                count++;
+//                score = sc.senti_strength(c.getMessage());
+//                high += score[0];
+//                low += score[1];
+//
+//                i--;
+//            } else {
+//                if (count != 0) {
+//                    Timestamp t = new Timestamp(time + mon / 2);
+//                    mlist.add(new MessageSenti(f(high / count), f(low / count), count, sdf.format(t)));
+//                    high = 0;
+//                    low = 0;
+//                    count = 0;
+//                }
+//                time += mon;
+//            }
 
         }
-        if (count != 0) {
-            Timestamp t = new Timestamp(time + mon / 2);
-            mlist.add(new MessageSenti(f(high / count), f(low / count), count, sdf.format(t)));
-        }
+//        if (count != 0) {
+//            Timestamp t = new Timestamp(time + mon / 2);
+//            mlist.add(new MessageSenti(f(high / count), f(low / count), count, sdf.format(t)));
+//        }
 
         return mlist;
     }
@@ -112,25 +118,27 @@ public class GitServiceImpl implements GitService {
                 sb.setLength(0);
 
                 for (String ca : calist) {
-                    sb.append(" "+ca);
+                    sb.append("\n"+ca);
                 }
-                score = sc.senti_strength(sb.toString());
+                String add=sb.toString();
+                score = sc.senti_strength(add);
                 high += score[0];
                 low += score[1];
 
 
                 sb.setLength(0);
                 for (String cd : cdlist) {
-                    sb.append(" "+cd);
+                    sb.append("\n"+cd);
                 }
-                score = sc.senti_strength(sb.toString());
+                String del=sb.toString();
+                score = sc.senti_strength(del);
                 high -= score[1];
                 low -= score[0];
 
 
                 int total=calist.size()+cdlist.size();
                 if (total != 0){
-                    map.get(name).add(new ClassSenti(name, f(high), f(low), sdf.format(c.getDate())));
+                    map.get(name).add(new ClassSenti(name, f(high), f(low), sdf.format(c.getDate()),"Add:"+add+"\n"+"Del:"+del));
                     high=0;
                     low=0;
                 }

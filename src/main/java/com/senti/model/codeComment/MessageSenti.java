@@ -5,14 +5,23 @@ public class MessageSenti {
     private double low;
     private int count;
     private String date;
+    private String comment;
 
-    public MessageSenti(double high, double low, int count, String date) {
+    public MessageSenti(double high, double low, int count, String date, String comment) {
         this.high = high;
         this.low = low;
         this.count = count;
         this.date = date;
+        this.comment = comment;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public int getCount() {
         return count;
