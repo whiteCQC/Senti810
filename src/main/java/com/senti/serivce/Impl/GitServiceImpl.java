@@ -2,11 +2,17 @@ package com.senti.serivce.Impl;
 
 import com.senti.helper.GitHelper;
 import com.senti.helper.SentiCal;
+import com.senti.model.GithubUser;
 import com.senti.model.codeComment.ClassSenti;
 import com.senti.model.codeComment.ClassVariation;
 import com.senti.model.codeComment.Commits;
 import com.senti.model.codeComment.MessageSenti;
 import com.senti.serivce.GitService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -84,6 +90,46 @@ public class GitServiceImpl implements GitService {
 //        }
 
         return mlist;
+    }
+
+    @Override
+    public List<Commits> getCommitByAuthor(String owner, String repo, String author) {
+        List<Commits> commits=gh.getCommits(owner,repo);
+        List<Commits> result=new ArrayList<>();
+        for (Commits commit:commits){
+            if (commit.getAuthor().equals(author)){
+                result.add(commit);
+            }
+        }
+        return  result;
+
+    }
+
+    @Override
+    public GithubUser findGithubUserbyName(String name) {
+
+        GithubUser githubUser;
+        try {
+            String url="https://api.github.com/search/users?q="+name+"+in:name";
+            Document doc = Jsoup.connect(url).ignoreContentType(true).get();
+            JSONParser parser = new JSONParser();
+
+            JSONObject json1 = (JSONObject) parser.parse(doc.body().text());
+            Integer count=Integer.parseInt(json1.get("total_count").toString());
+            if (count==0) return null;
+            JSONArray json2 = (JSONArray) json1.get("items");
+
+
+            JSONObject jsonObject=(JSONObject) json2.get(0);
+            String username=jsonObject.get("login").toString();
+            String avatar_url=jsonObject.get("avatar_url").toString();
+            githubUser= new GithubUser(name,username,avatar_url);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return githubUser;
     }
 
     @Override

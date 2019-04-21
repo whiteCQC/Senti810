@@ -84,7 +84,7 @@ public class GitHelper {
     }
 
     public List<Commits> getCommits(String owner, String repo) {
-        String localRepoGitConfig = loaclPathprefix + owner + "\\" + repo + "\\.git";
+        String localRepoGitConfig = loaclPathprefix + owner + "/" + repo + "/.git";
         Git git;
         List<Commits> cList = new ArrayList<>();
 
