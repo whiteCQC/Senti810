@@ -1,15 +1,3 @@
-$(document).ready(function(){
-    $("#showCommit").click(function(){
-        $("#CommitMessage").show();
-        $("#CodeSentis").hide();
-    });
-    $("#showCode").click(function(){
-        $("#CommitMessage").hide();
-        $("#CodeSentis").show();
-    });
-
-});
-
 new Vue({
     el: "#Senti",
     data: {
@@ -29,6 +17,7 @@ new Vue({
     },
     methods: {
         commitSenti: function () {
+            $("#CodeSentis").hide();
             self = this;
             this.$http.get("http://localhost:8080/git/commitSenti").then(function (response) {
                 var res = response.data;
@@ -91,6 +80,8 @@ new Vue({
                 };
                 myChart.setOption(option);
 
+                $("#CommitMessage").show();
+
                 myChart.on('click',function(params){
                     // confirm(comments[params.dataIndex]);
                     $('#commitModal').modal();
@@ -99,10 +90,12 @@ new Vue({
             })
         },
         codeSenti: function () {
+            $("#CommitMessage").hide();
             self = this;
             this.$http.get("http://localhost:8080/git/codeSenti").then(function (response) {
                 var res = response.data;
                 this.classes = res;
+                $("#CodeSentis").show();
             })
         },
 

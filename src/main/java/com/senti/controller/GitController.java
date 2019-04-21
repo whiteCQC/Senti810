@@ -35,6 +35,10 @@ public class GitController {
         boolean res=gitService.ProjectDeal(owner,repo);
         if (res) {
             HttpSession session = request.getSession(true);
+
+            session.removeAttribute("Allcodes");
+            session.removeAttribute("ClassSenti");
+
             session.setAttribute("owner", owner);
             session.setAttribute("repo",repo);
             return "success";
@@ -78,14 +82,20 @@ public class GitController {
     @ResponseBody
     public String codeSenti(HttpServletRequest request){
         HttpSession session = request.getSession(true);
-        String owner=(String)session.getAttribute("owner");
-        String repo=(String)session.getAttribute("repo");
+        Map<String, List<ClassSenti>> map1=(Map<String, List<ClassSenti>>)session.getAttribute("ClassSenti");
+        Map<String, List<String>> map2;
 
-        Map<String, List<ClassSenti>> map1=gitService.getClassSenti(owner, repo);
-        Map<String, List<String>> map2=gitService.getClassCode(owner, repo);
+        if(map1==null){
+            String owner=(String)session.getAttribute("owner");
+            String repo=(String)session.getAttribute("repo");
 
-        session.setAttribute("Allcodes",map2);
-        session.setAttribute("ClassSenti",map1);
+            map1=gitService.getClassSenti(owner, repo);
+            map2=gitService.getClassCode(owner, repo);
+
+            session.setAttribute("Allcodes",map2);
+            session.setAttribute("ClassSenti",map1);
+        }
+
         JSONArray json=new JSONArray();
         List<String> classes=new ArrayList<>(map1.keySet());
 
