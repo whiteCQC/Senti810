@@ -44,13 +44,13 @@ public class GitHelper {
         cc = new CodeComments();
         c = Calendar.getInstance();
         sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        fd=new FileDeal();
+        fd = new FileDeal();
     }
 
     public boolean downloadProject(String owner, String repo) {// download the target git project.if already
         // downloaded,pass.
         String url = urlprefix + owner + "/" + repo + ".git";
-        String localpath = loaclPathprefix + owner + "\\" + repo;
+        String localpath = loaclPathprefix + owner + "/" + repo;
 
         File file = new File(localpath);
         if (file.exists()) {
@@ -121,10 +121,10 @@ public class GitHelper {
         Map<String, List<ClassVariation>> map = new HashMap<>();
 
         Git git = null;
-        String localRepoGitConfig = loaclPathprefix + owner + "\\" + repo + "\\.git";
+        String localRepoGitConfig = loaclPathprefix + owner + "/" + repo + "/.git";
 
-        String filepath=loaclPathprefix+owner+"\\"+repo;
-        List<String> presentJava=fd.getPresentJava(filepath);
+        String filepath = loaclPathprefix + owner + "/" + repo;
+        List<String> presentJava = fd.getPresentJava(filepath);
 
         List<RevCommit> rv = new ArrayList<>();
         try {
@@ -133,15 +133,15 @@ public class GitHelper {
             Iterator<RevCommit> iter = iterable.iterator();
 
             while (iter.hasNext()) {
-                rv.add(0,iter.next());
+                rv.add(0, iter.next());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Repository repository=git.getRepository();
+        Repository repository = git.getRepository();
 
-        RevCommit first=rv.get(0);
+        RevCommit first = rv.get(0);
 
         c.setTimeInMillis(new Long(first.getCommitTime()).longValue() * 1000);
         String firstDate = sdf.format(c.getTime());
@@ -149,32 +149,32 @@ public class GitHelper {
             treeWalk.addTree(first.getTree());
             treeWalk.setRecursive(true);
             while (treeWalk.next()) {
-               String filename=treeWalk.getPathString();
+                String filename = treeWalk.getPathString();
                 ObjectId objectId = treeWalk.getObjectId(0);
                 ObjectLoader loader = repository.open(objectId);
-                String firstCodes=new String(loader.getBytes(),"UTF-8");
-                if(filename.endsWith(".java")){
-                    for(String JavaName:presentJava){
-                        if(JavaName.endsWith("/"+filename)){
-                            List<ClassVariation> cvl=new ArrayList<>();
+                String firstCodes = new String(loader.getBytes(), "UTF-8");
+                if (filename.endsWith(".java")) {
+                    for (String JavaName : presentJava) {
+                        if (JavaName.endsWith("/" + filename)) {
+                            List<ClassVariation> cvl = new ArrayList<>();
 
-                            cvl.add(new ClassVariation(JavaName,Timestamp.valueOf(firstDate),cc.getCommentOnlyInMethod(Arrays.asList(firstCodes.split("\n"))),new ArrayList<String>()));
-                            map.put(JavaName,cvl);
+                            cvl.add(new ClassVariation(JavaName, Timestamp.valueOf(firstDate), cc.getCommentOnlyInMethod(Arrays.asList(firstCodes.split("\n"))), new ArrayList<String>()));
+                            map.put(JavaName, cvl);
                         }
                     }
                 }
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
 
         ObjectReader reader = repository.newObjectReader();
         CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-        DiffEntry diffEntry=null;
+        DiffEntry diffEntry = null;
         try {
-            for(int i=1;i<rv.size();i++) {
+            for (int i = 1; i < rv.size(); i++) {
                 ObjectId old = repository.resolve(rv.get(i - 1).getName() + "^{tree}");
                 ObjectId head = repository.resolve(rv.get(i).getName() + "^{tree}");
                 oldTreeIter.reset(reader, old);
@@ -192,11 +192,11 @@ public class GitHelper {
                     diffEntry = diffs.get(j);
                     df.format(diffEntry);
                 }
-                String code=out.toString("UTF-8");
+                String code = out.toString("UTF-8");
 
                 c.setTimeInMillis(new Long(rv.get(i).getCommitTime()).longValue() * 1000);
                 String date = sdf.format(c.getTime());
-                splitCodes(code,date,map,presentJava);
+                splitCodes(code, date, map, presentJava);
                 df.close();
             }
 
@@ -213,27 +213,27 @@ public class GitHelper {
     }
 
     public Map<String, List<String>> getClassCode(String owner, String repo) {
-        String filepath=loaclPathprefix+owner+"\\"+repo;
+        String filepath = loaclPathprefix + owner + "/" + repo;
         return fd.getJavaFileContent(filepath);
 
     }
 
-    private void splitCodes(String codes, String date, Map<String, List<ClassVariation>> map,List<String> presentNames) {
+    private void splitCodes(String codes, String date, Map<String, List<ClassVariation>> map, List<String> presentNames) {
         String lines[] = codes.split("\n");
         String className = "";
-        Map<String,Integer> codesMap=new HashMap<>();
+        Map<String, Integer> codesMap = new HashMap<>();
 
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
             if (line.startsWith("diff --git")) {
-                line=line.replace("diff --git", "");
+                line = line.replace("diff --git", "");
 
-                if(line.contains(".java b/"))
-                    line=line.substring(0,line.length()/2);
-                className=line.substring(3);
+                if (line.contains(".java b/"))
+                    line = line.substring(0, line.length() / 2);
+                className = line.substring(3);
 
-                if (className.endsWith(".java")&&presentNames.contains(className)) {
-                        codesMap.put(className, i+4);
+                if (className.endsWith(".java") && presentNames.contains(className)) {
+                    codesMap.put(className, i + 4);
                 }
             }
         }
@@ -242,7 +242,7 @@ public class GitHelper {
         List<String> commenta;
         List<String> commentd;
 
-        for (String name:codesMap.keySet()) {
+        for (String name : codesMap.keySet()) {
             for (int j = codesMap.get(name); j < lines.length; j++) {
                 String line = lines[j];
                 if (line.startsWith("diff --git"))
@@ -258,18 +258,17 @@ public class GitHelper {
             commenta = cc.getCommentOnlyInMethod(codea);
             commentd = cc.getCommentOnlyInMethod(coded);
 
-            Timestamp t=Timestamp.valueOf(date);
+            Timestamp t = Timestamp.valueOf(date);
 
-            if(commenta.size()!=0||commentd.size()!=0) {
+            if (commenta.size() != 0 || commentd.size() != 0) {
                 if (map.containsKey(name)) {
-                    map.get(name).add(new ClassVariation(name,t, commenta, commentd));
+                    map.get(name).add(new ClassVariation(name, t, commenta, commentd));
                 } else {
                     List<ClassVariation> l = new ArrayList<>();
                     l.add(new ClassVariation(name, t, commenta, commentd));
                     map.put(name, l);
                 }
             }
-
 
 
             codea.clear();

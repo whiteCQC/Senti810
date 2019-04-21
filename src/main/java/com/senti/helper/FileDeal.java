@@ -51,13 +51,13 @@ public class FileDeal {
     }
 
     public List<String> getPresentJava(String filepath){
-        String prefix=filepath+"\\";
+        String prefix=filepath+"/";
         List<File> files = getFiles(filepath);
         List<String> paths=getJavaFilePath(files);
         List<String> res=new ArrayList<>();
 
         for(String path:paths) {
-            res.add((path.replace(prefix, "")).replace("\\","/"));
+            res.add(path.replace("\\","/").replace(prefix, ""));
         }
         return res;
 
@@ -71,7 +71,7 @@ public class FileDeal {
         List<String> lines=null;
         for(String path:paths){
             lines=getFileLines(path);
-            path=path.replace(filepath, "").substring(1);
+            path=path.replace("\\","/").replace(filepath, "").substring(1);
             res.put(path, lines);
         }
 

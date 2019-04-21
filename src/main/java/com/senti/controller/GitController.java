@@ -139,7 +139,7 @@ public class GitController {
         res.put("codeComments",codeComments);
 
         Map<String, List<String>> allCodes=(Map<String, List<String>>)session.getAttribute("Allcodes");
-        List<String> codes=allCodes.get(selectClass.replace("/","\\"));
+        List<String> codes=allCodes.get(selectClass);
 
         res.put("codes",codes);
 

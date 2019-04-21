@@ -128,7 +128,9 @@ new Vue({
                 }
 
                 this.codes=res.codes;
-
+                console.log(this.codes);
+                console.log(posData);
+                console.log(negData);
                 var code=this.codes.join("\n");
 
                 document.getElementById("codes").innerHTML=code;
