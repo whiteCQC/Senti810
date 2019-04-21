@@ -63,7 +63,7 @@ public class SentiCal {
             return new int[] {0,0};
 
         SentiStrength sentiStrength = new SentiStrength();
-        String ssthInitialisation[] = {"sentidata", "F:/F/Git/SentStrength_Data/", "explain"};
+        String ssthInitialisation[] = {"sentidata", "SentStrength_Data/", "explain"};
         sentiStrength.initialise(ssthInitialisation); //Initialise
         //can now calculate sentiment scores quickly without having to initialise again
         String[] s=sentiStrength.computeSentimentScores(line).split(" ");

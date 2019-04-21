@@ -1,4 +1,4 @@
-关于Sentistrength  的jar包。 因为这个包不在maven的中央库里。所以直接加到本地库里会简单一点。
+﻿关于Sentistrength  的jar包。 因为这个包不在maven的中央库里。所以直接加到本地库里会简单一点。
 
 在终端（或者cmd,powershell）里
 
