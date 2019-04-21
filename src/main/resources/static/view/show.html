@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/SidebarNav.min.css" type="text/css"/>
     <link rel="stylesheet" href="/css/custom.css" type="text/css"/>
     <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
 
@@ -52,6 +53,7 @@
                         <option v-for="Aclass in classes">{{ Aclass.name }}</option>
                     </select>
                     <div id="CodeComment" style="width: 1200px; height: 800px;"></div>
+<!--                    <div id="CodeComment" style="width: 1200px; height: 800px;" data-toggle="modal" data-target="#codeModal"></div>-->
                     <textarea style="width: 1200px;height: 600px;" readonly="readonly" id="codes"></textarea>
                 </div>
             </div>
@@ -60,6 +62,47 @@
 
 </div>
 
+
+<div class="modal fade" id="commitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    Commit Message
+                </h4>
+            </div>
+            <div class="modal-body" id="commit-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    Code Comments
+                </h4>
+            </div>
+            <div class="modal-body" id="code-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="/js/local/show.js"></script>
 </body>

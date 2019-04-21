@@ -72,6 +72,7 @@ public class GitHelper {
             } catch (InvalidRemoteException e) {
                 e.printStackTrace();
             } catch (TransportException e) {
+                fd.deleteDirectory(new File(loaclPathprefix + owner));
                 System.out.println("not exist!");
                 return false;
             } catch (GitAPIException e) {

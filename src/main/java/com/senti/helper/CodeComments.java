@@ -87,9 +87,8 @@ public class CodeComments {
         boolean isAdd = false;
 
         for (int w = 0; w < list.size(); w++) {
-            line = list.get(w);
-            if (line.contains("//")&&!line.endsWith(";")&&!line.endsWith("}")) {
-                line=line.trim();
+            line = list.get(w).trim();
+            if (line.contains("//")&&!line.startsWith("*")&&!line.endsWith(";")&&!line.endsWith("}")) {
 
                 int intIndex = line.indexOf("//");
                 String str = line.substring(intIndex+2).trim();

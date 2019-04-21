@@ -92,7 +92,9 @@ new Vue({
                 myChart.setOption(option);
 
                 myChart.on('click',function(params){
-                    confirm(comments[params.dataIndex]);
+                    // confirm(comments[params.dataIndex]);
+                    $('#commitModal').modal();
+                    document.getElementById("commit-body").innerHTML=comments[params.dataIndex];
                 });
             })
         },
@@ -123,7 +125,6 @@ new Vue({
                 var posData=[];
                 var negData=[];
                 var comments=[];
-                console.log(this.codeComments);
 
                 for(var i=0;i<this.dates.length;i++){
                     posData[i]=[this.dates[i],this.codeHighs[i]];
@@ -181,9 +182,12 @@ new Vue({
                 };
                 myChart.setOption(option);
 
+                if(myChart._$handlers.click){
+                    myChart._$handlers.click.length = 0;
+                }
                 myChart.on('click',function(params){
-                    //alert(params.dataIndex);
-                    confirm(comments[params.dataIndex]);
+                    $('#codeModal').modal();
+                    document.getElementById("code-body").innerHTML=comments[params.dataIndex];
                 });
             })
         }
