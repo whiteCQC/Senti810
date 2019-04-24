@@ -35,7 +35,7 @@ new Vue({
                     negData[i]=[this.Commitdates[i],this.lows[i]];
                     comments[i]=this.commitMessage[i];
                 }
-                var myChart = echarts.init(document.getElementById('CommitMessage'));
+                var myChart = echarts.init(document.getElementById('CommitMessage'),'macarons');
                 var option = {
                     title : {
                         text : 'Commit Message Sentiment',
@@ -128,14 +128,11 @@ new Vue({
                 }
 
                 this.codes=res.codes;
-                console.log(this.codes);
-                console.log(posData);
-                console.log(negData);
                 var code=this.codes.join("\n");
 
                 document.getElementById("codes").innerHTML=code;
 
-                var myChart = echarts.init(document.getElementById('CodeComment'));
+                var myChart = echarts.init(document.getElementById('CodeComment'),'macarons');
                 var option = {
                     title: {
                         text: 'Code Sentiment',
