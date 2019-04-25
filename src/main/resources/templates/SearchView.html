@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>搜索界面</title>
+</head>
+<style>
+	#header {
+		background-color:black;
+		color:white;
+		text-align:center;
+		padding:5px;
+	}
+	#leftDiv {
+		line-height:80px;
+		background-color:#eeeeee;
+		height:850px;
+		width:300px;
+		float:left;
+		padding:5px;
+		font-size:20px;
+	}
+
+	#show {
+		width:350px;
+		height:850px;
+		float:left;
+		padding-top:20px;
+		padding-left:100px;
+	}
+
+	a{text-decoration:none}
+
+</style>
+<body>
+<div id="header">
+	<p>个人</p>
+</div>
+
+<div id="leftDiv">
+	<a href="SearchView.html">搜索界面</a><br/>
+	<a href="History.jsp">搜索记录</a><br/>
+</div>
+
+<div id="show">
+	<form action="/search/history" method="post">
+		<input type="text" name="content"><input type="submit" value="搜索">
+		<!--			<tr><td><input type="checkbox" value="commit" >commit</td></tr>
+                        <tr><td><input type="checkbox" value="comment" >comment<br></td></tr>   -->
+
+
+	</form>
+</div>
+
+</body>
+</html>
