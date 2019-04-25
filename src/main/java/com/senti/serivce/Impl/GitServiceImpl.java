@@ -1,5 +1,7 @@
 package com.senti.serivce.Impl;
 
+import com.senti.dao.GitDao;
+import com.senti.dao.MessageSentiDao;
 import com.senti.helper.GitHelper;
 import com.senti.helper.SentiCal;
 import com.senti.model.GithubUser;
@@ -13,9 +15,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +31,12 @@ public class GitServiceImpl implements GitService {
     private GitHelper gh ;
     private SentiCal sc;
 
+    @Autowired
+    GitDao gitDao;
+
+    @Autowired
+    MessageSentiDao messageSentiDao;
+
     public GitServiceImpl(){
         gh= new GitHelper();
         sc = new SentiCal();
@@ -41,15 +49,15 @@ public class GitServiceImpl implements GitService {
 
     @Override
     public List<MessageSenti> getCommitSenti(String owner, String repo) {
-        List<Commits> clist = gh.getCommits(owner, repo);
+        List<MessageSenti> mlist;
+        int gid=gitDao.GetProjectId(owner,repo);
+        mlist=messageSentiDao.GetMessages(gid);
+        if(mlist.size()!=0)
+            return mlist;
 
-        List<MessageSenti> mlist = new ArrayList<>();
+        List<Commits> clist= gh.getCommits(owner, repo);
 
-//        Timestamp t1 = clist.get(clist.size() - 1).getDate();
-//        long mon = 30 * 24 * 60 * 60 * 1000l;
-
-        int count = 0;
-//        long time = t1.getTime() + mon;
+        mlist = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
         double high = 0;
@@ -62,32 +70,11 @@ public class GitServiceImpl implements GitService {
             score = sc.senti_strength(c.getMessage());
             high = score[0];
             low = score[1];
-            String date=sdf.format(target);
-            mlist.add(new MessageSenti(high, low, count, date,c.getMessage()));
-
-//            if (target <= time) {
-//                count++;
-//                score = sc.senti_strength(c.getMessage());
-//                high += score[0];
-//                low += score[1];
-//
-//                i--;
-//            } else {
-//                if (count != 0) {
-//                    Timestamp t = new Timestamp(time + mon / 2);
-//                    mlist.add(new MessageSenti(f(high / count), f(low / count), count, sdf.format(t)));
-//                    high = 0;
-//                    low = 0;
-//                    count = 0;
-//                }
-//                time += mon;
-//            }
-
+            String date = sdf.format(target);
+            mlist.add(new MessageSenti(gid, high, low, date, c.getMessage()));
         }
-//        if (count != 0) {
-//            Timestamp t = new Timestamp(time + mon / 2);
-//            mlist.add(new MessageSenti(f(high / count), f(low / count), count, sdf.format(t)));
-//        }
+        messageSentiDao.insertMessages(mlist);
+
 
         return mlist;
     }

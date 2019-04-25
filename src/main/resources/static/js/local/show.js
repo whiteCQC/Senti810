@@ -162,13 +162,13 @@ new Vue({
                     },
                     series: [{
                         name: 'positive',
-                        type: 'scatter',
+                        type: 'line',
                         showAllSymbol: true,
                         symbolSize: 10,
                         data:posData
                     }, {
                         name: 'negative',
-                        type: 'scatter',
+                        type: 'line',
                         showAllSymbol: true,
                         symbolSize: 10,
                         data:negData

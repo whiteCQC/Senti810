@@ -231,7 +231,6 @@ public class GitHelper {
                 if (line.contains(".java b/"))
                     line = line.substring(0, line.length() / 2);
                 className = line.substring(3);
-
                 if (className.endsWith(".java") && presentNames.contains(className)) {
                     codesMap.put(className, i + 4);
                 }
@@ -250,7 +249,7 @@ public class GitHelper {
                 else {
                     if (line.startsWith("+"))
                         codea.add(line.substring(1));
-                    else if (line.startsWith("1"))
+                    else if (line.startsWith("-"))
                         coded.add(line.substring(1));
                 }
             }
