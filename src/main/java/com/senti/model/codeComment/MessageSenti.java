@@ -6,15 +6,25 @@ public class MessageSenti {
     private double low;
     private String date;
     private String comment;
+    private int type;//选用的情绪计算策略
 
     public MessageSenti(){}
 
-    public MessageSenti(int gid,double high, double low, String date, String comment) {
+    public MessageSenti(int gid,double high, double low, String date, String comment,int type) {
         this.gid=gid;
         this.high = high;
         this.low = low;
         this.date = date;
         this.comment = comment;
+        this.type=type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public int getGid() {

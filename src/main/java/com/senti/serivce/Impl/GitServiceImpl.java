@@ -1,7 +1,7 @@
 package com.senti.serivce.Impl;
 
 import com.senti.dao.GitDao;
-import com.senti.dao.MessageSentiDao;
+import com.senti.dao.SentiDao;
 import com.senti.helper.GitHelper;
 import com.senti.helper.SentiCal;
 import com.senti.model.GithubUser;
@@ -35,7 +35,7 @@ public class GitServiceImpl implements GitService {
     GitDao gitDao;
 
     @Autowired
-    MessageSentiDao messageSentiDao;
+    SentiDao sentiDao;
 
     public GitServiceImpl(){
         gh= new GitHelper();
@@ -51,7 +51,7 @@ public class GitServiceImpl implements GitService {
     public List<MessageSenti> getCommitSenti(String owner, String repo) {
         List<MessageSenti> mlist;
         int gid=gitDao.GetProjectId(owner,repo);
-        mlist=messageSentiDao.GetMessages(gid);
+        mlist=sentiDao.GetMessages(gid);
         if(mlist.size()!=0)
             return mlist;
 
@@ -71,9 +71,10 @@ public class GitServiceImpl implements GitService {
             high = score[0];
             low = score[1];
             String date = sdf.format(target);
-            mlist.add(new MessageSenti(gid, high, low, date, c.getMessage()));
+            mlist.add(new MessageSenti(gid, high, low, date, c.getMessage(),1));
+
         }
-        messageSentiDao.insertMessages(mlist);
+        sentiDao.insertMessages(mlist);
 
 
         return mlist;
@@ -121,7 +122,25 @@ public class GitServiceImpl implements GitService {
 
     @Override
     public Map<String, List<ClassSenti>> getClassSenti(String owner, String repo) {
-        Map<String, List<ClassSenti>> map = new HashMap<>();
+        int gid=gitDao.GetProjectId(owner,repo);
+        List<ClassSenti> cslist=sentiDao.GetCodeSenti(gid);
+
+        Map<String, List<ClassSenti>> map=new HashMap<>();
+        if(cslist.size()!=0){
+
+            for(ClassSenti c:cslist){
+                if(!map.containsKey(c.getName())){
+                    List<ClassSenti> l=new ArrayList<>();
+                    l.add(c);
+                    map.put(c.getName(),l);
+                }else{
+                    map.get(c.getName()).add(c);
+                }
+            }
+
+            return map;
+        }
+        List<ClassSenti> toStore=new ArrayList<>();
 
         Map<String, List<ClassVariation>> clist = gh.getCommitClassVariation(owner, repo);
 
@@ -171,8 +190,8 @@ public class GitServiceImpl implements GitService {
 
                 int total=calist.size()+cdlist.size();
                 if (total != 0){
-                    map.get(name).add(new ClassSenti(name, f(high), f(low), sdf.format(c.getDate()),
-                            ("Add:"+add+"\n"+"Del:"+del).replaceAll("\n","<br>")));
+                    map.get(name).add(new ClassSenti(gid,name, f(high), f(low), sdf.format(c.getDate()),
+                            ("Add:"+add+"\n"+"Del:"+del).replaceAll("\n","<br>"),1));
                     high=0;
                     low=0;
                 }
@@ -180,6 +199,12 @@ public class GitServiceImpl implements GitService {
             }
 
         }
+
+        for(String name:map.keySet()){
+            toStore.addAll(map.get(name));
+        }
+
+        sentiDao.insertCodeSenti(toStore);
 
         return map;
     }
