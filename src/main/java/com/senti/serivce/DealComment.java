@@ -17,8 +17,11 @@ public interface DealComment {
     /*github单个issue内的情绪变化(此处url为具体到某个页面，格式如https://github.com/TheAlgorithms/Java/issues/1*/
     public ArrayList<ArrayList<String>> sentiChangeGit(String url);
 
-    /*年度好坏top5(本地已下好的数据库)*/
+    /*年度好坏top5(本地已下好的数据库) 仅用于计算出数据，不调用*/
     public ArrayList<ArrayList<String>> getLYearTop(String name);
+
+    /*17,18,19年的年度top5*/
+    public ArrayList<ArrayList<String>> getLYdata(String name);
 
     /*月度好坏top1(本地已下好的数据库*/
     public ArrayList<ArrayList<String>> getLMonthTop(String name);

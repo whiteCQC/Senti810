@@ -14,7 +14,7 @@ new Vue({
             self = this;
             this.$http.get("http://localhost:8080/search/getComments").then(function (response) {
                 var res=response.data;
-                var issuename=res[0][1];//issue的名字
+                var issuename="Issue  "+res[0][1];//issue的名字
                 var names=[];           //人名
                 var date=[];            //评论日期
                 var comment=[];         //评论
@@ -23,12 +23,12 @@ new Vue({
                 var count=[];           //评论数量
                 var count_p1,count_p2,count_p3,count_p4,count_p5,count_n1,count_n2,count_n3,count_n4,count_n5;
                 count_p1=count_p2=count_p3=count_p4=count_p5=count_n1=count_n2=count_n3=count_n4=count_n5=0;
-                for(var i=0;i<res.length;i++){
-                    names[i]=res[i][2];
-                    date[i]=res[i][3];
-                    comment[i]=res[i][4];
-                    posData[i]=res[i][7];
-                    negData[i]=res[i][8];
+                for(var i=0;i<res.length;i++) {
+                    names[i] = res[i][2];
+                    date[i] = res[i][3];
+                    comment[i] = res[i][4];
+                    posData[i] = res[i][7];
+                    negData[i] = res[i][8];
                     count[i]=i+1;
                     if(posData[i]==1){
                         count_p1++;

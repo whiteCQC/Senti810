@@ -26,9 +26,8 @@ import org.springframework.stereotype.Service;
  */
 
 public class CrawlCommentImpl extends BreadthCrawler {
-
     static ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
-    Database dao=new DatabaseImpl();
+    DatabaseImpl dao=new DatabaseImpl();
     SentiStrengthAnalyse SSA=new SentiStrengthAnalyse();
     // 自定义的请求插件
     // 可以自定义User-Agent和Cookie
@@ -51,7 +50,6 @@ public class CrawlCommentImpl extends BreadthCrawler {
     }
 
     //这里用于添加种子并添加限制
-
     public CrawlCommentImpl(String crawlPath, String weburl) {
         super(crawlPath, true);
 
@@ -62,6 +60,7 @@ public class CrawlCommentImpl extends BreadthCrawler {
         for(int i=1;i<=10;i++) {
             addSeed(weburl+"/issues?page="+i+"&q=is%3Aissue+is%3Aopen");
             addSeed(weburl+"/issues?page="+i+"&q=is%3Aissue+is%3Aclosed");
+
         }
         addRegex(weburl+"/issues/[0-9][0-9]*");
     }
@@ -101,28 +100,64 @@ public class CrawlCommentImpl extends BreadthCrawler {
             while ((lines = br.readLine()) != null) {
                 if(lines.contains("Originally posted by")||lines.contains("Copy link Quote reply")){
                     temp.add(lines);
+//		    		System.out.println(lines);    //打印每一行
                 }
             }
             br.close();
+            //考虑到某些页面上并不是每一行一条评论，可能每一行有多条评论
+            ArrayList<String> infors=new ArrayList<String>();//装载每行所有的评论
             for(int i=0;i<temp.size();i++){
                 String line=temp.get(i);
 //            	System.out.println(line);
-                String allInfor;
-                if(line.contains("Originally posted by")){
-                    int startIndex=line.indexOf("Create issue");
-                    int endIndex=line.length();
-                    if(line.contains("This comment has been minimized")){
-                        endIndex=line.indexOf("This comment has been minimized");
+                for(int j=0;j<100;j++) {//假设每一行的评论不超过100条
+                    String allInfor="";
+                    if(line.contains("Originally posted by")){
+                        int startIndex=line.indexOf("Create issue");
+                        int endIndex=line.length();
+                        if(line.contains("This comment has been minimized")){
+                            endIndex=line.indexOf("This comment has been minimized");
+                            while(endIndex<startIndex) {
+                                line=line.substring(endIndex+10);
+//            					System.out.println(line);
+                                endIndex=line.indexOf("This comment has been minimized");
+                                startIndex=line.indexOf("Copy link Quote reply");//重新定位start
+                            }
+                            allInfor=line.substring(startIndex+12, endIndex);
+                            line=line.substring(endIndex+10);//如果有这段话那么删除这条评论继续进行,+10是防止endIndex<startIndex
+                        }else {
+                            allInfor=line.substring(startIndex+12, endIndex);
+                            line="";//不然line为空
+                        }
+                        infors.add(allInfor);
                     }
-                    allInfor=line.substring(startIndex+12, endIndex);
-                }else{
-                    int startIndex=line.indexOf("Copy link Quote reply");
-                    int endIndex=line.length();
-                    if(line.contains("This comment has been minimized")){
-                        endIndex=line.indexOf("This comment has been minimized");
+                    if(line.contains("Copy link Quote reply")){
+                        int startIndex=line.indexOf("Copy link Quote reply");
+                        int endIndex=line.length();
+                        if(line.contains("This comment has been minimized")){
+                            endIndex=line.indexOf("This comment has been minimized");
+                            while(endIndex<startIndex) {
+                                line=line.substring(endIndex+10);
+                                endIndex=line.indexOf("This comment has been minimized");
+                                startIndex=line.indexOf("Copy link Quote reply");//重新定位start
+                            }
+                            allInfor=line.substring(startIndex+21, endIndex);
+                            line=line.substring(endIndex+10);
+                        }else {
+                            allInfor=line.substring(startIndex+21, endIndex);
+                            line="";
+                        }
+//            			System.out.println(allInfor);
+                        infors.add(allInfor);
                     }
-                    allInfor=line.substring(startIndex+21, endIndex);
+                    if(line=="") {
+                        break;
+                    }
+
                 }
+            }
+            for(int m=0;m<infors.size();m++) {
+                String allInfor=infors.get(m);
+                int size=infors.size();
                 allInfor=allInfor.replaceAll("Pick your reaction 👍 👎 😄 🎉 😕 ❤️ 🚀 👀", "");
                 allInfor=allInfor.replaceAll("Pick your reaction", "");
                 allInfor=allInfor.replaceAll("👍 ", "");
@@ -134,28 +169,27 @@ public class CrawlCommentImpl extends BreadthCrawler {
                 allInfor=allInfor.replaceAll("🚀 ", "");
                 allInfor=allInfor.replaceAll("👀", "");
                 allInfor=allInfor.replaceAll("'", " ");
-                int comIndex=allInfor.indexOf("commented");
-                int commaIndex=allInfor.indexOf(",");
-                int[] score=SSA.getScore(allInfor.substring(commaIndex+6));//情绪得分
-/*            	ArrayList<String> singleInfor=new ArrayList<String>();//将人名，时间，评论分开
-            	singleInfor.add(url);
-            	singleInfor.add(issueName);
-            	singleInfor.add(allInfor.substring(0,comIndex));//人名
-            	singleInfor.add(allInfor.substring(comIndex+9,commaIndex+6));//时间
-            	singleInfor.add(allInfor.substring(commaIndex+6));//评论
-            	result.add(singleInfor);*/
-                System.out.println(url);
-                System.out.println(issueName);
-                System.out.println(allInfor.substring(0,comIndex));
-                System.out.println(allInfor.substring(comIndex+9,commaIndex+6));//时间
-                System.out.println(allInfor.substring(commaIndex+6));
-                System.out.println(url.substring(0, url.indexOf("issues")-1));
-                System.out.println(i);
-                String sql="insert into githubtable values ('"+url+"', '"+issueName+"', '"+allInfor.substring(0,comIndex)+"', '"+allInfor.substring(comIndex+9,commaIndex+6)+"', '"+allInfor.substring(commaIndex+6)+"', '"+url.substring(0, url.indexOf("issues")-1)+"', '"+i+"', '"+score[0]+"', '"+score[1]+"');";
-                dao.update(sql);
+                if(allInfor.contains("commented")&&allInfor.contains(",")) {
+                    int comIndex=allInfor.indexOf("commented");
+                    int commaIndex=allInfor.indexOf(",");
+                    int[] score=SSA.getScore(allInfor.substring(commaIndex+6));//情绪得分
+                    System.out.println(url);
+                    System.out.println(issueName);
+                    System.out.println(allInfor.substring(0,comIndex));//人名
+                    System.out.println(allInfor.substring(comIndex+9,commaIndex+6));//时间
+                    System.out.println(allInfor.substring(commaIndex+6));//评论
+                    System.out.println(url.substring(0, url.indexOf("issues")-1));
+                    System.out.println(m);
+                    String comments=allInfor.substring(commaIndex+6);
+                    comments=comments.replaceAll("https://.*/"," ");//删除超链接
+                    comments=comments.replaceAll("• edited","");
+                    String sql="insert into githubtable values ('"+url+"', '"+issueName+"', '"+allInfor.substring(0,comIndex)+"', '"+allInfor.substring(comIndex+9,commaIndex+6)+"', '"+comments+"', '"+url.substring(0, url.indexOf("issues")-1)+"', '"+m+"', '"+score[0]+"', '"+score[1]+"');";
+                    dao.update(sql);
+                }
             }
+
             String sql2="insert into gitissue values ('"+url.substring(0, url.indexOf("issues")-1)+"', '"+url+"');";
-                      dao.update(sql2);
+            dao.update(sql2);
         }catch(Exception e){
             System.out.println("处理Github数据失败");
         }
@@ -163,7 +197,7 @@ public class CrawlCommentImpl extends BreadthCrawler {
     }
 
     public static void main(String[] args) throws Exception {
-        CrawlCommentImpl crawler = new CrawlCommentImpl("crawl","https://github.com/TheAlgorithms/C");
+        CrawlCommentImpl crawler = new CrawlCommentImpl("crawl","https://github.com/TheAlgorithms/Scala");
         crawler.start(2);
 
     }

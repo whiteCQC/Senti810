@@ -25,7 +25,7 @@ public class DatabaseImpl implements Database {
 
     //连接数据库
     public void connSQL() {
-        String url = "jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8";
+        String url = "jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8&useSSL=false";
 
         String username = "root";
         String password = "973348"; // 加载驱动程序以连接数据库
@@ -390,10 +390,13 @@ public class DatabaseImpl implements Database {
             ResultSet rs=selectSQL(sql);
             while(rs.next()) {
                 ArrayList<String> temp=new ArrayList<String>();
+                temp.add("tianchong");//用于占位置，使得Derby等数据库中人名等信息的位置与GitHub一致
                 temp.add(Integer.toString(rs.getInt("issueNo")));
                 temp.add(rs.getString("personName"));
                 temp.add(rs.getString("datetime"));
                 temp.add(rs.getString("comment"));
+                temp.add("tianchong");
+                temp.add("tianchong");
                 temp.add(Integer.toString(rs.getInt("activeScore")));
                 temp.add(Integer.toString(rs.getInt("negativeScore")));
                 result.add(temp);

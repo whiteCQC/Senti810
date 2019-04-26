@@ -226,7 +226,7 @@ public class DealCommentImpl implements DealComment{
     }
 
 
-    /*年度好坏top5(本地已下好的数据库)统一以2015起步到2018*/
+    /*年度好坏top5(本地已下好的数据库)统一以2015起步到2018,该方法用于计算数据，不调用，数据存放在另一个方法中*/
     /*DERBY年份2004.9到 2019.1
      * drools 2008.3-2019.1
      * groovy 2003.10-2019-1
@@ -415,7 +415,247 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
-    /*月度好坏top1(本地已下好的数据库15年到19年*/
+    /*17,18,19年度top5*/
+    public ArrayList<ArrayList<String>> getLYdata(String name){
+        ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
+        ArrayList<String> temp17=new ArrayList<String>();
+        ArrayList<String> temp18=new ArrayList<String>();
+        ArrayList<String> temp19=new ArrayList<String>();
+        if(name.equals("JBSEAM")){
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-1");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-2");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-1");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-2");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-1");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-2");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-3");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-1");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-2");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-3");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+        }else if(name.equals("DROOLS")){
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1765");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-329");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-662");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-738");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1130");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1943");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1869");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1631");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1567");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1543");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2964");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2319");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-650");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-783");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-1380");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2755");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-3081");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2967");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2803");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2688");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+        }else if(name.equals("GROOVY")){
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-7763");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-3493");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-7423");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-7679");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8096");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-6655");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8320");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8250");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8178");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8146");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-4214");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-7202");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8241");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8329");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-7601");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-3942");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8298");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-6864");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-4151");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8329");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+        }else if(name.equals("MNG")){
+            temp17.add("https://issues.apache.org/jira/browse/MNG-1378");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-2802");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-3328");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5585");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5894");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-3328");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6320");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6317");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6297");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6241");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6159");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-5668");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6169");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6294");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6300");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-4917");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6506");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6447");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6437");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6422");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+        }else if(name.equals("PIG")){
+            temp17.add("https://issues.apache.org/jira/browse/PIG-3498");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-4449");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5268");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5294");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-4324");
+
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5260");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5172");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5086");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5072");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-4631");
+
+            temp18.add("https://issues.apache.org/jira/browse/PIG-4373");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5320");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5329");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5348");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5360");
+
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5348");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-4373");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5253");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5369");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+        }else if(name.equals("DERBY")){
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6933");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-4842");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6937");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6936");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6904");
+
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-3219");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6766");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-4842");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6944");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6979");
+
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7018");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6996");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7017");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6991");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6983");
+
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6993");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6983");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7003");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6985");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+        }else if(name.equals("ISPN")){
+            temp17.add("https://issues.jboss.org/browse/ISPN-3849");
+            temp17.add("https://issues.jboss.org/browse/ISPN-3988");
+            temp17.add("https://issues.jboss.org/browse/ISPN-3992");
+            temp17.add("https://issues.jboss.org/browse/ISPN-6827");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7024");
+
+            temp17.add("https://issues.jboss.org/browse/ISPN-7863");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8519");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8298");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8263");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7537");
+
+            temp18.add("https://issues.jboss.org/browse/ISPN-9588");
+            temp18.add("https://issues.jboss.org/browse/ISPN-2442");
+            temp18.add("https://issues.jboss.org/browse/ISPN-6924");
+            temp18.add("https://issues.jboss.org/browse/ISPN-7977");
+            temp18.add("https://issues.jboss.org/browse/ISPN-8173");
+
+            temp18.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9542");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9501");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9410");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9173");
+
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+        }
+        res.add(temp17);
+        res.add(temp18);
+        res.add(temp19);
+        return res;
+    }
+
+    /*月度好坏top1(本地已下好的数据库15年到19年)只用于计算数据，不调用*/
     public ArrayList<ArrayList<String>> getLMonthTop(String name){
         ArrayList<ArrayList<String>> result= new ArrayList<ArrayList<String>>();
         try {
@@ -738,6 +978,431 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
+    /*17,18,19月度top1*/
+    public ArrayList<ArrayList<String>> getLMdata(String name){
+        ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
+        ArrayList<String> temp17=new ArrayList<String>();
+        ArrayList<String> temp18=new ArrayList<String>();
+        ArrayList<String> temp19=new ArrayList<String>();
+        //前12个积极，后12个消极
+        if(name.equals("DROOLS")){
+            temp17.add("https://issues.jboss.org/browse/DROOLS-329");//积极
+            temp17.add("https://issues.jboss.org/browse/DROOLS-662");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1461");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1130");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1543");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1388");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1662");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1943");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1737");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1765");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1745");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1949");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1391");//消极
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1448");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1502");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1534");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1576");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1869");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1654");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1943");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1927");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-1769");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-2138");
+            temp17.add("https://issues.jboss.org/browse/DROOLS-2170");
+
+            temp18.add("https://issues.jboss.org/browse/DROOLS-783");//积极
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2319");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2411");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2426");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2431");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2156");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2714");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2457");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2964");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-3037");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-3221");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2313");//
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2160");//消极
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2343");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2411");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2504");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2595");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2586");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2755");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-2803");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-1937");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-3081");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-3271");
+            temp18.add("https://issues.jboss.org/browse/DROOLS-3430");
+
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+
+        }else if(name.equals("GROOVY")){
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-7423");//积极
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-3493");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8082");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-7646");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8175");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-5227");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8270");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-7763");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8329");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8329");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-7407");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-7087");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-6220");//消极
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-7405");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-5122");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8146");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8178");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8227");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-6655");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8250");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8329");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8329");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8301");
+            temp17.add("https://issues.apache.org/jira/browse/GROOVY-8241");
+
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-5169");//积极
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8241");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8113");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-7202");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-7154");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8195");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-7404");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-4360");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-4214");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8329");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-7854");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-6532");//
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-3942");//消极
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8241");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8298");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8301");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-4151");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8008");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8212");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-7891");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-7764");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-8329");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-7854");
+            temp18.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+
+        }else if(name.equals("PIG")){
+            temp17.add("https://issues.apache.org/jira/browse/PIG-3498");//积极
+            temp17.add("https://issues.apache.org/jira/browse/PIG-4748");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5155");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5164");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-4449");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5268");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5273");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5268");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5290");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5310");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-4324");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5110");//
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5086");//消极
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5156");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5172");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5199");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5225");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5260");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5278");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5256");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-4621");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5310");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5312");
+            temp17.add("https://issues.apache.org/jira/browse/PIG-5318");
+
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5320");//积极
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5331");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-2557");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5333");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5338");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-2599");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-4373");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5253");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5342");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5360");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5368");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5371");//
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5253");//消极
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5331");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5331");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5338");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5338");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-2599");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5348");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-766");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5354");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-3038");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5369");
+            temp18.add("https://issues.apache.org/jira/browse/PIG-5372");
+
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+
+
+
+        }else if(name.equals("MNG")){
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5894");//积极
+            temp17.add("https://issues.apache.org/jira/browse/MNG-2199");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5585");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6112");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6007");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6186");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-3328");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5937");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6287");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-1378");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6007");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6112");//
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6162");//消极
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5315");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5315");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6223");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5728");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6241");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6262");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5868");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-5728");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-1867");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6297");
+            temp17.add("https://issues.apache.org/jira/browse/MNG-6320");
+
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6296");//积极
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6311");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-5588");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6390");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6364");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6399");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6386");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6441");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6159");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-5951");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6294");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6450");//
+            temp18.add("https://issues.apache.org/jira/browse/MNG-4917");//消极
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6361");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6380");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6400");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6028");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6422");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6447");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6442");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6480");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6465");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6506");
+            temp18.add("https://issues.apache.org/jira/browse/MNG-6532");
+
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+
+        }else if(name.equals("ISPN")){
+            temp17.add("https://issues.jboss.org/browse/ISPN-7264");//积极
+            temp17.add("https://issues.jboss.org/browse/ISPN-7387");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7554");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7359");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7368");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7863");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7024");
+            temp17.add("https://issues.jboss.org/browse/ISPN-3992");
+            temp17.add("https://issues.jboss.org/browse/ISPN-3849");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8257");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8258");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7098");//
+            temp17.add("https://issues.jboss.org/browse/ISPN-7425");//消极
+            temp17.add("https://issues.jboss.org/browse/ISPN-7526");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7537");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7542");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7514");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7863");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8114");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8220");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8298");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8257");
+            temp17.add("https://issues.jboss.org/browse/ISPN-8519");
+            temp17.add("https://issues.jboss.org/browse/ISPN-7098");
+
+            temp18.add("https://issues.jboss.org/browse/ISPN-8173");//积极
+            temp18.add("https://issues.jboss.org/browse/ISPN-8723");
+            temp18.add("https://issues.jboss.org/browse/ISPN-8728");
+            temp18.add("https://issues.jboss.org/browse/ISPN-8941");
+            temp18.add("https://issues.jboss.org/browse/ISPN-2442");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9173");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9338");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9410");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9501");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9588");
+            temp18.add("https://issues.jboss.org/browse/ISPN-6924");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9761");//
+            temp18.add("https://issues.jboss.org/browse/ISPN-8676");//消极
+            temp18.add("https://issues.jboss.org/browse/ISPN-8888");
+            temp18.add("https://issues.jboss.org/browse/ISPN-8975");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9106");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9198");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9173");
+            temp18.add("https://issues.jboss.org/browse/ISPN-8241");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9410");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9542");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9588");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9605");
+            temp18.add("https://issues.jboss.org/browse/ISPN-9809");
+
+
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+
+        }else if(name.equals("DERBY")){
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6920");//积极
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-5543");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6904");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6929");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6933");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6937");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-4041");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6909");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6904");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-5543");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-4842");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6979");//
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6919");//消极
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6920");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6766");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6929");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6933");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6766");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6944");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6949");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6958");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6975");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-4842");
+            temp17.add("https://issues.apache.org/jira/browse/DERBY-6979");
+
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6981");//积极
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6981");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6983");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6996");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6990");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6998");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6999");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6815");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6998");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-3547");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7018");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6973");//
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6981");//消极
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6985");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6983");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6988");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6998");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-6999");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7003");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7007");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7010");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7011");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7019");
+            temp18.add("https://issues.apache.org/jira/browse/DERBY-7025");
+
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+
+        }else if(name.equals("JBSEAM")){
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");//积极
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");//
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-4945");//消极
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
+
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-3247");//积极
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");//
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-3247");//消极
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-3247");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
+
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+            temp19.add("");
+
+        }
+        res.add(temp17);
+        res.add(temp18);
+        res.add(temp19);
+        return res;
+    }
+
+
+
     /*本地数据库的2017.1到2019.3的情绪变化*/
     public double[][] getLChange(String name) {
         double[][] result=new double[2][27];
@@ -899,7 +1564,7 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
-    /*年度好坏top5 github(如果issue的数量太少，则返回空数组)*/
+    /*年度好坏top5 github(如果issue的数量小于5，那就返回issueWeb)*/
     public ArrayList<ArrayList<String>> getGYearTop(String url){
         ArrayList<ArrayList<String>> result= new ArrayList<ArrayList<String>>();
         try {
@@ -1019,8 +1684,21 @@ public class DealCommentImpl implements DealComment{
                 result.add(temp18);
                 result.add(temp19);
 
-            }else {
-                result=issueWeb;
+            }else if(issueWeb.size()<5){//如果issue数量少于5，则直接返回这些issue
+                ArrayList<String> temp=new ArrayList<String>();
+                int size=issueWeb.size();
+                for(int i=0;i<10;i++){
+                    if(i<size) {
+                        temp.add(issueWeb.get(i).get(1));
+                    }else if( i>=5 && i<(size+5) ){
+                        temp.add(issueWeb.get(i-5).get(1));
+                    } else {
+                        temp.add("not anymore");
+                    }
+                }
+                result.add(temp);
+                result.add(temp);
+                result.add(temp);
             }
         }catch(Exception e) {
             System.out.println("GitHub年度top5出错");
@@ -1529,7 +2207,7 @@ public class DealCommentImpl implements DealComment{
         ArrayList<ArrayList<String>> res=da.getGMonthTop("https://github.com/TheAlgorithms/C");
         for(int i=0;i<res.size();i++){
             for(int j=0;j<res.get(0).size();j++)
-            System.out.println(i+j+res.get(i).get(j));
+                System.out.println(i+j+res.get(i).get(j));
         }
     }
 

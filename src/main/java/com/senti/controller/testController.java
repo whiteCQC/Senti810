@@ -42,37 +42,37 @@ public class testController {
             if(webContent!=null) {
                 if (webContent.contains("DERBY")) {
                     DealComment DC = new DealCommentImpl();
-                    rs = DC.getLow("DERBY");
+// 情绪值低于-3                   rs = DC.getLow("DERBY");
                     session.setAttribute("name", "DERBY");       //名字在session里2
                 }
                 if (webContent.contains("DROOLS")) {
                     DealComment DC = new DealCommentImpl();
-                    rs = DC.getLow("DROOLS");
+// 情绪值低于-3                   rs = DC.getLow("DROOLS");
                     session.setAttribute("name", "DROOLS");
                 }
                 if (webContent.contains("GROOVY")) {
                     DealComment DC = new DealCommentImpl();
-                    rs = DC.getLow("GROOVY");
+//情绪值低于-3                     rs = DC.getLow("GROOVY");
                     session.setAttribute("name", "GROOVY");
                 }
                 if (webContent.contains("ISPN")) {
                     DealComment DC = new DealCommentImpl();
-                    rs = DC.getLow("ISPN");
+//情绪值低于-3                     rs = DC.getLow("ISPN");
                     session.setAttribute("name", "ISPN");
                 }
                 if (webContent.contains("MNG")) {
                     DealComment DC = new DealCommentImpl();
-                    rs = DC.getLow("MNG");
+//情绪值低于-3                     rs = DC.getLow("MNG");
                     session.setAttribute("name", "MNG");
                 }
                 if (webContent.contains("PIG")) {
                     DealComment DC = new DealCommentImpl();
-                    rs = DC.getLow("PIG");
+//情绪值低于-3                     rs = DC.getLow("PIG");
                     session.setAttribute("name", "PIG");
                 }
                 if (webContent.contains("JBSEAM")) {
                     DealComment DC = new DealCommentImpl();
-                    rs = DC.getLow("JBSEAM");
+//情绪值低于-3                     rs = DC.getLow("JBSEAM");
                     session.setAttribute("name", "JBSEAM");//传递数据库名
                 }
                 if (webContent.contains("https://github.com")) {
@@ -82,11 +82,11 @@ public class testController {
                         crawler.start(2);
                     }
                     DealComment DC = new DealCommentImpl();
-                    rs = DC.getGitLow(webContent);
+//情绪值低于-2.5                    rs = DC.getGitLow(webContent);
                     session.setAttribute("name", "github");//传递数据库名
                     session.setAttribute("url", webContent);//查找的网址
                 }
-                session.setAttribute("issueNo", rs);//传递情绪值较低的issueNo
+//低情绪值的url                session.setAttribute("issueNo", rs);//传递情绪值较低的issueNo
 //			for(int i=0;i<rs.size();i++) {
 //				System.out.print(rs.get(i));
 //			}
@@ -110,13 +110,20 @@ public class testController {
             String name =(String)session.getAttribute("name");//搜索的数据库名
             DealComment DC=new DealCommentImpl();
             if(name.equals("github")){
-                String url=(String)session.getAttribute("url");
-                res=DC.getGYearTop(url);
-                System.out.println(res.get(0).get(0));
-            }else if(name.equals("DERBY")){
+                String url=(String)session.getAttribute("url");//输入的url（格式如https://github.com/TheAlgorithms/C）
+                res=DC.getGYearTop(url);//获取GitHub的年度top5
 
+            }else if(name.equals("DERBY") || name.equals("DROOLS") || name.equals("GROOVY") || name.equals("PIG") ||
+                    name.equals("MNG") || name.equals("ISPN") || name.equals("JBSEAM") ){
+                res=DC.getLYdata(name);
             }
             session.setAttribute("yeartop",res); //年度top5
+/*            for(int i=0;i<res.size();i++){
+                for(int j=0;j<res.get(0).size();j++) {
+                    System.out.println(i);
+                    System.out.println(res.get(i).get(j));
+                }
+            }*/
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -138,8 +145,9 @@ public class testController {
                 String url=(String)session.getAttribute("url");
                 res=DC.getGMonthTop(url);
                 System.out.println(res.get(0).get(0));
-            }else if(name.equals("DERBY")){
-
+            }else if(name.equals("DERBY") || name.equals("DROOLS") || name.equals("GROOVY") || name.equals("PIG") ||
+                    name.equals("MNG") || name.equals("ISPN") || name.equals("JBSEAM") ){
+                res=((DealCommentImpl) DC).getLMdata(name);
             }
             session.setAttribute("monthtop",res); //年度top5
         }catch(Exception e){
@@ -162,7 +170,10 @@ public class testController {
             if(name.equals("github")){
                 String url=(String)session.getAttribute("url");
                 res=DC.getGChange(url);
-                System.out.println(res[0][0]);
+//                System.out.println(res[0][0]);
+            }else if(name.equals("DERBY") || name.equals("DROOLS") || name.equals("GROOVY") || name.equals("PIG") ||
+                    name.equals("MNG") || name.equals("ISPN") || name.equals("JBSEAM") ){
+                res=DC.getLChange(name);
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -173,11 +184,27 @@ public class testController {
 
     @RequestMapping("/issueComments")
     public String turn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String issueweb=request.getParameter("issueweb");
-        issueweb="https://github.com/"+issueweb;
+        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        try {
+            HttpSession session=request.getSession();
+            String time =(String)session.getAttribute("time");//搜索的时间
+            String name =(String)session.getAttribute("name");//搜索的数据库名
+            String issueweb = request.getParameter("issueweb");//传递的参数
+            if(name.equals("github")) {
+                issueweb = "https://github.com/" + issueweb;
+                session.setAttribute("issueWeb", issueweb);
+            }else if(name.equals("DERBY") || name.equals("DROOLS") || name.equals("GROOVY") || name.equals("PIG") ||
+                    name.equals("MNG") || name.equals("ISPN") || name.equals("JBSEAM") ){
+                int startIndex=issueweb.indexOf(name);
+                issueweb=issueweb.substring(startIndex);
+                session.setAttribute("issueWeb", issueweb);
+
+            }
 //        System.out.println(issueweb);
-        HttpSession session=request.getSession();
-        session.setAttribute("issueWeb",issueweb);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return "issueComments";
     }
 
@@ -193,9 +220,16 @@ public class testController {
             String time =(String)session.getAttribute("time");//搜索的时间
             String name =(String)session.getAttribute("name");//搜索的数据库名
             DealComment DC=new DealCommentImpl();
+            Database da=new DatabaseImpl();
+            issueWeb=(String)session.getAttribute("issueWeb");
             if(name.equals("github")) {
-                issueWeb=(String)session.getAttribute("issueWeb");
                 res = DC.getGIn_order(issueWeb);
+            }else if(name.equals("DERBY") || name.equals("DROOLS") || name.equals("GROOVY") || name.equals("PIG") ||
+                    name.equals("MNG") || name.equals("ISPN") || name.equals("JBSEAM") ){
+                int issueNo=Integer.parseInt(issueWeb.substring(issueWeb.indexOf("-")+1));
+//                System.out.println(issueNo);
+                res = da.getLIn_order(name, issueNo);
+//                System.out.println(res.get(0).get(2));
             }
 
         }catch(Exception e){
