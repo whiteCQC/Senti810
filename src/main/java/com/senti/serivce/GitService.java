@@ -13,7 +13,7 @@ public interface GitService {
 
     List<MessageSenti> getCommitSenti(String owner, String repo);
 
-    List<Commits> getCommitByAuthor(String owner,String repo,String author);
+    Map<String,List<MessageSenti>> getCommitSentiSortbyAuthor(String owner,String repo);
 
     GithubUser findGithubUserbyName(String name);
 

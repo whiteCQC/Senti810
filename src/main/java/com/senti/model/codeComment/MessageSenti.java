@@ -10,6 +10,13 @@ public class MessageSenti {
 
     public MessageSenti(){}
 
+    public MessageSenti(double high, double low,String date, String comment){
+        this.high=high;
+        this.low=low;
+        this.date=date;
+        this.comment=comment;
+    }
+
     public MessageSenti(int gid,double high, double low, int score, String date, String comment) {
         this.gid=gid;
         this.high = high;
