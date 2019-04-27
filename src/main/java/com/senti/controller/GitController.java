@@ -59,11 +59,14 @@ public class GitController {
         List<String> highs=new ArrayList<>();
         List<String> lows=new ArrayList<>();
         List<String> messages=new ArrayList<>();
+        List<String> scores=new ArrayList<>();
 
         List<String> HighCount=new ArrayList<>();
         List<String> LowCount=new ArrayList<>();
+        List<String> ScoreCount=new ArrayList<>();
         int[] hightemp=new int[4];
         int[] lowtemp=new int[4];
+        int[] scoretemp=new int[5];
 
         MessageSenti m=null;
         for(int i=0;i<mlist.size();i++) {
@@ -75,12 +78,19 @@ public class GitController {
             lows.add(String.valueOf(m.getLow()));
             lowtemp[-(int)m.getLow()]++;
 
+            scores.add(String.valueOf(m.getScore()));
+            scoretemp[m.getScore()]++;
+
             messages.add(m.getComment());
         }
         for(int i=0;i<4;i++){
             HighCount.add(String.valueOf(hightemp[i]));
             LowCount.add(String.valueOf(lowtemp[i]));
         }
+        for(int i=0;i<5;i++){
+            ScoreCount.add(String.valueOf(scoretemp[i]));
+        }
+
 
 
         Map<String,List<String>> res=new HashMap<>();
@@ -90,6 +100,8 @@ public class GitController {
         res.put("commitMessage",messages);
         res.put("HighCount",HighCount);
         res.put("LowCount",LowCount);
+        res.put("Scores",scores);
+        res.put("ScoreCount",ScoreCount);
 
         return res;
     }

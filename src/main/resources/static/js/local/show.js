@@ -7,6 +7,8 @@ new Vue({
         commitMessage:[],
         HighCount:[],
         LowCount:[],
+        Scores:[],
+        ScoreCount:[],
 
         selectClass:"",
         classes:"",
@@ -30,17 +32,21 @@ new Vue({
                 this.highs = res.highs;
                 this.lows = res.lows;
                 this.commitMessage=res.commitMessage;
+                this.Scores=res.Scores;
 
+                this.ScoreCount=res.ScoreCount;
                 this.HighCount=res.HighCount;
                 this.LowCount=res.LowCount;
 
                 var posData=[];
                 var negData=[];
                 var comments=[];
+                var scoreData=[];
                 for(var i=0;i<this.Commitdates.length;i++){
                     posData[i]=[this.Commitdates[i],this.highs[i]];
                     negData[i]=[this.Commitdates[i],this.lows[i]];
                     comments[i]=this.commitMessage[i];
+                    scoreData[i]=[this.Commitdates[i],this.Scores[i]];
                 }
                 var myChart1 = echarts.init(document.getElementById('CommitMessage10'),'macarons');
                 var option1 = {
@@ -166,9 +172,90 @@ new Vue({
                 };
 
 
+                var myChart4 = echarts.init(document.getElementById('CommitMessage20'),'macarons');
+                var option4 = {
+                    title : {
+                        text : 'Commit情绪总体情况',
+                        subtext: 'Sanford-corenlp',
+                    },
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend : {
+                        data : ['Sentiment']
+                    },
+                    dataZoom: {
+                        show: true,
+                        realtime: true,
+                        start: 0,
+                        end: 100
+                    },
+                    grid: {
+                        y2: 80
+                    },
+                    xAxis: {
+                        type: 'time',
+                        name: 'time',
+
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        name: 'Sentiment',
+                        type: 'scatter',
+                        showAllSymbol: true,
+                        symbolSize: 10,
+                        data:scoreData
+                    }
+                    ]
+                };
+
+                var myChart5 = echarts.init(document.getElementById('CommitMessage21'),'macarons');
+                var option5 = {
+                    title : {
+                        text: 'Commit情绪分布',
+                        subtext: 'Sanford-corenlp',
+                        x:'center'
+                    },
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: ['非常消极','较为消极','情绪平稳','较为积极','非常积极']
+                    },
+                    series : [
+                        {
+                            name: '情绪程度',
+                            type: 'pie',
+                            radius : '55%',
+                            center: ['50%', '60%'],
+                            data:[
+                                {value:this.ScoreCount[0], name:'非常消极'},
+                                {value:this.ScoreCount[1], name:'较为消极'},
+                                {value:this.ScoreCount[2], name:'情绪平稳'},
+                                {value:this.ScoreCount[3], name:'较为积极'},
+                                {value:this.ScoreCount[4], name:'非常积极'}
+                            ],
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+
                 myChart1.setOption(option1);
                 myChart2.setOption(option2);
                 myChart3.setOption(option3);
+                myChart4.setOption(option4);
+                myChart5.setOption(option5);
 
                 $("#loader").hide();
                 $("#CommitMessage").show();
@@ -176,6 +263,10 @@ new Vue({
                 myChart1.on('click',function(params){
                     $('#commitModal').modal();
                     document.getElementById("commit-body").innerHTML=comments[params.dataIndex];
+                });
+                myChart4.on('click',function(params){
+                    $('#commitModal1').modal();
+                    document.getElementById("commit-body1").innerHTML=comments[params.dataIndex];
                 });
             })
         },

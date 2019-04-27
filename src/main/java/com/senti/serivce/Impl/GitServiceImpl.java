@@ -64,14 +64,19 @@ public class GitServiceImpl implements GitService {
         double low = 0;
         int[] score;
 
+        int standf=0;
+
         for (int i = clist.size() - 1; i >= 0;i--) {
             Commits c = clist.get(i);
             long target = c.getDate().getTime();
+
             score = sc.senti_strength(c.getMessage());
+            standf= sc.stanford_analyse(c.getMessage());
+
             high = score[0];
             low = score[1];
             String date = sdf.format(target);
-            mlist.add(new MessageSenti(gid, high, low, date, c.getMessage(),1));
+            mlist.add(new MessageSenti(gid, high, low, standf,date, c.getMessage()));
 
         }
         sentiDao.insertMessages(mlist);

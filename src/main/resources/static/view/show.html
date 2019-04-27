@@ -83,6 +83,16 @@
                             <div id="CommitMessage12" style=" margin-left:400px;width: 400px; height: 400px; float: left"></div>
                         </div>
                     </div>
+
+                    <br>
+
+                    <div class="panel-info widget-shadow"  style="margin-left: 230px">
+                        <h3>Sanford-corenlp</h3>
+                        <div id="CommitMessage20" style=" margin-left:280px; width: 1200px; height: 400px;"></div><!--commit情绪图Sanford-corenlp-->
+                        <div class="fan" style=" margin-left:280px; width: 1200px; height: 400px;">
+                            <div id="CommitMessage21" style=" width: 400px; height: 400px; float: left;"></div>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -100,7 +110,7 @@
 </div>
 
 <!--点击图的模态框-->
-<div class="modal fade" id="commitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="commitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><!-- senti-strength commit -->
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -120,6 +130,29 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="commitModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><!-- standford commit -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    Commit Message
+                </h4>
+            </div>
+            <div class="modal-body" id="commit-body1">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
