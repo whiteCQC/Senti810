@@ -87,14 +87,14 @@ public class GitServiceImpl implements GitService {
 
                 List<MessageSenti> list=new ArrayList<>();
                 int[] ints=sc.senti_strength(commits.getMessage());
-                MessageSenti messageSenti=new MessageSenti(ints[0],ints[1],0,commits.getDate().toString(),commits.getMessage());
+                MessageSenti messageSenti=new MessageSenti(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
                 list.add(messageSenti);
                 map.put(commits.getAuthor(),list);
 
             }else{
                 List<MessageSenti> list=map.get(commits.getAuthor());
                 int[] ints=sc.senti_strength(commits.getMessage());
-                MessageSenti messageSenti=new MessageSenti(ints[0],ints[1],0,commits.getDate().toString(),commits.getMessage());
+                MessageSenti messageSenti=new MessageSenti(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
                 list.add(messageSenti);
 
             }
