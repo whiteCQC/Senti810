@@ -18,6 +18,7 @@
     <script src="/js/modernizr.js"></script>
     <link href="/css/Loadingstyle.css" rel="stylesheet">
     <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/flatnav.css"  rel="stylesheet">
 </head>
 <body>
 
@@ -49,6 +50,18 @@
         </nav>
     </aside>
 
+    <!-- header-starts -->
+    <div class="sticky-header header-section ">
+            <!--search-box-->
+            <div class="search-box" style="margin-left: 500px">
+                <form v-on:submit.prevent="searchProject">
+                    <input type="text" id="search_text" placeholder="Search" v-model="toSearch">
+                    <input type="button" id="search_button">
+                </form>
+            </div><!--//end-search-box-->
+
+    </div>
+    <!-- //header-ends -->
 
     <div id="page-wrapper">
         <div class="main-page">
@@ -61,7 +74,17 @@
                 <div class="dot"></div>
             </div>
             <div class="row-one widgettable">
-                <div id="CommitMessage" style=" margin-left:280px; width: 1200px; height: 400px;display:none;"></div><!--commit情绪图-->
+                <div id="CommitMessage" style="display:none;">
+                    <div class="panel-info widget-shadow"  style="margin-left: 230px">
+                        <h3>Senti-Strength</h3>
+                        <div id="CommitMessage10" style=" margin-left:280px; width: 1200px; height: 400px;"></div><!--commit情绪图senti-strength-->
+                        <div class="fan" style=" margin-left:280px; width: 1200px; height: 400px;">
+                            <div id="CommitMessage11" style=" width: 400px; height: 400px; float: left"></div>
+                            <div id="CommitMessage12" style=" margin-left:400px;width: 400px; height: 400px; float: left"></div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div id="CodeSentis" style=" margin-left:280px;  display:none;">
                     <select v-model="selectClass" @change="getValue"><!--class生成 -->

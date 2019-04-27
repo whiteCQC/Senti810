@@ -60,19 +60,36 @@ public class GitController {
         List<String> lows=new ArrayList<>();
         List<String> messages=new ArrayList<>();
 
+        List<String> HighCount=new ArrayList<>();
+        List<String> LowCount=new ArrayList<>();
+        int[] hightemp=new int[4];
+        int[] lowtemp=new int[4];
+
         MessageSenti m=null;
         for(int i=0;i<mlist.size();i++) {
             m=mlist.get(i);
             Commitdates.add(m.getDate());
+
             highs.add(String.valueOf(m.getHigh()));
+            hightemp[(int)m.getHigh()]++;
             lows.add(String.valueOf(m.getLow()));
+            lowtemp[-(int)m.getLow()]++;
+
             messages.add(m.getComment());
         }
+        for(int i=0;i<4;i++){
+            HighCount.add(String.valueOf(hightemp[i]));
+            LowCount.add(String.valueOf(lowtemp[i]));
+        }
+
+
         Map<String,List<String>> res=new HashMap<>();
         res.put("Commitdates",Commitdates);
         res.put("highs",highs);
         res.put("lows",lows);
         res.put("commitMessage",messages);
+        res.put("HighCount",HighCount);
+        res.put("LowCount",LowCount);
 
         return res;
     }
