@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service(value="GitService")
 public class GitServiceImpl implements GitService {
@@ -93,17 +90,31 @@ public class GitServiceImpl implements GitService {
     }
 
     @Override
-    public List<Commits> getCommitByAuthor(String owner, String repo, String author) {
-        List<Commits> commits=gh.getCommits(owner,repo);
-        List<Commits> result=new ArrayList<>();
-        for (Commits commit:commits){
-            if (commit.getAuthor().equals(author)){
-                result.add(commit);
+    public Map<String, List<MessageSenti>> getCommitSentiSortbyAuthor(String owner, String repo) {
+        List<Commits> commitsList=gh.getCommits(owner, repo);
+        Map<String, List<MessageSenti>> map=new HashMap<>();
+        for (Commits commits:commitsList){
+            Set<String> keys=map.keySet();
+            if (!keys.contains(commits.getAuthor())){
+
+                List<MessageSenti> list=new ArrayList<>();
+                int[] ints=sc.senti_strength(commits.getMessage());
+                MessageSenti messageSenti=new MessageSenti(ints[0],ints[1],0,commits.getDate().toString(),commits.getMessage());
+                list.add(messageSenti);
+                map.put(commits.getAuthor(),list);
+
+            }else{
+                List<MessageSenti> list=map.get(commits.getAuthor());
+                int[] ints=sc.senti_strength(commits.getMessage());
+                MessageSenti messageSenti=new MessageSenti(ints[0],ints[1],0,commits.getDate().toString(),commits.getMessage());
+                list.add(messageSenti);
+
             }
         }
-        return  result;
-
+        return map;
     }
+
+
 
     @Override
     public GithubUser findGithubUserbyName(String name) {
