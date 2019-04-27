@@ -3,18 +3,40 @@ package com.senti.model.codeComment;
 import java.io.Serializable;
 
 public class ClassSenti implements Serializable {
+    private int gid;
     private String name;
     private double high;
     private double low;
     private String date;
     private String comment;
+    private int type;
 
-    public ClassSenti(String name, double high, double low, String date,String comment) {
+    public ClassSenti(){}
+
+    public ClassSenti(int gid,String name, double high, double low, String date,String comment,int type) {
         this.name = name;
         this.high = high;
         this.low = low;
         this.date = date;
         this.comment=comment;
+        this.gid=gid;
+        this.type=type;
+    }
+
+    public int getGid() {
+        return gid;
+    }
+
+    public void setGid(int gid) {
+        this.gid = gid;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getComment() {

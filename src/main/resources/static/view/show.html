@@ -5,6 +5,7 @@
     <title>Title</title>
     <script src="/js/local/common.js"></script>
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script src="/js/macarons.js"></script>
 
     <link rel="stylesheet" href="/css/style.css" type="text/css"/>
     <link rel="stylesheet" href="/css/bootstrap.css" type="text/css"/>
@@ -17,6 +18,7 @@
     <script src="/js/modernizr.js"></script>
     <link href="/css/Loadingstyle.css" rel="stylesheet">
     <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/flatnav.css"  rel="stylesheet">
 </head>
 <body>
 
@@ -48,9 +50,23 @@
         </nav>
     </aside>
 
+    <!-- header-starts -->
+    <div class="sticky-header header-section ">
+            <!--search-box-->
+            <div class="search-box" style="margin-left: 500px">
+                <form v-on:submit.prevent="searchProject">
+                    <input type="text" id="search_text" placeholder="Search" v-model="toSearch">
+                    <input type="button" id="search_button">
+                </form>
+            </div><!--//end-search-box-->
+
+    </div>
+    <!-- //header-ends -->
+
     <div id="page-wrapper">
         <div class="main-page">
-            <div class="loader" id="loader" style="display:none;">
+
+            <div class="loader" id="loader" style="display:none;"><!--加载动画-->
                 <div class="dot"></div>
                 <div class="dot"></div>
                 <div class="dot"></div>
@@ -58,13 +74,23 @@
                 <div class="dot"></div>
             </div>
             <div class="row-one widgettable">
-                <div id="CommitMessage" style=" margin-left:280px; width: 1200px; height: 800px;display:none;"></div>
+                <div id="CommitMessage" style="display:none;">
+                    <div class="panel-info widget-shadow"  style="margin-left: 230px">
+                        <h3>Senti-Strength</h3>
+                        <div id="CommitMessage10" style=" margin-left:280px; width: 1200px; height: 400px;"></div><!--commit情绪图senti-strength-->
+                        <div class="fan" style=" margin-left:280px; width: 1200px; height: 400px;">
+                            <div id="CommitMessage11" style=" width: 400px; height: 400px; float: left"></div>
+                            <div id="CommitMessage12" style=" margin-left:400px;width: 400px; height: 400px; float: left"></div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div id="CodeSentis" style=" margin-left:280px;  display:none;">
-                    <select v-model="selectClass" @change="getValue">
+                    <select v-model="selectClass" @change="getValue"><!--class生成 -->
                         <option v-for="Aclass in classes">{{ Aclass.name }}</option>
                     </select>
-                    <div id="CodeComment" style="width: 1200px; height: 800px;"></div>
+                    <div id="CodeComment" style="width: 1200px; height: 400px;"></div><!--代码情绪图-->
                     <textarea style="width: 1200px;height: 600px;" readonly="readonly" id="codes"></textarea>
                 </div>
             </div>
@@ -73,7 +99,7 @@
 
 </div>
 
-
+<!--点击图的模态框-->
 <div class="modal fade" id="commitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

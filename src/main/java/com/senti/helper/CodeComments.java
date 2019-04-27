@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CodeComments {
+    private final static String reg="[^0-9a-zA-Z\\u4e00-\\u9fa5.,!?: \\n]";
+
     public List<String> getComment(List<String> list) {// get all comments in list
         List<String> res = new ArrayList<>();
 
@@ -91,7 +93,7 @@ public class CodeComments {
             if (line.contains("//")&&!line.startsWith("*")&&!line.endsWith(";")&&!line.endsWith("}")) {
 
                 int intIndex = line.indexOf("//");
-                String str = line.substring(intIndex+2).trim();
+                String str = line.substring(intIndex+2).replaceAll(reg,"").trim();
                 if (str.length() != 0)
                     res.add(str);
 
@@ -112,7 +114,7 @@ public class CodeComments {
                             String temppart = m.group();
                             complete.append(temppart.substring(1, temppart.length() - 1));
                         }
-                        String comp=complete.toString().trim();
+                        String comp=complete.toString().replaceAll(reg,"").trim();
                         if (comp.length() != 0)
                             res.add(comp);
 

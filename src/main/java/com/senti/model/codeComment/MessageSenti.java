@@ -1,18 +1,38 @@
 package com.senti.model.codeComment;
 
 public class MessageSenti {
+    private int gid;
     private double high;
     private double low;
-    private int count;
     private String date;
     private String comment;
+    private int type;//选用的情绪计算策略
 
-    public MessageSenti(double high, double low, int count, String date, String comment) {
+    public MessageSenti(){}
+
+    public MessageSenti(int gid,double high, double low, String date, String comment,int type) {
+        this.gid=gid;
         this.high = high;
         this.low = low;
-        this.count = count;
         this.date = date;
         this.comment = comment;
+        this.type=type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getGid() {
+        return gid;
+    }
+
+    public void setGid(int gid) {
+        this.gid = gid;
     }
 
     public String getComment() {
@@ -21,14 +41,6 @@ public class MessageSenti {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 
     public double getHigh() {

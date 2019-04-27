@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/local/common.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/SidebarNav.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/custom.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/font-awesome.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/graph.css">
+    <link rel="stylesheet" href="/css/export.css" type="text/css" media="all" />
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+</head>
+<body class="cbp-spmenu-push">
+<div class="main-content" id="Senti">
+    <div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+        <!--left-fixed -navigation-->
+        <aside class="sidebar-left">
+            <nav class="navbar navbar-inverse">
+                <div class="navbar-header">
+                    <h1><a class="navbar-brand" href="/view/show.html"><span class="fa fa-area-chart"></span> Senti</a></h1>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="sidebar-menu">
+                        <li class="header">GITHUB ANALYSE</li>
+                        <li class="treeview">
+                            <a type="button" id="showYear" v-on:click="yeartop">
+                                <i class="fa fa-table"></i>
+                                <span>YearTop5</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a type="button" id="showMonth" v-on:click="monthtop">
+                                <i class="fa fa-table"></i>
+                                <span>MonthTop1</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a type="button" id="showMonthChart" v-on:click="monthchart">
+                                <i class="fa fa-pie-chart"></i>
+                                <span>MonthChart</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </nav>
+        </aside>
+    </div>
+    <!--left-fixed -navigation-->
+
+
+
+
+
+
+
+    <!-- main content start-->
+    <div id="page-wrapper">
+        <div class="main-page">
+            <div class="tables" id="yeartable">
+                <h2 class="title1">YYearTop5</h2>
+                <div class="panel-body widget-shadow">
+                    <h4>2019:</h4>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Positive</th>
+                            <th>Negative</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template v-for="(item,index) in year2019dataP">
+                            <tr>
+                                <th scope="row">{{ index }}</th>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(year2019dataP[index])'>{{ item }}</button></td>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(year2019dataN[index])'>{{ year2019dataN[index] }}</button></td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bs-example widget-shadow" data-example-id="hoverable-table">
+                    <h4>2018:</h4>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Positive</th>
+                            <th>Negative</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template v-for="(item,index) in year2018dataP">
+                            <tr>
+                                <th scope="row">{{ index }}</th>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(year2018dataP[index])'>{{ item }}</button></td>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(year2018dataN[index])'>{{ year2018dataN[index] }}</button></td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bs-example widget-shadow" data-example-id="hoverable-table">
+                    <h4>2017:</h4>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Positive</th>
+                            <th>Negative</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template v-for="(item,index) in year2017dataP">
+                            <tr>
+                                <th scope="row">{{ index }}</th>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(year2017dataP[index])'>{{ item }}</button></td>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(year2017dataN[index])'>{{ year2017dataN[index] }}</button></td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table" id="monthtable">
+                <h2 class="title1">YMonthTop1</h2>
+                <div class="panel-body widget-shadow" data-example-id="contextual-table">
+                    <h4>2019:</h4>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Positive</th>
+                            <th>Negative</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template v-for="(item,index) in month2019dataP" v-if="index<3">
+                            <tr v-if="index%2==0" class="active">
+                                <th scope="row">{{ index+1}}</th>
+                                <td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(month2019dataP[index])'>{{ item }}</button></td>
+                                <td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(month2019dataN[index])'>{{ month2019dataN[index] }}</button></td>
+                            </tr>
+                            <tr v-if="index%2!=0">
+                                <th scope="row">{{ index+1}}</th>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(month2019dataP[index])'>{{ item }}</button></td>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(month2019dataN[index])'>{{ month2019dataN[index] }}</button></td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bs-example widget-shadow"> </div>
+                <div class="panel-body widget-shadow" data-example-id="contextual-table">
+                    <h4>2018:</h4>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Positive</th>
+                            <th>Negative</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template v-for="(item,index) in month2018dataP">
+                            <tr v-if="index%2==0" class="active">
+                                <th scope="row">{{ index+1}}</th>
+                                <td><button style="border:none; background-color: #f6f6f6" @click = 'sendurl(month2018dataP[index])'>{{ item }}</button></td>
+                                <td><button style="border:none; background-color: #f6f6f6" @click = 'sendurl(month2018dataN[index])'>{{ month2018dataN[index] }}</button></td>
+                            </tr>
+                            <tr v-if="index%2!=0" >
+                                <th scope="row">{{ index+1}}</th>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(month2018dataP[index])'>{{ item }}</button></td>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(month2018dataN[index])'>{{ month2018dataN[index] }}</button></td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bs-example widget-shadow"> </div>
+                <div class="panel-body widget-shadow" data-example-id="contextual-table">
+                    <h4>2017:</h4>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Positive</th>
+                            <th>Negative</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template v-for="(item,index) in month2017dataP">
+                            <tr v-if="index%2==0" class="active">
+                                <th scope="row">{{ index+1}}</th>
+                                <td><button style="border:none; background-color: #f6f6f6" @click = 'sendurl(month2017dataP[index])'>{{ item }}</button></td>
+                                <td><button style="border:none; background-color: #f6f6f6" @click = 'sendurl(month2017dataN[index])'>{{ month2017dataN[index] }}</button></td>
+                            </tr>
+                            <tr v-if="index%2!=0">
+                                <th scope="row">{{ index+1}}</th>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(month2017dataP[index])'>{{ item }}</button></td>
+                                <td><button style="border:none; background-color: white" @click = 'sendurl(month2017dataN[index])'>{{ month2017dataN[index] }}</button></td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table" id="monthcharts" style=" margin-left:50px; width: 1200px; height: 600px;display:none;">
+
+            </div>
+        </div>
+    </div>
+    <!--footer-->
+    <div class="footer">
+        <p>Copyright &copy; 2018.Company name All rights reserved.<a target="_blank" href="http://www.genban.org/">跟版网模板</a></p>
+    </div>
+    <!--//footer-->
+</div>
+
+<script src="/js/local/details.js"></script>
+<script src="/js/jquery.nicescroll.js"></script>
+<script src="/js/scripts.js"></script>
+<script src="/js/bootstrap.js"> </script>
+</body>
+</html>
