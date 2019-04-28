@@ -19,6 +19,7 @@
     <link href="/css/Loadingstyle.css" rel="stylesheet">
     <link href="/css/normalize.css" rel="stylesheet">
     <link href="/css/flatnav.css"  rel="stylesheet">
+    <link rel="stylesheet" href="/css/themes/default/style.min.css" />
 </head>
 <body>
 
@@ -97,11 +98,12 @@
 
 
                 <div id="CodeSentis" style=" margin-left:280px;  display:none;">
-                    <select v-model="selectClass" @change="getValue"><!--class生成 -->
-                        <option v-for="Aclass in classes">{{ Aclass.name }}</option>
-                    </select>
-                    <div id="CodeComment" style="width: 1200px; height: 400px;"></div><!--代码情绪图-->
-                    <textarea style="width: 1200px;height: 600px;" readonly="readonly" id="codes"></textarea>
+                    <div>
+                        <div id="allClasses" style="float: left;"></div>
+                        <div id="CodeComment" style="width: 1200px; height: 400px;float: left;"></div><!--代码情绪图-->
+                    </div>
+
+                    <textarea style="width: 1200px;height: 600px;margin-left: 280px" readonly="readonly" id="codes"></textarea>
                 </div>
             </div>
         </div>
@@ -173,7 +175,7 @@
         </div>
     </div>
 </div>
-
+<script src="/js/jstree.min.js"></script>
 <script src="/js/local/show.js"></script>
 </body>
 </html>

@@ -206,8 +206,8 @@ public class GitServiceImpl implements GitService {
 
                 int total=calist.size()+cdlist.size();
                 if (total != 0){
-                    map.get(name).add(new ClassSenti(gid,name, f(high), f(low), sdf.format(c.getDate()),
-                            ("Add:"+add+"\n"+"Del:"+del).replaceAll("\n","<br>"),1));
+                    map.get(name).add(new ClassSenti(gid,name, f(high), f(low),sdf.format(c.getDate()),
+                            ("Add:"+add+"\n"+"Del:"+del).replaceAll("\n","<br>")));
                     high=0;
                     low=0;
                 }
