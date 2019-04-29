@@ -4,9 +4,9 @@ public class MessageSenti {
     private int gid;
     private double high;
     private double low;
-    private int score;
     private String date;
     private String comment;
+    private String sha;
 
     public MessageSenti(){}
 
@@ -17,21 +17,21 @@ public class MessageSenti {
         this.comment=comment;
     }
 
-    public MessageSenti(int gid,double high, double low, int score, String date, String comment) {
+    public MessageSenti(int gid,double high, double low, String date, String comment,String sha) {
         this.gid=gid;
         this.high = high;
         this.low = low;
         this.date = date;
-        this.score=score;
         this.comment = comment;
+        this.sha=sha;
     }
 
-    public int getScore() {
-        return score;
+    public String getSha() {
+        return sha;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setSha(String sha) {
+        this.sha = sha;
     }
 
     public int getGid() {

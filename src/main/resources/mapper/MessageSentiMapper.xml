@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.senti.dao.SentiDao">
   <insert id="insertMessages" parameterType="java.util.List">
-    insert into messagesenti (gid, high, low,score,date,comment) values
+    insert into messagesenti (gid, high, low,date,comment,sha) values
     <foreach collection="list" item="item" index="index" separator=",">
-      (#{item.gid},#{item.high},#{item.low},#{item.score},#{item.date},#{item.comment})
+      (#{item.gid},#{item.high},#{item.low},#{item.date},#{item.comment},#{item.sha})
     </foreach>
   </insert>
   <select id="GetMessages" resultType="com.senti.model.codeComment.MessageSenti">

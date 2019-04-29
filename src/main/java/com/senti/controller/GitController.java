@@ -55,31 +55,39 @@ public class GitController {
         String repo=(String)session.getAttribute("repo");
 
         List<MessageSenti> mlist=gitService.getCommitSenti(owner, repo);
+
+        Map<String,List<String>> relatedClass=gitService.getCommitRelatedClasses(owner,repo);
+
+        //gitService.getTopClasses(relatedClass,mlist,owner,repo);
+
         List<String> Commitdates=new ArrayList<>();
         List<String> highs=new ArrayList<>();
         List<String> lows=new ArrayList<>();
         List<String> messages=new ArrayList<>();
-        List<String> scores=new ArrayList<>();
 
         List<String> HighCount=new ArrayList<>();
         List<String> LowCount=new ArrayList<>();
-        List<String> ScoreCount=new ArrayList<>();
+        List<String> relatedClasses=new ArrayList<>();
         int[] hightemp=new int[4];
         int[] lowtemp=new int[4];
-        int[] scoretemp=new int[5];
 
         MessageSenti m=null;
         for(int i=0;i<mlist.size();i++) {
             m=mlist.get(i);
             Commitdates.add(m.getDate());
 
+            List<String> tempClasses=relatedClass.get(m.getSha());
+            String classes="RelatedClasses:";
+            for(String s:tempClasses){
+                classes=classes+"<br>"+s;
+            }
+            relatedClasses.add(classes);
+
             highs.add(String.valueOf(m.getHigh()));
             hightemp[(int)m.getHigh()]++;
             lows.add(String.valueOf(m.getLow()));
             lowtemp[-(int)m.getLow()]++;
 
-            scores.add(String.valueOf(m.getScore()));
-            scoretemp[m.getScore()]++;
 
             messages.add(m.getComment());
         }
@@ -87,9 +95,7 @@ public class GitController {
             HighCount.add(String.valueOf(hightemp[i]));
             LowCount.add(String.valueOf(lowtemp[i]));
         }
-        for(int i=0;i<5;i++){
-            ScoreCount.add(String.valueOf(scoretemp[i]));
-        }
+
 
 
 
@@ -100,8 +106,7 @@ public class GitController {
         res.put("commitMessage",messages);
         res.put("HighCount",HighCount);
         res.put("LowCount",LowCount);
-        res.put("Scores",scores);
-        res.put("ScoreCount",ScoreCount);
+        res.put("relatedClasses",relatedClasses);
 
         return res;
     }

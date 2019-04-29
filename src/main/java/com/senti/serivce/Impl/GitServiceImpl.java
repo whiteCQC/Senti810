@@ -5,10 +5,7 @@ import com.senti.dao.SentiDao;
 import com.senti.helper.GitHelper;
 import com.senti.helper.SentiCal;
 import com.senti.model.GithubUser;
-import com.senti.model.codeComment.ClassSenti;
-import com.senti.model.codeComment.ClassVariation;
-import com.senti.model.codeComment.Commits;
-import com.senti.model.codeComment.MessageSenti;
+import com.senti.model.codeComment.*;
 import com.senti.serivce.GitService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -69,12 +66,11 @@ public class GitServiceImpl implements GitService {
                 long target = c.getDate().getTime();
 
                 score = sc.senti_strength(c.getMessage());
-                standf= sc.stanford_analyse(c.getMessage());
 
                 high = score[0];
                 low = score[1];
                 String date = sdf.format(target);
-                mlist.add(new MessageSenti(gid, high, low, standf,date, c.getMessage()));
+                mlist.add(new MessageSenti(gid, high, low,date, c.getMessage(),c.getSha()));
             }
         }
         sentiDao.insertMessages(mlist);
@@ -135,6 +131,11 @@ public class GitServiceImpl implements GitService {
             return null;
         }
         return githubUser;
+    }
+
+    @Override
+    public Map<String, List<String>> getCommitRelatedClasses(String owner, String repo) {
+        return gh.getCommitChangedFile(owner,repo);
     }
 
     @Override
@@ -229,6 +230,36 @@ public class GitServiceImpl implements GitService {
     @Override
     public Map<String, List<String>> getClassCode(String owner, String repo) {
         return gh.getClassCode(owner, repo);
+    }
+
+    @Override
+    public List<List<String>> getTopClasses(Map<String, List<String>> map, List<MessageSenti> mlist,String owner,String repo) {
+        List<String> presentJava=gh.getPresentJava(owner,repo);
+
+        Map<String, Caltopsenti> res=new HashMap<>();
+
+        for(MessageSenti m:mlist){
+            int high=(int)m.getHigh();
+            int low=(int)m.getLow();
+
+            for(String c:map.get(m.getSha())){
+                if(presentJava.contains(c)){
+
+                    if(res.containsKey(c)){
+
+                    }else{
+                    }
+                    res.get(c).add(high);
+                    res.get(c).add(low);
+                }
+            }
+        }
+
+        List<String> topHigh=new ArrayList<>();
+        List<String> topLow=new ArrayList<>();
+        List<List<String>> l=new ArrayList<>();
+
+        return l;
     }
 
     private double f(double i) {

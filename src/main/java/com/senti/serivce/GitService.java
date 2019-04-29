@@ -17,8 +17,11 @@ public interface GitService {
 
     GithubUser findGithubUserbyName(String name);
 
+    Map<String,List<String>> getCommitRelatedClasses(String owner, String repo);
 
     Map<String,List<ClassSenti>> getClassSenti(String owner, String repo);
 
     Map<String,List<String>> getClassCode(String owner, String repo);
+
+    List<List<String>> getTopClasses(Map<String,List<String>> map,List<MessageSenti> mlist,String owner,String repo);
 }
