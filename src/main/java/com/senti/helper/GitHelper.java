@@ -17,6 +17,9 @@ import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 
@@ -275,4 +278,110 @@ public class GitHelper {
         }
 
     }
+
+    public List<String> getPresentJava(String owner,String repo){
+        String filepath = loaclPathprefix + owner + "/" + repo;
+        List<String> presentJava = fd.getPresentJava(filepath);
+        return presentJava;
+    }
+
+    public Map<String,List<String>> getCommitChangedFile(String owner, String repo){
+        Map<String,List<String>> map=new HashMap<>();
+
+        Git git = null;
+        String localRepoGitConfig = loaclPathprefix + owner + "/" + repo + "/.git";
+
+
+
+        List<RevCommit> rv = new ArrayList<>();
+        try {
+            git = Git.open(new File(localRepoGitConfig));
+            Iterable<RevCommit> iterable = git.log().call();
+            Iterator<RevCommit> iter = iterable.iterator();
+
+            while (iter.hasNext()) {
+                rv.add(0, iter.next());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Repository repository = git.getRepository();
+
+        RevCommit first = rv.get(0);
+
+        try (TreeWalk treeWalk = new TreeWalk(repository)) {//处理第一次commit内容
+            treeWalk.addTree(first.getTree());
+            treeWalk.setRecursive(true);
+
+            List<String> firsts=new ArrayList<>();
+            while (treeWalk.next()) {
+                String filename = treeWalk.getPathString();
+                if(filename.endsWith(".java"))
+                    firsts.add(filename);
+
+            }
+            map.put(first.getName(),firsts);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        for(int i=1;i<rv.size();i++){
+            if(!rv.get(i).getFullMessage().startsWith("Merge")){
+                List<String> list=listDiffFile(repository,git,rv.get(i).getName(),rv.get(i-1).getName());
+                map.put(rv.get(i).getName(),list);
+            }
+        }
+        return map;
+    }
+
+
+    private List<String> listDiffFile(Repository repository, Git git, String oldCommit, String newCommit) {
+        List<String> list=new ArrayList<>();
+        try{
+            final List<DiffEntry> diffs = git.diff()
+                    .setOldTree(prepareTreeParser(repository, oldCommit))
+                    .setNewTree(prepareTreeParser(repository, newCommit))
+                    .call();
+            for (DiffEntry diff : diffs) {
+                String path=diff.getNewPath();
+                if(path.endsWith(".java"))
+                    list.add(path);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        return list;
+    }
+
+    private static AbstractTreeIterator prepareTreeParser(Repository repository, String objectId) throws IOException {
+        // from the commit we can build the tree which allows us to construct the TreeParser
+        //noinspection Duplicates
+        try (RevWalk walk = new RevWalk(repository)) {
+            RevCommit commit = walk.parseCommit(repository.resolve(objectId));
+            RevTree tree = walk.parseTree(commit.getTree().getId());
+
+            CanonicalTreeParser treeParser = new CanonicalTreeParser();
+            try (ObjectReader reader = repository.newObjectReader()) {
+                treeParser.reset(reader, tree.getId());
+            }
+
+            walk.dispose();
+
+            return treeParser;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 }

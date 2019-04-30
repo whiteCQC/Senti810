@@ -55,24 +55,58 @@ public class GitController {
         String repo=(String)session.getAttribute("repo");
 
         List<MessageSenti> mlist=gitService.getCommitSenti(owner, repo);
+
+        Map<String,List<String>> relatedClass=gitService.getCommitRelatedClasses(owner,repo);
+
+        //gitService.getTopClasses(relatedClass,mlist,owner,repo);
+
         List<String> Commitdates=new ArrayList<>();
         List<String> highs=new ArrayList<>();
         List<String> lows=new ArrayList<>();
         List<String> messages=new ArrayList<>();
 
+        List<String> HighCount=new ArrayList<>();
+        List<String> LowCount=new ArrayList<>();
+        List<String> relatedClasses=new ArrayList<>();
+        int[] hightemp=new int[4];
+        int[] lowtemp=new int[4];
+
         MessageSenti m=null;
         for(int i=0;i<mlist.size();i++) {
             m=mlist.get(i);
             Commitdates.add(m.getDate());
+
+            List<String> tempClasses=relatedClass.get(m.getSha());
+            String classes="RelatedClasses:";
+            for(String s:tempClasses){
+                classes=classes+"<br>"+s;
+            }
+            relatedClasses.add(classes);
+
             highs.add(String.valueOf(m.getHigh()));
+            hightemp[(int)m.getHigh()]++;
             lows.add(String.valueOf(m.getLow()));
+            lowtemp[-(int)m.getLow()]++;
+
+
             messages.add(m.getComment());
         }
+        for(int i=0;i<4;i++){
+            HighCount.add(String.valueOf(hightemp[i]));
+            LowCount.add(String.valueOf(lowtemp[i]));
+        }
+
+
+
+
         Map<String,List<String>> res=new HashMap<>();
         res.put("Commitdates",Commitdates);
         res.put("highs",highs);
         res.put("lows",lows);
         res.put("commitMessage",messages);
+        res.put("HighCount",HighCount);
+        res.put("LowCount",LowCount);
+        res.put("relatedClasses",relatedClasses);
 
         return res;
     }
@@ -99,12 +133,38 @@ public class GitController {
         JSONArray json=new JSONArray();
         List<String> classes=new ArrayList<>(map1.keySet());
 
-        for(String s:classes){
-            JSONObject node = new JSONObject();
-            node.put("name",s);
+        List<String> list=new ArrayList<>();
+        Map<String,String> paths=new HashMap<>();
 
-            json.add(node);
+        for(String s:classes){
+
+            String[] temp= ("#/"+s).split("/");
+            int len=temp.length;
+            for(int i=0;i<len-2;i++){
+                String ss=temp[i]+"/"+temp[i+1];
+                if(!list.contains(ss)){
+                    list.add(ss);
+                    JSONObject node = new JSONObject();
+                    node.put("id",temp[i+1]);
+                    node.put("parent",temp[i]);
+                    node.put("text",temp[i+1]);
+                    json.add(node);
+                }
+            }
+            String ss=temp[len-2]+"/"+temp[len-1];
+            if(!list.contains(ss)){
+                list.add(ss);
+                JSONObject node = new JSONObject();
+                node.put("id",temp[len-1]);
+                node.put("parent",temp[len-2]);
+                node.put("text",temp[len-1]);
+                json.add(node);
+                paths.put(temp[len-1],s);
+            }
+
         }
+
+        session.setAttribute("TreePaths",paths);
         return json.toString();
     }
 
@@ -113,8 +173,9 @@ public class GitController {
     public Map<String,List<String>> getSingleSenti(@PathVariable("selectClass")String selectClass,HttpServletRequest request){
         HttpSession session = request.getSession(true);
 
-        selectClass=selectClass.replace(".java","");
-        selectClass=selectClass.replace(".","/")+".java";
+//        selectClass=selectClass.replace(".java","");
+//        selectClass=selectClass.replace(".","/")+".java";
+        Map<String,String> paths=(Map<String,String>)session.getAttribute("TreePaths");
 
         Map<String, List<ClassSenti>> map=(Map<String, List<ClassSenti>>)session.getAttribute("ClassSenti");
 
@@ -124,7 +185,9 @@ public class GitController {
         List<String> lows=new ArrayList<>();
         List<String> codeComments=new ArrayList<>();
 
-        List<ClassSenti> lcs=map.get(selectClass);
+        String path=paths.get(selectClass);
+
+        List<ClassSenti> lcs=map.get(path);
 
         for(ClassSenti c:lcs){
             dates.add(c.getDate());
@@ -139,7 +202,7 @@ public class GitController {
         res.put("codeComments",codeComments);
 
         Map<String, List<String>> allCodes=(Map<String, List<String>>)session.getAttribute("Allcodes");
-        List<String> codes=allCodes.get(selectClass);
+        List<String> codes=allCodes.get(path);
 
         res.put("codes",codes);
 
