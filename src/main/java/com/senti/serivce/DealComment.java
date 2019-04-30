@@ -41,5 +41,9 @@ public interface DealComment {
     /*返回GITHUB单个issue内按照评论顺序的评论*/
     public ArrayList<ArrayList<String>> getGIn_order(String url);
 
+    public ArrayList<ArrayList<String>> getHisYear(int userid, String url, String time);
+
+    public ArrayList<ArrayList<String>> getHisMonth(int userid, String url, String time);
+
 }
 

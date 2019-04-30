@@ -1,56 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>搜索界面</title>
+	<title>Title</title>
+	<script src="/js/local/common.js"></script>
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+
+	<link rel="stylesheet" href="/css/style.css" type="text/css"/>
+	<link rel="stylesheet" href="/css/bootstrap.css" type="text/css"/>
+	<link rel="stylesheet" href="/css/SidebarNav.min.css" type="text/css"/>
+	<link rel="stylesheet" href="/css/custom.css" type="text/css"/>
+	<link rel="stylesheet" href="/css/font-awesome.css" type="text/css"/>
+	<link rel="stylesheet" href="/css/graph.css">
+	<link rel="stylesheet" href="/css/export.css" type="text/css" media="all" />
+	<link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+	<style>
+		form {
+			position: relative;
+			width: 300px;
+			margin: 0 auto;
+			padding-top:100px;
+		}
+	</style>
 </head>
-<style>
-	#header {
-		background-color:black;
-		color:white;
-		text-align:center;
-		padding:5px;
-	}
-	#leftDiv {
-		line-height:80px;
-		background-color:#eeeeee;
-		height:850px;
-		width:300px;
-		float:left;
-		padding:5px;
-		font-size:20px;
-	}
+<body class="cbp-spmenu-push">
+<div class="main-content" id="Senti">
+	<div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+		<!--left-fixed -navigation-->
+		<aside class="sidebar-left">
+			<nav class="navbar navbar-inverse">
+				<div class="navbar-header">
+					<h1><a class="navbar-brand" href="/search/input"><span class="fa fa-area-chart"></span> Senti</a></h1>
+				</div>
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="sidebar-menu">
+						<li class="header">GITHUB ANALYSE</li>
+						<li class="treeview">
+							<a href="/search/input">
+								<i class="fa fa-table"></i>
+								<span>Search</span>
+							</a>
+						</li>
+						<li class="treeview">
+							<a type="button" id="History" v-on:click="history">
+								<i class="fa fa-table"></i>
+								<span>History</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- /.navbar-collapse -->
+			</nav>
+		</aside>
+	</div>
+	<!--left-fixed -navigation-->
 
-	#show {
-		width:350px;
-		height:850px;
-		float:left;
-		padding-top:20px;
-		padding-left:100px;
-	}
 
-	a{text-decoration:none}
 
-</style>
-<body>
-<div id="header">
-	<p>个人</p>
+
+
+
+
+	<!-- main content start-->
+	<div id="page-wrapper">
+		<div class="main-page">
+			<div class="tables" id="searchdiv">
+				<h2 class="title1">YSearch</h2>
+				<form action="/search/history" method="post">
+					<input type="text" name="url" placeholder="请输入您要搜索的内容..."><input type="submit" value="搜索">
+				</form>
+			</div>
+
+			<div class="table" id="historySearch">
+				<h2 class="title1">YHistory</h2>
+				<div class="panel-body widget-shadow" data-example-id="contextual-table">
+					<table class="table">
+						<thead>
+						<tr>
+							<th>#</th>
+							<th>url</th>
+							<th>time</th>
+						</tr>
+						</thead>
+						<tbody>
+						<template v-for="(item,index) in time">
+							<tr v-if="index%2==0" class="active">
+								<th scope="row">{{ index+1}}</th>
+								<td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(beforeurl[index], item)'>{{beforeurl[index]}}</button></td>
+								<td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(beforeurl[index], item)'>{{item}}</button></td>
+								<td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(beforeurl[index], item)'>more</button></td>
+							</tr>
+							<tr v-if="index%2!=0">
+								<th scope="row">{{ index+1}}</th>
+								<td><button style="border:none; background-color: white" @click = 'sendurl(beforeurl[index], item)'>{{beforeurl[index]}}</button></td>
+								<td><button style="border:none; background-color: white" @click = 'sendurl(beforeurl[index], item)'>{{item}}</button></td>
+								<td><button style="border:none; background-color: white" @click = 'sendurl(beforeurl[index], item)'>more</button></td>
+							</tr>
+						</template>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+			<div class="clearfix" style="height:370px"> </div>
+		</div>
+	</div>
+	<!--footer-->
+	<div class="footer">
+		<p> </p>
+	</div>
+	<!--//footer-->
 </div>
 
-<div id="leftDiv">
-	<a href="SearchView.html">搜索界面</a><br/>
-	<a href="History.jsp">搜索记录</a><br/>
-</div>
-
-<div id="show">
-	<form action="/search/history" method="post">
-		<input type="text" name="content"><input type="submit" value="搜索">
-		<!--			<tr><td><input type="checkbox" value="commit" >commit</td></tr>
-                        <tr><td><input type="checkbox" value="comment" >comment<br></td></tr>   -->
-
-
-	</form>
-</div>
-
+<script src="/js/local/searchview.js"></script>
+<script src="/js/jquery.nicescroll.js"></script>
+<script src="/js/scripts.js"></script>
+<script src="/js/bootstrap.js"> </script>
 </body>
 </html>
+

@@ -155,6 +155,7 @@ public class CrawlCommentImpl extends BreadthCrawler {
 
                 }
             }
+            dao.connSQL();
             for(int m=0;m<infors.size();m++) {
                 String allInfor=infors.get(m);
                 int size=infors.size();
@@ -190,6 +191,7 @@ public class CrawlCommentImpl extends BreadthCrawler {
 
             String sql2="insert into gitissue values ('"+url.substring(0, url.indexOf("issues")-1)+"', '"+url+"');";
             dao.update(sql2);
+            dao.deconnSQL();
         }catch(Exception e){
             System.out.println("处理Github数据失败");
         }
