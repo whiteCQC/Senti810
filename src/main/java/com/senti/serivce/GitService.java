@@ -21,4 +21,6 @@ public interface GitService {
     Map<String,List<ClassSenti>> getClassSenti(String owner, String repo);
 
     Map<String,List<String>> getClassCode(String owner, String repo);
+
+    List<MessageSenti> getCommitSentibyAuthor(String owner, String repo, String author);
 }

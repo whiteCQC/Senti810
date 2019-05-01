@@ -16,9 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +32,8 @@ public class ContributorsController  {
 
     @Autowired
     GitService gitService;
-    @GetMapping("/contributors")
-    public String get(Model model){
-        String repo;
-        String owner;
-
-        repo="WaveFunctionCollapse";
-        owner="mxgmn";
-
+    @GetMapping("/contributors/{owner}/{repo}")
+    public String get(@PathVariable("owner") String owner,@PathVariable("repo") String repo, Model model){
 
         List<MessageSenti> messageSentis=gitService.getCommitSenti(owner,repo);
         Map<String,List<MessageSenti>> map=gitService.getCommitSentiSortbyAuthor(owner,repo);
@@ -45,11 +41,21 @@ public class ContributorsController  {
 
         model.addAttribute("messlist",messageSentis);
         model.addAttribute("map",map);
-
-
+        model.addAttribute("owner",owner);
+        model.addAttribute("repo",repo);
 
         return "/contributors";
 
-
     }
+    @GetMapping("/contributors/{owner}/{repo}/{author}")
+    public String get(@PathVariable("owner") String owner,@PathVariable("repo") String repo,@PathVariable("author") String author, Model model){
+        List<MessageSenti> messageSentis=gitService.getCommitSentibyAuthor(owner,repo,author);
+
+        model.addAttribute("list",messageSentis);
+
+
+
+        return "/author";
+    }
+
 }
