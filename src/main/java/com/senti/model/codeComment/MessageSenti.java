@@ -6,32 +6,32 @@ public class MessageSenti {
     private double low;
     private String date;
     private String comment;
-    private int type;//选用的情绪计算策略
+    private String sha;
 
     public MessageSenti(){}
 
-
-    public MessageSenti(double high, double low, String date, String comment) {
-        this.high = high;
-        this.low = low;
-        this.date = date;
-        this.comment = comment;
+    public MessageSenti(double high, double low,String date, String comment){
+        this.high=high;
+        this.low=low;
+        this.date=date;
+        this.comment=comment;
     }
-    public MessageSenti(int gid,double high, double low, String date, String comment,int type) {
+
+    public MessageSenti(int gid,double high, double low, String date, String comment,String sha) {
         this.gid=gid;
         this.high = high;
         this.low = low;
         this.date = date;
         this.comment = comment;
-        this.type=type;
+        this.sha=sha;
     }
 
-    public int getType() {
-        return type;
+    public String getSha() {
+        return sha;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setSha(String sha) {
+        this.sha = sha;
     }
 
     public int getGid() {

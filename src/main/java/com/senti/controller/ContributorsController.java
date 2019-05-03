@@ -3,6 +3,7 @@ package com.senti.controller;
 import com.senti.model.GithubUser;
 import com.senti.model.codeComment.Commits;
 import com.senti.model.codeComment.MessageSenti;
+import com.senti.model.codeComment.MessageSentihht;
 import com.senti.serivce.GitService;
 import com.senti.serivce.GithubService;
 import org.json.simple.JSONArray;
@@ -35,8 +36,8 @@ public class ContributorsController  {
     @GetMapping("/contributors/{owner}/{repo}")
     public String get(@PathVariable("owner") String owner,@PathVariable("repo") String repo, Model model){
 
-        List<MessageSenti> messageSentis=gitService.getCommitSenti(owner,repo);
-        Map<String,List<MessageSenti>> map=gitService.getCommitSentiSortbyAuthor(owner,repo);
+        List<MessageSentihht> messageSentis=gitService.getCommitSentihht(owner,repo);
+        Map<String,List<MessageSentihht>> map=gitService.getCommitSentiSortbyAuthor(owner,repo);
 
 
         model.addAttribute("messlist",messageSentis);
@@ -49,7 +50,7 @@ public class ContributorsController  {
     }
     @GetMapping("/contributors/{owner}/{repo}/{author}")
     public String get(@PathVariable("owner") String owner,@PathVariable("repo") String repo,@PathVariable("author") String author, Model model){
-        List<MessageSenti> messageSentis=gitService.getCommitSentibyAuthor(owner,repo,author);
+        List<MessageSentihht> messageSentis=gitService.getCommitSentibyAuthor(owner,repo,author);
 
         model.addAttribute("list",messageSentis);
 

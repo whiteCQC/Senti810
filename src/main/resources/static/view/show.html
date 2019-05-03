@@ -19,6 +19,7 @@
     <link href="/css/Loadingstyle.css" rel="stylesheet">
     <link href="/css/normalize.css" rel="stylesheet">
     <link href="/css/flatnav.css"  rel="stylesheet">
+    <link rel="stylesheet" href="/css/themes/default/style.min.css" />
 </head>
 <body>
 
@@ -75,6 +76,18 @@
             </div>
             <div class="row-one widgettable">
                 <div id="CommitMessage" style="display:none;">
+                    <div class="panel-info widget-shadow"  style="margin-left: 230px"> <!-- 推荐关注类 -->
+                        <h3>推荐关注类</h3>
+                        <div><h5>高情绪值类（以下类可能为主要功能类/质量较高类）</h5>
+
+                        </div>
+                        <div><h5>低情绪值类（以下类可能质量存在问题/较多异常处理类）</h5>
+
+                        </div>
+                    </div>
+
+                    <br>
+
                     <div class="panel-info widget-shadow"  style="margin-left: 230px">
                         <h3>Senti-Strength</h3>
                         <div id="CommitMessage10" style=" margin-left:280px; width: 1200px; height: 400px;"></div><!--commit情绪图senti-strength-->
@@ -86,12 +99,18 @@
                 </div>
 
 
-                <div id="CodeSentis" style=" margin-left:280px;  display:none;">
-                    <select v-model="selectClass" @change="getValue"><!--class生成 -->
-                        <option v-for="Aclass in classes">{{ Aclass.name }}</option>
-                    </select>
-                    <div id="CodeComment" style="width: 1200px; height: 400px;"></div><!--代码情绪图-->
-                    <textarea style="width: 1200px;height: 600px;" readonly="readonly" id="codes"></textarea>
+                <div id="CodeSentis" style="display:none;">
+                    <div class="panel-info widget-shadow"  style="margin-left: 230px">
+                        <table width="1600px" border="0">
+                            <tr>
+                                <td rowspan="2"> <div id="allClasses" style="height: 1200px"></div></td>
+                                <td><div id="CodeComment" style="width: 1000px; height: 350px;"></div><!--代码情绪图--></td>
+                            </tr>
+                            <tr>
+                                <td><textarea style="width: 800px;height: 400px;margin-left: 100px" readonly="readonly" id="codes"></textarea></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,7 +119,7 @@
 </div>
 
 <!--点击图的模态框-->
-<div class="modal fade" id="commitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="commitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><!-- senti-strength commit -->
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -120,6 +139,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -140,7 +160,7 @@
         </div>
     </div>
 </div>
-
+<script src="/js/jstree.min.js"></script>
 <script src="/js/local/show.js"></script>
 </body>
 </html>

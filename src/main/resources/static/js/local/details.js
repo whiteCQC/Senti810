@@ -32,6 +32,10 @@ new Vue({
         month2018dataN:[],
         month2017dataN:[]
     },
+    mounted:function(){
+        this.yeartop();
+
+    },
     methods:{
         yeartop: function () {
             self = this;

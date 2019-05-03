@@ -2202,6 +2202,56 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
+    public ArrayList<ArrayList<String>> getHisYear(int userid, String url, String time){
+        ArrayList<ArrayList<String>> res = new ArrayList<ArrayList<String>>();
+        try {
+            ArrayList<ArrayList<String>> info = dao.getHistoryYear(userid, url, time);
+            ArrayList<String> temp17 = new ArrayList<String>();
+            ArrayList<String> temp18 = new ArrayList<String>();
+            ArrayList<String> temp19 = new ArrayList<String>();
+            for (int i = 0; i < info.size(); i++) {
+                if (i < 10) {
+                    temp17.add(info.get(i).get(3));
+                } else if (i >= 10 && i < 20) {
+                    temp18.add(info.get(i).get(3));
+                } else {
+                    temp19.add(info.get(i).get(3));
+                }
+            }
+            res.add(temp17);
+            res.add(temp18);
+            res.add(temp19);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    public ArrayList<ArrayList<String>> getHisMonth(int userid, String url, String time){
+        ArrayList<ArrayList<String>> res = new ArrayList<ArrayList<String>>();
+        try {
+            ArrayList<ArrayList<String>> info = dao.getHistoryMonth(userid, url, time);
+            ArrayList<String> temp17 = new ArrayList<String>();
+            ArrayList<String> temp18 = new ArrayList<String>();
+            ArrayList<String> temp19 = new ArrayList<String>();
+            for (int i = 0; i < info.size(); i++) {
+                if (i < 24) {
+                    temp17.add(info.get(i).get(3));
+                } else if (i >= 24 && i < 48) {
+                    temp18.add(info.get(i).get(3));
+                } else {
+                    temp19.add(info.get(i).get(3));
+                }
+            }
+            res.add(temp17);
+            res.add(temp18);
+            res.add(temp19);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
     public static void main(String[] args){
         DealCommentImpl da=new DealCommentImpl();
         ArrayList<ArrayList<String>> res=da.getGMonthTop("https://github.com/TheAlgorithms/C");

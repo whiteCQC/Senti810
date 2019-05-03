@@ -305,10 +305,21 @@
                             console.log("data-list-" + id.split('-')[1]);
                             var comment = document.getElementById("data-list-" + id.split('-')[1]);
                             var politeness = document.createElement("div");
-                            politeness.textContent = json_data;
                             var test_data = JSON.parse(json_data);
                             console.log(test_data['label']);
                             politeness.setAttribute("id", id.split('-')[1] + "politness");
+                            console.log(json_data);
+                            if (test_data['label']=='polite') {
+                                politeness.innerText = "礼貌的";
+                            }
+                            else if (test_data['label']=='neutral'){
+                                politeness.innerText = "中性的";
+                            }else{
+                                politeness.innerText = "不礼貌的";
+                            }
+
+                            politeness.innerText+="\n\n置信度："+test_data['confidence'];
+                            politeness.style.marginTop="200px";
                             comment.append(politeness);
 
                             // console.log(json_data)

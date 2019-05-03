@@ -72,10 +72,10 @@ public class DatabaseImpl implements Database {
     /*更新数据库*/
     public boolean update(String sql) {
         try {
-            connSQL();
+//            connSQL();
             statement = conn.prepareStatement(sql);
             statement.executeUpdate();
-            deconnSQL();
+//            deconnSQL();
             return true;
         }catch (Exception e) {
             System.out.println("数据已存在或数据存入数据库错误");
@@ -408,5 +408,119 @@ public class DatabaseImpl implements Database {
         return result;
     }
 
+
+    public ArrayList<String> getUser(String name){
+        ArrayList<String> result= new ArrayList<String>();
+        try{
+            connSQL();
+            String sql="select * from user where name ='"+name+"';";
+            ResultSet rs=selectSQL(sql);
+            while(rs.next()) {
+                result.add(String.valueOf(rs.getInt("userid")));
+                result.add(rs.getString("name"));
+                result.add(rs.getString("password"));
+            }
+            deconnSQL();
+        }catch(Exception e){
+            System.out.println("获取用户信息失败");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public boolean updatehistory(int userid, String url, String time){
+        String sql="insert into history values('"+userid+"', '"+url+"', '"+time+"')";//存入history表中
+        if(update(sql))
+            return true;
+        return false;
+    }
+
+    public boolean updateYear(int userid, String url, String time, String yeartop, int number){
+        String sql="insert into historyofyear values('"+userid+"', '"+url+"', '"+time+"', '"+yeartop+"', '"+number+"')";//存入historyofyear表中
+        System.out.println(sql);
+        if(update(sql))
+            return true;
+        return false;
+    }
+
+    public boolean updateMonth(int userid, String url, String time, String monthtop, int number){
+        String sql="insert into historyofmonth values('"+userid+"', '"+url+"', '"+time+"', '"+monthtop+"', '"+number+"')";//存入historyofyear表中
+        if(update(sql))
+            return true;
+        return false;
+    }
+
+    //查找历史记录
+    public ArrayList<ArrayList<String>> getHistory(int userid){
+        ArrayList<ArrayList<String>> res= new ArrayList<ArrayList<String>>();
+        try{
+            connSQL();
+            String sql="select * from history where userid ='"+userid+"' order by time;";
+            ResultSet rs=selectSQL(sql);
+            while(rs.next()) {
+                ArrayList<String> result=new ArrayList<String>();
+                result.add(String.valueOf(rs.getInt("userid")));
+                result.add(rs.getString("url"));
+                result.add(rs.getString("time"));
+                res.add(result);
+            }
+            deconnSQL();
+        }catch(Exception e){
+            System.out.println("获取历史搜索记录失败");
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    //查找历史年度
+    public ArrayList<ArrayList<String>> getHistoryYear(int userid, String url, String time){
+        ArrayList<ArrayList<String>> res= new ArrayList<ArrayList<String>>();
+        try{
+            connSQL();
+            String sql="select * from historyofyear where userid ='"+userid+"' and url='"+url+"' and time='"+time+"' order by number;";
+            ResultSet rs=selectSQL(sql);
+            while(rs.next()) {
+                ArrayList<String> result=new ArrayList<String>();
+                result.add(String.valueOf(rs.getInt("userid")));
+                result.add(rs.getString("url"));
+                result.add(rs.getString("time"));
+                result.add(rs.getString("yeartop"));
+                result.add(rs.getString("number"));
+                res.add(result);
+            }
+            deconnSQL();
+        }catch(Exception e){
+            System.out.println("获取历史年度失败");
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    //查找历史月度
+    public ArrayList<ArrayList<String>> getHistoryMonth(int userid, String url, String time){
+        ArrayList<ArrayList<String>> res= new ArrayList<ArrayList<String>>();
+        try{
+            connSQL();
+            String sql="select * from historyofmonth where userid ='"+userid+"' and url='"+url+"' and time='"+time+"' order by number;";
+            ResultSet rs=selectSQL(sql);
+            while(rs.next()) {
+                ArrayList<String> result=new ArrayList<String>();
+                result.add(String.valueOf(rs.getInt("userid")));
+                result.add(rs.getString("url"));
+                result.add(rs.getString("time"));
+                result.add(rs.getString("monthtop"));
+                result.add(rs.getString("number"));
+                res.add(result);
+            }
+            deconnSQL();
+        }catch(Exception e){
+            System.out.println("获取历史月度失败");
+            e.printStackTrace();
+        }
+        return res;
+    }
 }
+
+
+
 
