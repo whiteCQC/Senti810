@@ -19,6 +19,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static java.util.Comparator.comparingInt;
+import static java.util.Map.Entry.comparingByValue;
+import static java.util.stream.Collectors.toMap;
+
 @Service(value="GitService")
 public class GitServiceImpl implements GitService {
 
@@ -80,28 +84,87 @@ public class GitServiceImpl implements GitService {
     }
 
     @Override
-    public Map<String, List<MessageSenti>> getCommitSentiSortbyAuthor(String owner, String repo) {
+    public List<MessageSentihht> getCommitSentihht(String owner, String repo) {
+        List<MessageSentihht> list;
+//        int gid=gitDao.GetProjectId(owner,repo);
+//        mlist=sentiDao.GetMessages(gid);
+//        if(mlist.size()!=0)
+//            return mlist;
+
+
+
+        list = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+
+        List<Commits> clist= gh.getCommits(owner, repo);
+        double low = 0;
+        double high = 0;
+
+        int[] score;
+
+        int standf=0;
+
+        for (int i = clist.size() - 1; i >= 0;i--) {
+            Commits c = clist.get(i);
+
+            if(!c.getMessage().startsWith("Merge")){
+                long target = c.getDate().getTime();
+
+                score = sc.senti_strength(c.getMessage());
+
+
+                high = score[0];
+                low = score[1];
+                String date = sdf.format(target);
+                list.add(new MessageSentihht(high, low, date, c.getMessage()));
+//                mlist.add(new MessageSenti(gid, high, low,date, c.getMessage(),c.getSha()));
+            }
+        }
+//        sentiDao.insertMessages(mlist);
+
+
+        return list;
+    }
+
+    @Override
+    public Map<String, List<MessageSentihht>> getCommitSentiSortbyAuthor(String owner, String repo) {
         List<Commits> commitsList=gh.getCommits(owner, repo);
-        Map<String, List<MessageSenti>> map=new HashMap<>();
+        Map<String, List<MessageSentihht>> map=new HashMap<>();
         for (Commits commits:commitsList){
             Set<String> keys=map.keySet();
             if (!keys.contains(commits.getAuthor())){
 
-                List<MessageSenti> list=new ArrayList<>();
+                List<MessageSentihht> list=new ArrayList<>();
                 int[] ints=sc.senti_strength(commits.getMessage());
-                MessageSenti messageSenti=new MessageSenti(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
+                MessageSentihht messageSenti=new MessageSentihht(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
                 list.add(messageSenti);
                 map.put(commits.getAuthor(),list);
 
             }else{
-                List<MessageSenti> list=map.get(commits.getAuthor());
+                List<MessageSentihht> list=map.get(commits.getAuthor());
                 int[] ints=sc.senti_strength(commits.getMessage());
-                MessageSenti messageSenti=new MessageSenti(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
+                MessageSentihht messageSenti=new MessageSentihht(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
                 list.add(messageSenti);
 
             }
         }
-        return map;
+        Comparator<List<MessageSentihht>> comparator=new Comparator<List<MessageSentihht>>() {
+
+
+            @Override
+            public int compare(List<MessageSentihht> o1, List<MessageSentihht> o2) {
+                return o2.size()-o1.size();
+            }
+        };
+        Map<String, List<MessageSentihht>> sorted = map.entrySet().stream()
+                .sorted(comparingByValue(comparator)).collect(toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (a,b) -> { throw new AssertionError(); },
+                        LinkedHashMap::new
+                ));
+
+        return sorted;
     }
 
 
@@ -233,7 +296,22 @@ public class GitServiceImpl implements GitService {
     }
 
     @Override
-    public List<List<String>> getTopClasses(Map<String, List<String>> map, List<MessageSenti> mlist,String owner,String repo) {
+    public List<MessageSentihht> getCommitSentibyAuthor(String owner, String repo, String author) {
+        List<Commits> commitsList = gh.getCommits(owner, repo);
+        List<MessageSentihht> result = new ArrayList<>();
+
+        for (Commits commits : commitsList) {
+            if (!commits.getAuthor().equals(author)) continue;
+            int[] ints = sc.senti_strength(commits.getMessage());
+            MessageSentihht messageSenti = new MessageSentihht(ints[0], ints[1], commits.getDate().toString(), commits.getMessage());
+            result.add(messageSenti);
+
+        }
+        return result;
+
+    }
+    @Override
+    public List<List<String>> getTopClasses(Map<String, List<String>> map, List<MessageSenti> mlist, String owner, String repo) {
         List<String> presentJava=gh.getPresentJava(owner,repo);
 
         Map<String, Caltopsenti> res=new HashMap<>();
@@ -266,3 +344,5 @@ public class GitServiceImpl implements GitService {
         return Double.parseDouble(String.format("%.2f", i));
     }
 }
+
+
