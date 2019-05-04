@@ -42,10 +42,10 @@ public interface Database {
     public boolean updatehistory(int userid, String url, String time);
 
     //更新历史yeartop表
-    public boolean updateYear(int userid, String url, String time, String yeartop, int number);
+    public boolean updateYear(int userid, String url, String time, String yeartop, int number, String description);
 
     //更新历史monthtop表
-    public boolean updateMonth(int userid, String url, String time, String monthtop, int number);
+    public boolean updateMonth(int userid, String url, String time, String monthtop, int number, String description);
 
     //查找历史记录
     public ArrayList<ArrayList<String>> getHistory(int userid);
@@ -55,5 +55,17 @@ public interface Database {
 
     //查找历史月度
     public ArrayList<ArrayList<String>> getHistoryMonth(int userid, String url, String time);
+
+    //查找月度图评论
+    public ArrayList<String> getHistoryComment(int userid, String url, String time);
+
+    //插入monthchart的评论表
+    public boolean insertHistoryComment(int userid, String url, String time, String comment, String commenttime);
+
+    //更新monthchart的评论表
+    public boolean updateHistoryComment(int userid, String url, String time, String comment, String commenttime);
+
+    //查找近期记录
+    public ArrayList<ArrayList<String>> getRecent(int userid);
 
 }

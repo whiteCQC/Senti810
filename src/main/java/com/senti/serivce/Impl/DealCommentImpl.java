@@ -1,5 +1,6 @@
 package com.senti.serivce.Impl;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import com.senti.serivce.Database;
@@ -11,219 +12,6 @@ public class DealCommentImpl implements DealComment{
     Database dao=new DatabaseImpl();
     SentiStrengthAnalyse SSA=new SentiStrengthAnalyse();
 
-    /*输入的网址为本地已下载的，则直接从数据库调取数据，无需重新爬取
-     * 消极的低于-3的issue
-     * */
-    public ArrayList<String> getLow(String name){
-        ArrayList<ArrayList<String>> Comment=new ArrayList<ArrayList<String>>();
-        ArrayList<String> NegIssueNo= new ArrayList<String>();        //消极issue的Number
-        try {
-            if(name.equals("DERBY")) {
-                for(int k=1;k<=7028;k++) {                            //Derby的issue数量
-                    System.out.println(k);
-                    Comment=dao.getDerbyComment(k);                   //每一个issue的评论
-                    double negativeScore=0;                              //每一个issue对应的总的负面情绪值
-                    if(Comment.size()!=0) {
-                        for(int i=0;i<Comment.size();i++) {
-                            int[] score= {Integer.parseInt(Comment.get(i).get(4)), Integer.parseInt(Comment.get(i).get(5))};
-                            negativeScore+=score[1];
-                        }
-                        negativeScore=negativeScore/Comment.size();
-                        System.out.println(negativeScore);
-                    }
-                    if(negativeScore<=-3) {
-                        NegIssueNo.add(String.valueOf(k));            //issue情绪值低于-3时归为消极
-                    }
-                }
-            }
-            if(name.equals("DROOLS")) {
-                for(int k=1;k<=100;k++) {
-                    System.out.println(k);
-                    Comment=dao.getDroolsComment(k);                   //每一个issue的评论
-                    double negativeScore=0;                              //每一个issue对应的总的负面情绪值
-                    if(Comment.size()!=0) {
-                        for(int i=0;i<Comment.size();i++) {
-                            int[] score={Integer.parseInt(Comment.get(i).get(4)), Integer.parseInt(Comment.get(i).get(5))};
-                            negativeScore+=score[1];
-                        }
-                        negativeScore=negativeScore/Comment.size();
-                    }
-                    if(negativeScore<=-3) {
-                        NegIssueNo.add(String.valueOf(k));            //issue情绪值低于-3时归为消极
-                    }
-                }
-            }
-            if(name.equals("GROOVY")) {
-                for(int k=1;k<=100;k++) {
-                    System.out.println(k);
-                    Comment=dao.getGroovyComment(k);                   //每一个issue的评论
-                    double negativeScore=0;                              //每一个issue对应的总的负面情绪值
-                    if(Comment.size()!=0) {
-                        for(int i=0;i<Comment.size();i++) {
-                            int[] score={Integer.parseInt(Comment.get(i).get(4)), Integer.parseInt(Comment.get(i).get(5))};
-                            negativeScore+=score[1];
-                        }
-                        negativeScore=negativeScore/Comment.size();
-                    }
-                    if(negativeScore<=-3) {
-                        NegIssueNo.add(String.valueOf(k));            //issue情绪值低于-3时归为消极
-                    }
-                }
-            }
-            if(name.equals("ISPN")) {
-                for(int k=1;k<=100;k++) {
-                    System.out.println(k);
-                    Comment=dao.getIspnComment(k);                   //每一个issue的评论
-                    double negativeScore=0;                              //每一个issue对应的总的负面情绪值
-                    if(Comment.size()!=0) {
-                        for(int i=0;i<Comment.size();i++) {
-                            int[] score={Integer.parseInt(Comment.get(i).get(4)), Integer.parseInt(Comment.get(i).get(5))};
-                            negativeScore+=score[1];
-                        }
-                        negativeScore=negativeScore/Comment.size();
-                    }
-                    if(negativeScore<=-3) {
-                        NegIssueNo.add(String.valueOf(k));            //issue情绪值低于-3时归为消极
-                    }
-                }
-            }
-            if(name.equals("MNG")) {
-                for(int k=1;k<=100;k++) {
-                    System.out.println(k);
-                    Comment=dao.getMngComment(k);                   //每一个issue的评论
-                    double negativeScore=0;                              //每一个issue对应的总的负面情绪值
-                    if(Comment.size()!=0) {
-                        for(int i=0;i<Comment.size();i++) {
-                            int[] score={Integer.parseInt(Comment.get(i).get(4)), Integer.parseInt(Comment.get(i).get(5))};
-                            negativeScore+=score[1];
-                        }
-                        negativeScore=negativeScore/Comment.size();
-                    }
-                    if(negativeScore<=-3) {
-                        NegIssueNo.add(String.valueOf(k));            //issue情绪值低于-3时归为消极
-                    }
-                }
-            }
-            if(name.equals("PIG")) {
-                for(int k=1;k<=100;k++) {
-                    System.out.println(k);
-                    Comment=dao.getPigComment(k);                   //每一个issue的评论
-                    double negativeScore=0;                              //每一个issue对应的总的负面情绪值
-                    if(Comment.size()!=0) {
-                        for(int i=0;i<Comment.size();i++) {
-                            int[] score={Integer.parseInt(Comment.get(i).get(4)), Integer.parseInt(Comment.get(i).get(5))};
-                            negativeScore+=score[1];
-                        }
-                        negativeScore=negativeScore/Comment.size();
-                    }
-                    if(negativeScore<=-3) {
-                        NegIssueNo.add(String.valueOf(k));            //issue情绪值低于-3时归为消极
-                    }
-                }
-            }
-            if(name.equals("JBSEAM")) {
-                for(int k=1;k<=100;k++) {
-                    System.out.println(k);
-                    Comment=dao.getJbseamComment(k);                   //每一个issue的评论
-                    double negativeScore=0;                              //每一个issue对应的总的负面情绪值
-                    if(Comment.size()!=0) {
-                        for(int i=0;i<Comment.size();i++) {
-                            int[] score={Integer.parseInt(Comment.get(i).get(4)), Integer.parseInt(Comment.get(i).get(5))};
-                            negativeScore+=score[1];
-                        }
-                        negativeScore=negativeScore/Comment.size();
-                    }
-                    if(negativeScore<=-3) {
-                        NegIssueNo.add(String.valueOf(k));            //issue情绪值低于-3时归为消极
-                    }
-                }
-            }
-        }catch(Exception e) {
-            System.out.println(name+"获取情绪值较低的评论失败");
-        }
-        return NegIssueNo;
-    }
-
-    /*相应的数据库和issueNo对应的情绪值随时间变化需要的数据
-     * name对应名字，如Derby
-     * */
-    public ArrayList<ArrayList<String>> sentiChange(String name, int issueNo) {
-        ArrayList<ArrayList<String>> result= new ArrayList<ArrayList<String>>();
-        ArrayList<ArrayList<String>> comment = new ArrayList<ArrayList<String>>();
-        if(name.equals("DERBY")) {
-            comment=dao.getDerbyComment(issueNo);
-        }
-        if(name.equals("DROOLS")) {
-            comment=dao.getDroolsComment(issueNo);
-        }
-        if(name.equals("GROOVY")) {
-            comment=dao.getGroovyComment(issueNo);
-        }
-        if(name.equals("ISPN")) {
-            comment=dao.getIspnComment(issueNo);
-        }
-        if(name.equals("MNG")) {
-            comment=dao.getMngComment(issueNo);
-        }
-        if(name.equals("PIG")) {
-            comment=dao.getPigComment(issueNo);
-        }
-        if(name.equals("JBSEAM")) {
-            comment=dao.getJbseamComment(issueNo);
-        }
-        for(int i=0;i<comment.size();i++) {
-            ArrayList<String> temp=new ArrayList<String>();
-            temp.add(comment.get(i).get(2));              //时间
-            temp.add(comment.get(i).get(4));         //积极得分
-            temp.add(comment.get(i).get(5));         //消极得分
-            result.add(temp);
-        }
-        return result;
-    }
-
-
-    /*处理GitHub爬取的数据(此处的url格式如https://github.com/TheAlgorithms/Java)*/
-    public ArrayList<String> getGitLow(String url){
-        ArrayList<String> result= new ArrayList<String>();
-        try {
-            ArrayList<ArrayList<String>> issueWeb=dao.getSameTypeIssue(url);//通过输入的网址获取其下的issue网址
-            if(issueWeb.size()!=0) {
-                for(int i=0;i<issueWeb.size();i++) {
-                    ArrayList<ArrayList<String>> comment=dao.getGithubComment(issueWeb.get(i).get(1));
-                    double negativeScore=0;
-                    if(comment.size()!=0) {
-                        for(int j=0;j<comment.size();j++) {
-                            int[] score= {Integer.parseInt(comment.get(j).get(7)),Integer.parseInt(comment.get(j).get(8))};
-                            negativeScore+=score[1];
-                        }
-                        negativeScore=negativeScore/comment.size();
-                        System.out.println(negativeScore);
-                    }
-                    if(negativeScore<=-2.5) {
-                        result.add(String.valueOf(issueWeb.get(i).get(1)));            //issue情绪值低于-2.5时归为消极
-                    }
-                }
-            }
-        }catch(Exception e) {
-            System.out.println("GitHub获取情绪值较低的评论失败");
-        }
-        return result;
-    }
-
-
-    /*github单个issue内的情绪变化(此处url为具体到某个页面，格式如https://github.com/TheAlgorithms/Java/issues/1*/
-    public ArrayList<ArrayList<String>> sentiChangeGit(String url){
-        ArrayList<ArrayList<String>> result= new ArrayList<ArrayList<String>>();
-        ArrayList<ArrayList<String>> data=dao.getGithubComment(url);
-        for(int i=0;i<data.size();i++) {
-            ArrayList<String> temp=new ArrayList<String>();
-            temp.add(data.get(i).get(3));              //时间
-            temp.add(data.get(i).get(7));         //积极得分
-            temp.add(data.get(i).get(8));         //消极得分
-            result.add(temp);
-        }
-        return result;
-    }
 
 
     /*年度好坏top5(本地已下好的数据库)统一以2015起步到2018,该方法用于计算数据，不调用，数据存放在另一个方法中*/
@@ -421,6 +209,9 @@ public class DealCommentImpl implements DealComment{
         ArrayList<String> temp17=new ArrayList<String>();
         ArrayList<String> temp18=new ArrayList<String>();
         ArrayList<String> temp19=new ArrayList<String>();
+        ArrayList<String> des17=new ArrayList<String>();
+        ArrayList<String> des18=new ArrayList<String>();
+        ArrayList<String> des19=new ArrayList<String>();
         if(name.equals("JBSEAM")){
             temp17.add("https://issues.jboss.org/browse/JBSEAM-4945");
             temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");
@@ -442,16 +233,18 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.jboss.org/browse/JBSEAM-2");
             temp18.add("https://issues.jboss.org/browse/JBSEAM-3");
             temp18.add("https://issues.jboss.org/browse/JBSEAM-4945");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-1");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-2");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-3");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-4945");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-1");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-2");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-3");
+
         }else if(name.equals("DROOLS")){
             temp17.add("https://issues.jboss.org/browse/DROOLS-1765");
             temp17.add("https://issues.jboss.org/browse/DROOLS-329");
@@ -473,16 +266,17 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.jboss.org/browse/DROOLS-2967");
             temp18.add("https://issues.jboss.org/browse/DROOLS-2803");
             temp18.add("https://issues.jboss.org/browse/DROOLS-2688");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3474");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3492");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3504");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3525");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3566");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3549");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3565");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3592");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3531");
         }else if(name.equals("GROOVY")){
             temp17.add("https://issues.apache.org/jira/browse/GROOVY-7763");
             temp17.add("https://issues.apache.org/jira/browse/GROOVY-3493");
@@ -504,16 +298,17 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.apache.org/jira/browse/GROOVY-6864");
             temp18.add("https://issues.apache.org/jira/browse/GROOVY-4151");
             temp18.add("https://issues.apache.org/jira/browse/GROOVY-8329");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-6641");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-7469");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4003");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-7160");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-8272");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-6641");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4003");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-3358");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-8238");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-7469");
         }else if(name.equals("MNG")){
             temp17.add("https://issues.apache.org/jira/browse/MNG-1378");
             temp17.add("https://issues.apache.org/jira/browse/MNG-2802");
@@ -535,16 +330,17 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.apache.org/jira/browse/MNG-6447");
             temp18.add("https://issues.apache.org/jira/browse/MNG-6437");
             temp18.add("https://issues.apache.org/jira/browse/MNG-6422");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6575");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6571");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6507");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6522");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6573");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6571");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6534");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6558");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6556");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-3372");
         }else if(name.equals("PIG")){
             temp17.add("https://issues.apache.org/jira/browse/PIG-3498");
             temp17.add("https://issues.apache.org/jira/browse/PIG-4449");
@@ -569,16 +365,17 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.apache.org/jira/browse/PIG-5253");
             temp18.add("https://issues.apache.org/jira/browse/PIG-5372");
             temp18.add("https://issues.apache.org/jira/browse/PIG-5369");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5253");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5375");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5373");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5377");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5377");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5253");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5375");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5376");
         }else if(name.equals("DERBY")){
             temp17.add("https://issues.apache.org/jira/browse/DERBY-6933");
             temp17.add("https://issues.apache.org/jira/browse/DERBY-4842");
@@ -603,16 +400,17 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.apache.org/jira/browse/DERBY-6983");
             temp18.add("https://issues.apache.org/jira/browse/DERBY-7003");
             temp18.add("https://issues.apache.org/jira/browse/DERBY-6985");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7028");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7010");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7018");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7017");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7028");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7010");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7017");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7018");
         }else if(name.equals("ISPN")){
             temp17.add("https://issues.jboss.org/browse/ISPN-3849");
             temp17.add("https://issues.jboss.org/browse/ISPN-3988");
@@ -638,20 +436,34 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.jboss.org/browse/ISPN-9410");
             temp18.add("https://issues.jboss.org/browse/ISPN-9173");
 
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9657");
+            temp19.add("https://issues.jboss.org/browse/ISPN-8432");
+            temp19.add("https://issues.jboss.org/browse/ISPN-8610");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9853");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9954");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9887");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9863");
+            temp19.add("https://issues.jboss.org/browse/ISPN-8432");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9920");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9917");
+        }
+        for(int i=0;i<10;i++){
+            if(name.equals("DERBY") || name.equals("GROOVY") || name.equals("MNG") || name.equals("PIG")) {
+                des17.add(temp17.get(i).substring(38));
+                des18.add(temp18.get(i).substring(38));
+                des19.add(temp19.get(i).substring(38));
+            }else{
+                des17.add(temp17.get(i).substring(32));
+                des18.add(temp18.get(i).substring(32));
+                des19.add(temp19.get(i).substring(32));
+            }
         }
         res.add(temp17);
         res.add(temp18);
         res.add(temp19);
+        res.add(des17);
+        res.add(des18);
+        res.add(des19);
         return res;
     }
 
@@ -984,6 +796,9 @@ public class DealCommentImpl implements DealComment{
         ArrayList<String> temp17=new ArrayList<String>();
         ArrayList<String> temp18=new ArrayList<String>();
         ArrayList<String> temp19=new ArrayList<String>();
+        ArrayList<String> des17=new ArrayList<String>();
+        ArrayList<String> des18=new ArrayList<String>();
+        ArrayList<String> des19=new ArrayList<String>();
         //前12个积极，后12个消极
         if(name.equals("DROOLS")){
             temp17.add("https://issues.jboss.org/browse/DROOLS-329");//积极
@@ -1036,12 +851,30 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.jboss.org/browse/DROOLS-3271");
             temp18.add("https://issues.jboss.org/browse/DROOLS-3430");
 
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
+            temp19.add("https://issues.jboss.org/browse/DROOLS-3430");
 
         }else if(name.equals("GROOVY")){
             temp17.add("https://issues.apache.org/jira/browse/GROOVY-7423");//积极
@@ -1094,12 +927,30 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.apache.org/jira/browse/GROOVY-7854");
             temp18.add("https://issues.apache.org/jira/browse/GROOVY-4063");
 
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
+            temp19.add("https://issues.apache.org/jira/browse/GROOVY-4063");
 
         }else if(name.equals("PIG")){
             temp17.add("https://issues.apache.org/jira/browse/PIG-3498");//积极
@@ -1152,12 +1003,30 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.apache.org/jira/browse/PIG-5369");
             temp18.add("https://issues.apache.org/jira/browse/PIG-5372");
 
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
+            temp19.add("https://issues.apache.org/jira/browse/PIG-5372");
 
 
 
@@ -1212,12 +1081,30 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.apache.org/jira/browse/MNG-6506");
             temp18.add("https://issues.apache.org/jira/browse/MNG-6532");
 
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
+            temp19.add("https://issues.apache.org/jira/browse/MNG-6532");
 
         }else if(name.equals("ISPN")){
             temp17.add("https://issues.jboss.org/browse/ISPN-7264");//积极
@@ -1271,12 +1158,30 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.jboss.org/browse/ISPN-9809");
 
 
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
+            temp19.add("https://issues.jboss.org/browse/ISPN-9809");
 
         }else if(name.equals("DERBY")){
             temp17.add("https://issues.apache.org/jira/browse/DERBY-6920");//积极
@@ -1329,12 +1234,30 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.apache.org/jira/browse/DERBY-7019");
             temp18.add("https://issues.apache.org/jira/browse/DERBY-7025");
 
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
+            temp19.add("https://issues.apache.org/jira/browse/DERBY-7025");
 
         }else if(name.equals("JBSEAM")){
             temp17.add("https://issues.jboss.org/browse/JBSEAM-3247");//积极
@@ -1387,166 +1310,282 @@ public class DealCommentImpl implements DealComment{
             temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
             temp18.add("https://issues.jboss.org/browse/JBSEAM-5148");
 
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
-            temp19.add("");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
+            temp19.add("https://issues.jboss.org/browse/JBSEAM-5148");
 
+        }
+        for(int i=0;i<24;i++){
+            if(name.equals("DERBY") || name.equals("GROOVY") || name.equals("MNG") || name.equals("PIG")) {
+                des17.add(temp17.get(i).substring(38));
+                des18.add(temp18.get(i).substring(38));
+                des19.add(temp19.get(i).substring(38));
+            }else{
+                des17.add(temp17.get(i).substring(32));
+                des18.add(temp18.get(i).substring(32));
+                des19.add(temp19.get(i).substring(32));
+            }
         }
         res.add(temp17);
         res.add(temp18);
         res.add(temp19);
+        res.add(des17);
+        res.add(des18);
+        res.add(des19);
         return res;
     }
 
 
 
     /*本地数据库的2017.1到2019.3的情绪变化*/
-    public double[][] getLChange(String name) {
+    public ArrayList<Object> getLChange(String name) {
         double[][] result=new double[2][27];
         int[] count=new int[27];//计次数
+        ArrayList<ArrayList<String>> relativeIssue=new ArrayList<ArrayList<String>>();
+        ArrayList<Object> list=new ArrayList();
+        ArrayList<String> issue_17_1=new ArrayList<String>();
+        ArrayList<String> issue_17_2=new ArrayList<String>();
+        ArrayList<String> issue_17_3=new ArrayList<String>();
+        ArrayList<String> issue_17_4=new ArrayList<String>();
+        ArrayList<String> issue_17_5=new ArrayList<String>();
+        ArrayList<String> issue_17_6=new ArrayList<String>();
+        ArrayList<String> issue_17_7=new ArrayList<String>();
+        ArrayList<String> issue_17_8=new ArrayList<String>();
+        ArrayList<String> issue_17_9=new ArrayList<String>();
+        ArrayList<String> issue_17_10=new ArrayList<String>();
+        ArrayList<String> issue_17_11=new ArrayList<String>();
+        ArrayList<String> issue_17_12=new ArrayList<String>();
+        ArrayList<String> issue_18_1=new ArrayList<String>();
+        ArrayList<String> issue_18_2=new ArrayList<String>();
+        ArrayList<String> issue_18_3=new ArrayList<String>();
+        ArrayList<String> issue_18_4=new ArrayList<String>();
+        ArrayList<String> issue_18_5=new ArrayList<String>();
+        ArrayList<String> issue_18_6=new ArrayList<String>();
+        ArrayList<String> issue_18_7=new ArrayList<String>();
+        ArrayList<String> issue_18_8=new ArrayList<String>();
+        ArrayList<String> issue_18_9=new ArrayList<String>();
+        ArrayList<String> issue_18_10=new ArrayList<String>();
+        ArrayList<String> issue_18_11=new ArrayList<String>();
+        ArrayList<String> issue_18_12=new ArrayList<String>();
+        ArrayList<String> issue_19_1=new ArrayList<String>();
+        ArrayList<String> issue_19_2=new ArrayList<String>();
+        ArrayList<String> issue_19_3=new ArrayList<String>();
         try {
             ArrayList<ArrayList<String>> allInfor=dao.getAllComment(name);//通过输入的网址获取所有具体信息
             for(int i=0;i<allInfor.size();i++) {
                 String datetime=allInfor.get(i).get(2);//日期
                 String month=datetime.substring(5,7);//月份
                 String year=datetime.substring(0,4);//年份
+                String issueurl=allInfor.get(i).get(0);//相关的url
                 if(month.equals("01")&&year.equals("2017")) {
                     count[0]++;
                     result[0][0]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][0]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_1.contains(issueurl))
+                        issue_17_1.add(issueurl);
                 }
                 if(month.equals("02")&&year.equals("2017")) {
                     count[1]++;
                     result[0][1]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][1]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_2.contains(issueurl))
+                        issue_17_2.add(issueurl);
                 }
                 if(month.equals("03")&&year.equals("2017")) {
                     count[2]++;
                     result[0][2]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][2]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_3.contains(issueurl))
+                        issue_17_3.add(issueurl);
                 }
                 if(month.equals("04")&&year.equals("2017")) {
                     count[3]++;
                     result[0][3]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][3]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_4.contains(issueurl))
+                        issue_17_4.add(issueurl);
                 }
                 if(month.equals("05")&&year.equals("2017")) {
                     count[4]++;
                     result[0][4]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][4]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_5.contains(issueurl))
+                        issue_17_5.add(issueurl);
                 }
                 if(month.equals("06")&&year.equals("2017")) {
                     count[5]++;
                     result[0][5]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][5]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_6.contains(issueurl))
+                        issue_17_6.add(issueurl);
                 }
                 if(month.equals("07")&&year.equals("2017")) {
                     count[6]++;
                     result[0][6]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][6]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_7.contains(issueurl))
+                        issue_17_7.add(issueurl);
                 }
                 if(month.equals("08")&&year.equals("2017")) {
                     count[7]++;
                     result[0][7]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][7]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_8.contains(issueurl))
+                        issue_17_8.add(issueurl);
                 }
                 if(month.equals("09")&&year.equals("2017")) {
                     count[8]++;
                     result[0][8]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][8]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_9.contains(issueurl))
+                        issue_17_9.add(issueurl);
                 }
                 if(month.equals("10")&&year.equals("2017")) {
                     count[9]++;
                     result[0][9]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][9]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_10.contains(issueurl))
+                        issue_17_10.add(issueurl);
                 }
                 if(month.equals("11")&&year.equals("2017")) {
                     count[10]++;
                     result[0][10]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][10]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_11.contains(issueurl))
+                        issue_17_11.add(issueurl);
                 }
                 if(month.equals("12")&&year.equals("2017")) {
                     count[11]++;
                     result[0][11]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][11]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_17_12.contains(issueurl))
+                        issue_17_12.add(issueurl);
                 }
                 if(month.equals("01")&&year.equals("2018")) {
                     count[12]++;
                     result[0][12]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][12]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_1.contains(issueurl))
+                        issue_18_1.add(issueurl);
                 }
                 if(month.equals("02")&&year.equals("2018")) {
                     count[13]++;
                     result[0][13]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][13]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_2.contains(issueurl))
+                        issue_18_2.add(issueurl);
                 }
                 if(month.equals("03")&&year.equals("2018")) {
                     count[14]++;
                     result[0][14]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][14]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_3.contains(issueurl))
+                        issue_18_3.add(issueurl);
                 }
                 if(month.equals("04")&&year.equals("2018")) {
                     count[15]++;
                     result[0][15]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][15]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_4.contains(issueurl))
+                        issue_18_4.add(issueurl);
                 }
                 if(month.equals("05")&&year.equals("2018")) {
                     count[16]++;
                     result[0][16]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][16]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_5.contains(issueurl))
+                        issue_18_5.add(issueurl);
                 }
                 if(month.equals("06")&&year.equals("2018")) {
                     count[17]++;
                     result[0][17]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][17]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_6.contains(issueurl))
+                        issue_18_6.add(issueurl);
                 }
                 if(month.equals("07")&&year.equals("2018")) {
                     count[18]++;
                     result[0][18]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][18]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_7.contains(issueurl))
+                        issue_18_7.add(issueurl);
                 }
                 if(month.equals("08")&&year.equals("2018")) {
                     count[19]++;
                     result[0][19]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][19]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_8.contains(issueurl))
+                        issue_18_8.add(issueurl);
                 }
                 if(month.equals("09")&&year.equals("2018")) {
                     count[20]++;
                     result[0][20]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][20]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_9.contains(issueurl))
+                        issue_18_9.add(issueurl);
                 }
                 if(month.equals("10")&&year.equals("2018")) {
                     count[21]++;
                     result[0][21]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][21]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_10.contains(issueurl))
+                        issue_18_10.add(issueurl);
                 }
                 if(month.equals("11")&&year.equals("2018")) {
                     count[22]++;
                     result[0][22]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][22]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_11.contains(issueurl))
+                        issue_18_11.add(issueurl);
                 }
                 if(month.equals("12")&&year.equals("2018")) {
                     count[23]++;
                     result[0][23]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][23]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_18_12.contains(issueurl))
+                        issue_18_12.add(issueurl);
                 }
                 if(month.equals("01")&&year.equals("2019")) {
                     count[24]++;
                     result[0][24]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][24]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_19_1.contains(issueurl))
+                        issue_19_1.add(issueurl);
                 }
                 if(month.equals("02")&&year.equals("2019")) {
                     count[25]++;
                     result[0][25]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][25]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_19_2.contains(issueurl))
+                        issue_19_2.add(issueurl);
                 }
                 if(month.equals("03")&&year.equals("2019")) {
                     count[26]++;
                     result[0][26]+=Integer.parseInt(allInfor.get(i).get(4));
                     result[1][26]+=Integer.parseInt(allInfor.get(i).get(5));
+                    if(!issue_19_3.contains(issueurl))
+                        issue_19_3.add(issueurl);
                 }
 
 
@@ -1557,16 +1596,48 @@ public class DealCommentImpl implements DealComment{
                     result[1][j]=result[1][j]/count[j];
                 }
             }
+            relativeIssue.add( issue_17_1);
+            relativeIssue.add( issue_17_2);
+            relativeIssue.add( issue_17_3);
+            relativeIssue.add( issue_17_4);
+            relativeIssue.add( issue_17_5);
+            relativeIssue.add( issue_17_6);
+            relativeIssue.add( issue_17_7);
+            relativeIssue.add( issue_17_8);
+            relativeIssue.add( issue_17_9);
+            relativeIssue.add( issue_17_10);
+            relativeIssue.add( issue_17_11);
+            relativeIssue.add( issue_17_12);
+            relativeIssue.add( issue_18_1);
+            relativeIssue.add( issue_18_2);
+            relativeIssue.add( issue_18_3);
+            relativeIssue.add( issue_18_4);
+            relativeIssue.add( issue_18_5);
+            relativeIssue.add( issue_18_6);
+            relativeIssue.add( issue_18_7);
+            relativeIssue.add( issue_18_8);
+            relativeIssue.add( issue_18_9);
+            relativeIssue.add( issue_18_10);
+            relativeIssue.add( issue_18_11);
+            relativeIssue.add( issue_18_12);
+            relativeIssue.add( issue_19_1);
+            relativeIssue.add( issue_19_2);
+            relativeIssue.add( issue_19_3);
+            list.add(result);
+            list.add(relativeIssue);
+            list.add(name);
 
         }catch(Exception e) {
             System.out.println(name+"月度情绪变化失败");
         }
-        return result;
+        return list;
     }
 
     /*年度好坏top5 github(如果issue的数量小于5，那就返回issueWeb)*/
-    public ArrayList<ArrayList<String>> getGYearTop(String url){
+    public ArrayList<Object> getGYearTop(String url){
+        ArrayList<Object> res=new ArrayList<Object>();
         ArrayList<ArrayList<String>> result= new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<String>> description= new ArrayList<ArrayList<String>>();
         try {
             ArrayList<ArrayList<String>> issueWeb=dao.getSameTypeIssue(url);//通过输入的网址获取其下的issue网址
             if(issueWeb.size()>=5) {
@@ -1693,22 +1764,38 @@ public class DealCommentImpl implements DealComment{
                     }else if( i>=5 && i<(size+5) ){
                         temp.add(issueWeb.get(i-5).get(1));
                     } else {
-                        temp.add("not anymore");
+                        temp.add("no more");
                     }
                 }
                 result.add(temp);
                 result.add(temp);
                 result.add(temp);
             }
+            for(int i=0;i<3;i++){
+                ArrayList<String> issueName=new ArrayList<String>();
+                for(int j=0;j<10;j++){
+                    ArrayList<ArrayList<String>> needInfor=dao.getGithubComment(result.get(i).get(j));
+                    if(needInfor.size()!=0) {
+                        issueName.add(needInfor.get(0).get(1));
+                    }else{
+                        issueName.add("no description");
+                    }
+                }
+                description.add(issueName);
+            }
+            res.add(result);
+            res.add(description);
         }catch(Exception e) {
             System.out.println("GitHub年度top5出错");
         }
 
-        return result;
+        return res;
     }
 
     /*月度好坏top1 github 如果当月没有issue评论，那么随机选取一个作为月度top1*/
-    public ArrayList<ArrayList<String>> getGMonthTop(String url){
+    public ArrayList<Object> getGMonthTop(String url){
+        ArrayList<Object> res=new ArrayList<Object>();
+        ArrayList<ArrayList<String>> description= new ArrayList<ArrayList<String>>();
         ArrayList<ArrayList<String>> result= new ArrayList<ArrayList<String>>();
         try {
             ArrayList<ArrayList<String>> issueWeb=dao.getSameTypeIssue(url);//通过输入的网址获取其下的issue网址
@@ -2000,21 +2087,66 @@ public class DealCommentImpl implements DealComment{
                     temp.add(afterNSort12[afterNSort12.length-1]);//12月top1消极
                     result.add(temp);
                 }
+                for(int i=0;i<3;i++){
+                    ArrayList<String> issueName=new ArrayList<String>();
+                    for(int j=0;j<24;j++){
+                        ArrayList<ArrayList<String>> needInfor=dao.getGithubComment(result.get(i).get(j));
+                        if(needInfor.size()!=0) {
+                            issueName.add(needInfor.get(0).get(1));
+                        }else{
+                            issueName.add("no description");
+                        }
+                    }
+                    description.add(issueName);
+                }
+                res.add(result);
+                res.add(description);
             }
         }catch(Exception e) {
             System.out.println("GitHub月度top1出错");
         }
-        return result;
+        return res;
     }
 
     /*GitHub的2017.1到2019.3的情绪变化*/
-    public double[][] getGChange(String url) {
+    public ArrayList<Object> getGChange(String url) {
         double[][] result=new double[2][27];
+        ArrayList<ArrayList<String>> relativeIssue=new ArrayList<ArrayList<String>>();
+        ArrayList<Object> list=new ArrayList();
         int[] count=new int[27];//计次数
+        ArrayList<String> issue_17_1=new ArrayList<String>();
+        ArrayList<String> issue_17_2=new ArrayList<String>();
+        ArrayList<String> issue_17_3=new ArrayList<String>();
+        ArrayList<String> issue_17_4=new ArrayList<String>();
+        ArrayList<String> issue_17_5=new ArrayList<String>();
+        ArrayList<String> issue_17_6=new ArrayList<String>();
+        ArrayList<String> issue_17_7=new ArrayList<String>();
+        ArrayList<String> issue_17_8=new ArrayList<String>();
+        ArrayList<String> issue_17_9=new ArrayList<String>();
+        ArrayList<String> issue_17_10=new ArrayList<String>();
+        ArrayList<String> issue_17_11=new ArrayList<String>();
+        ArrayList<String> issue_17_12=new ArrayList<String>();
+        ArrayList<String> issue_18_1=new ArrayList<String>();
+        ArrayList<String> issue_18_2=new ArrayList<String>();
+        ArrayList<String> issue_18_3=new ArrayList<String>();
+        ArrayList<String> issue_18_4=new ArrayList<String>();
+        ArrayList<String> issue_18_5=new ArrayList<String>();
+        ArrayList<String> issue_18_6=new ArrayList<String>();
+        ArrayList<String> issue_18_7=new ArrayList<String>();
+        ArrayList<String> issue_18_8=new ArrayList<String>();
+        ArrayList<String> issue_18_9=new ArrayList<String>();
+        ArrayList<String> issue_18_10=new ArrayList<String>();
+        ArrayList<String> issue_18_11=new ArrayList<String>();
+        ArrayList<String> issue_18_12=new ArrayList<String>();
+        ArrayList<String> issue_19_1=new ArrayList<String>();
+        ArrayList<String> issue_19_2=new ArrayList<String>();
+        ArrayList<String> issue_19_3=new ArrayList<String>();
+
         try {
             ArrayList<ArrayList<String>> allInfor=dao.getAllGitComment(url);//通过输入的网址获取所有具体信息
             for(int i=0;i<allInfor.size();i++) {
                 String datetime=allInfor.get(i).get(3);//日期
+                String issueurl=allInfor.get(i).get(0);//相关的url
                 datetime=datetime.replaceAll(" ", "");
                 String month=datetime.substring(0,3);//月份
                 String year=datetime.substring(datetime.length()-4, datetime.length());//年份
@@ -2022,136 +2154,190 @@ public class DealCommentImpl implements DealComment{
                     count[0]++;
                     result[0][0]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][0]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_1.contains(issueurl))
+                        issue_17_1.add(issueurl);
                 }
                 if(month.equals("Feb")&&year.equals("2017")) {
                     count[1]++;
                     result[0][1]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][1]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_2.contains(issueurl))
+                        issue_17_2.add(issueurl);
                 }
                 if(month.equals("Mar")&&year.equals("2017")) {
                     count[2]++;
                     result[0][2]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][2]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_3.contains(issueurl))
+                        issue_17_3.add(issueurl);
                 }
                 if(month.equals("Apr")&&year.equals("2017")) {
                     count[3]++;
                     result[0][3]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][3]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_4.contains(issueurl))
+                        issue_17_4.add(issueurl);
                 }
                 if(month.equals("May")&&year.equals("2017")) {
                     count[4]++;
                     result[0][4]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][4]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_5.contains(issueurl))
+                        issue_17_5.add(issueurl);
                 }
                 if(month.equals("Jun")&&year.equals("2017")) {
                     count[5]++;
                     result[0][5]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][5]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_6.contains(issueurl))
+                        issue_17_6.add(issueurl);
                 }
                 if(month.equals("Jul")&&year.equals("2017")) {
                     count[6]++;
                     result[0][6]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][6]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_7.contains(issueurl))
+                        issue_17_7.add(issueurl);
                 }
                 if(month.equals("Aug")&&year.equals("2017")) {
                     count[7]++;
                     result[0][7]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][7]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_8.contains(issueurl))
+                        issue_17_8.add(issueurl);
                 }
                 if(month.equals("Sep")&&year.equals("2017")) {
                     count[8]++;
                     result[0][8]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][8]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_9.contains(issueurl))
+                        issue_17_9.add(issueurl);
                 }
                 if(month.equals("Oct")&&year.equals("2017")) {
                     count[9]++;
                     result[0][9]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][9]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_10.contains(issueurl))
+                        issue_17_10.add(issueurl);
                 }
                 if(month.equals("Nov")&&year.equals("2017")) {
                     count[10]++;
                     result[0][10]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][10]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_11.contains(issueurl))
+                        issue_17_11.add(issueurl);
                 }
                 if(month.equals("Dec")&&year.equals("2017")) {
                     count[11]++;
                     result[0][11]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][11]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_17_12.contains(issueurl))
+                        issue_17_12.add(issueurl);
                 }
                 if(month.equals("Jan")&&year.equals("2018")) {
                     count[12]++;
                     result[0][12]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][12]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_1.contains(issueurl))
+                        issue_18_1.add(issueurl);
                 }
                 if(month.equals("Feb")&&year.equals("2018")) {
                     count[13]++;
                     result[0][13]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][13]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_2.contains(issueurl))
+                        issue_18_2.add(issueurl);
                 }
                 if(month.equals("Mar")&&year.equals("2018")) {
                     count[14]++;
                     result[0][14]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][14]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_3.contains(issueurl))
+                        issue_18_3.add(issueurl);
                 }
                 if(month.equals("Apr")&&year.equals("2018")) {
                     count[15]++;
                     result[0][15]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][15]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_4.contains(issueurl))
+                        issue_18_4.add(issueurl);
                 }
                 if(month.equals("May")&&year.equals("2018")) {
                     count[16]++;
                     result[0][16]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][16]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_5.contains(issueurl))
+                        issue_18_5.add(issueurl);
                 }
                 if(month.equals("Jun")&&year.equals("2018")) {
                     count[17]++;
                     result[0][17]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][17]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_6.contains(issueurl))
+                        issue_18_6.add(issueurl);
                 }
                 if(month.equals("Jul")&&year.equals("2018")) {
                     count[18]++;
                     result[0][18]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][18]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_7.contains(issueurl))
+                        issue_18_7.add(issueurl);
                 }
                 if(month.equals("Aug")&&year.equals("2018")) {
                     count[19]++;
                     result[0][19]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][19]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_8.contains(issueurl))
+                        issue_18_8.add(issueurl);
                 }
                 if(month.equals("Sep")&&year.equals("2018")) {
                     count[20]++;
                     result[0][20]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][20]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_9.contains(issueurl))
+                        issue_18_9.add(issueurl);
                 }
                 if(month.equals("Oct")&&year.equals("2018")) {
                     count[21]++;
                     result[0][21]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][21]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_10.contains(issueurl))
+                        issue_18_10.add(issueurl);
                 }
                 if(month.equals("Nov")&&year.equals("2018")) {
                     count[22]++;
                     result[0][22]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][22]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_11.contains(issueurl))
+                        issue_18_11.add(issueurl);
                 }
                 if(month.equals("Dec")&&year.equals("2018")) {
                     count[23]++;
                     result[0][23]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][23]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_18_12.contains(issueurl))
+                        issue_18_12.add(issueurl);
                 }
                 if(month.equals("Jan")&&year.equals("2019")) {
                     count[24]++;
                     result[0][24]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][24]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_19_1.contains(issueurl))
+                        issue_19_1.add(issueurl);
                 }
                 if(month.equals("Feb")&&year.equals("2019")) {
                     count[25]++;
                     result[0][25]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][25]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_19_2.contains(issueurl))
+                        issue_19_2.add(issueurl);
                 }
                 if(month.equals("Mar")&&year.equals("2019")) {
                     count[26]++;
                     result[0][26]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][26]+=Integer.parseInt(allInfor.get(i).get(8));
+                    if(!issue_19_3.contains(issueurl))
+                        issue_19_3.add(issueurl);
                 }
 
 
@@ -2162,11 +2348,44 @@ public class DealCommentImpl implements DealComment{
                     result[1][j]=result[1][j]/count[j];
                 }
             }
+            relativeIssue.add( issue_17_1);
+            relativeIssue.add( issue_17_2);
+            relativeIssue.add( issue_17_3);
+            relativeIssue.add( issue_17_4);
+            relativeIssue.add( issue_17_5);
+            relativeIssue.add( issue_17_6);
+            relativeIssue.add( issue_17_7);
+            relativeIssue.add( issue_17_8);
+            relativeIssue.add( issue_17_9);
+            relativeIssue.add( issue_17_10);
+            relativeIssue.add( issue_17_11);
+            relativeIssue.add( issue_17_12);
+            relativeIssue.add( issue_18_1);
+            relativeIssue.add( issue_18_2);
+            relativeIssue.add( issue_18_3);
+            relativeIssue.add( issue_18_4);
+            relativeIssue.add( issue_18_5);
+            relativeIssue.add( issue_18_6);
+            relativeIssue.add( issue_18_7);
+            relativeIssue.add( issue_18_8);
+            relativeIssue.add( issue_18_9);
+            relativeIssue.add( issue_18_10);
+            relativeIssue.add( issue_18_11);
+            relativeIssue.add( issue_18_12);
+            relativeIssue.add( issue_19_1);
+            relativeIssue.add( issue_19_2);
+            relativeIssue.add( issue_19_3);
+            list.add(result);
+            list.add(relativeIssue);
+            list.add(url);
+
+
 
         }catch(Exception e) {
             System.out.println("GitHub月度情绪变化失败");
+            e.printStackTrace();
         }
-        return result;
+        return list;
     }
 
 
@@ -2209,18 +2428,27 @@ public class DealCommentImpl implements DealComment{
             ArrayList<String> temp17 = new ArrayList<String>();
             ArrayList<String> temp18 = new ArrayList<String>();
             ArrayList<String> temp19 = new ArrayList<String>();
+            ArrayList<String> des17 = new ArrayList<String>();
+            ArrayList<String> des18 = new ArrayList<String>();
+            ArrayList<String> des19 = new ArrayList<String>();
             for (int i = 0; i < info.size(); i++) {
                 if (i < 10) {
                     temp17.add(info.get(i).get(3));
+                    des17.add(info.get(i).get(5));
                 } else if (i >= 10 && i < 20) {
                     temp18.add(info.get(i).get(3));
+                    des18.add(info.get(i).get(5));
                 } else {
                     temp19.add(info.get(i).get(3));
+                    des19.add(info.get(i).get(5));
                 }
             }
             res.add(temp17);
             res.add(temp18);
             res.add(temp19);
+            res.add(des17);
+            res.add(des18);
+            res.add(des19);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -2234,32 +2462,42 @@ public class DealCommentImpl implements DealComment{
             ArrayList<String> temp17 = new ArrayList<String>();
             ArrayList<String> temp18 = new ArrayList<String>();
             ArrayList<String> temp19 = new ArrayList<String>();
+            ArrayList<String> des17 = new ArrayList<String>();
+            ArrayList<String> des18 = new ArrayList<String>();
+            ArrayList<String> des19 = new ArrayList<String>();
             for (int i = 0; i < info.size(); i++) {
                 if (i < 24) {
                     temp17.add(info.get(i).get(3));
+                    des17.add(info.get(i).get(5));
                 } else if (i >= 24 && i < 48) {
                     temp18.add(info.get(i).get(3));
+                    des18.add(info.get(i).get(5));
                 } else {
                     temp19.add(info.get(i).get(3));
+                    des19.add(info.get(i).get(5));
                 }
             }
             res.add(temp17);
             res.add(temp18);
             res.add(temp19);
+            res.add(des17);
+            res.add(des18);
+            res.add(des19);
         }catch(Exception e){
             e.printStackTrace();
         }
         return res;
     }
 
-    public static void main(String[] args){
+/*    public static void main(String[] args){
         DealCommentImpl da=new DealCommentImpl();
-        ArrayList<ArrayList<String>> res=da.getGMonthTop("https://github.com/TheAlgorithms/C");
-        for(int i=0;i<res.size();i++){
-            for(int j=0;j<res.get(0).size();j++)
-                System.out.println(i+j+res.get(i).get(j));
+        ArrayList<ArrayList<String>> result= new ArrayList<>();
+        result=da.getLYearTop("DERBY");
+        for(int i=0;i<4;i++){
+            System.out.println(result.get(i));
         }
-    }
+
+    }*/
 
 }
 

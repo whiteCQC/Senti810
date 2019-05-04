@@ -141,7 +141,7 @@ new Vue({
                 };
                 var option2 = {
                     timeline : {
-                        data :['positive','negative'],
+                        data :['1','2'],
                         label : {
 
                         }
@@ -150,6 +150,7 @@ new Vue({
                         {
                             title : {
                                 text: '',
+                                subtext:'1表示积极占比，2表示消极占比'
                             },
                             tooltip : {
                                 trigger: 'item',
@@ -187,11 +188,11 @@ new Vue({
                                     center: ['50%', '45%'],
                                     radius: '50%',
                                     data:[
-                                        {value:count_p1, name:'等级1'},
-                                        {value:count_p2, name:'等级2'},
-                                        {value:count_p3, name:'等级3'},
-                                        {value:count_p4, name:'等级4'},
-                                        {value:count_p5, name:'等级5'},
+                                        {value:count_p1, name:'情绪平稳'},
+                                        {value:count_p2, name:'较为积极'},
+                                        {value:count_p3, name:'积极'},
+                                        {value:count_p4, name:'相当积极'},
+                                        {value:count_p5, name:'特别积极'},
                                     ]
                                 }
                             ]
@@ -202,11 +203,11 @@ new Vue({
                                     name:'消极等级',
                                     type:'pie',
                                     data:[
-                                        {value:count_n1, name:'等级-1'},
-                                        {value:count_n2, name:'等级-2'},
-                                        {value:count_n3, name:'等级-3'},
-                                        {value:count_n4, name:'等级-4'},
-                                        {value:count_n5, name:'等级-5'},
+                                        {value:count_n1, name:'情绪平稳'},
+                                        {value:count_n2, name:'略显消极'},
+                                        {value:count_n3, name:'消极'},
+                                        {value:count_n4, name:'相当消极'},
+                                        {value:count_n5, name:'特别消极'},
                                     ]
                                 }
                             ]

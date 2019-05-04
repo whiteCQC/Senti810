@@ -435,16 +435,16 @@ public class DatabaseImpl implements Database {
         return false;
     }
 
-    public boolean updateYear(int userid, String url, String time, String yeartop, int number){
-        String sql="insert into historyofyear values('"+userid+"', '"+url+"', '"+time+"', '"+yeartop+"', '"+number+"')";//存入historyofyear表中
+    public boolean updateYear(int userid, String url, String time, String yeartop, int number, String description){
+        String sql="insert into historyofyear values('"+userid+"', '"+url+"', '"+time+"', '"+yeartop+"', '"+number+"', '"+description+"')";//存入historyofyear表中
         System.out.println(sql);
         if(update(sql))
             return true;
         return false;
     }
 
-    public boolean updateMonth(int userid, String url, String time, String monthtop, int number){
-        String sql="insert into historyofmonth values('"+userid+"', '"+url+"', '"+time+"', '"+monthtop+"', '"+number+"')";//存入historyofyear表中
+    public boolean updateMonth(int userid, String url, String time, String monthtop, int number, String description){
+        String sql="insert into historyofmonth values('"+userid+"', '"+url+"', '"+time+"', '"+monthtop+"', '"+number+"', '"+description+"')";//存入historyofyear表中
         if(update(sql))
             return true;
         return false;
@@ -486,6 +486,7 @@ public class DatabaseImpl implements Database {
                 result.add(rs.getString("time"));
                 result.add(rs.getString("yeartop"));
                 result.add(rs.getString("number"));
+                result.add(rs.getString("description"));
                 res.add(result);
             }
             deconnSQL();
@@ -510,11 +511,67 @@ public class DatabaseImpl implements Database {
                 result.add(rs.getString("time"));
                 result.add(rs.getString("monthtop"));
                 result.add(rs.getString("number"));
+                result.add(rs.getString("description"));
                 res.add(result);
             }
             deconnSQL();
         }catch(Exception e){
             System.out.println("获取历史月度失败");
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    //查找月度图评论
+    public ArrayList<String> getHistoryComment(int userid, String url, String time){
+        ArrayList<String> res=new ArrayList<String>();
+        try{
+            connSQL();
+            String sql="select * from historyofchart where userid ='"+userid+"' and url='"+url+"' and time='"+time+"';";
+            ResultSet rs=selectSQL(sql);
+            while(rs.next()) {
+                res.add(rs.getString("chartcomment"));
+            }
+            deconnSQL();
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("月度图评论失败");
+        }
+        return res;
+    }
+
+    public boolean insertHistoryComment(int userid, String url, String time, String comment, String commenttime){
+        String sql="insert into historyofchart values('"+userid+"', '"+url+"', '"+time+"', '"+comment+"', '"+commenttime+"')";//存入historyofchart表中
+        if(update(sql))
+            return true;
+        return false;
+    }
+
+    public boolean updateHistoryComment(int userid, String url, String time, String comment, String commenttime){
+        String sql="update historyofchart set chartcomment='"+comment+"', commenttime='"+commenttime+"' where userid='"+userid+"' and url='"+url+"' and time='"+time+"';";
+        if(update(sql))
+            return true;
+        return false;
+    }
+
+    //查找近期记录
+    public ArrayList<ArrayList<String>> getRecent(int userid){
+        ArrayList<ArrayList<String>> res= new ArrayList<ArrayList<String>>();
+        try{
+            connSQL();
+            String sql="select * from historyofchart where userid ='"+userid+"' order by commenttime desc;";
+            ResultSet rs=selectSQL(sql);
+            while(rs.next()) {
+                ArrayList<String> result=new ArrayList<String>();
+                result.add(String.valueOf(rs.getInt("userid")));
+                result.add(rs.getString("url"));
+                result.add(rs.getString("time"));
+                result.add(rs.getString("commenttime"));
+                res.add(result);
+            }
+            deconnSQL();
+        }catch(Exception e){
+            System.out.println("获取近期项目失败");
             e.printStackTrace();
         }
         return res;

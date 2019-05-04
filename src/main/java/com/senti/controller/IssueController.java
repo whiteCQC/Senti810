@@ -20,7 +20,7 @@ import java.util.Date;
 
 @Controller
 @RequestMapping("/search")
-public class testController {
+public class IssueController {
     @RequestMapping("/home")
     public String login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {//登录模块
         response.setContentType("text/html;charset=utf-8");
@@ -85,31 +85,31 @@ public class testController {
 //                    session.setAttribute("name", "DERBY");       //名字在session里2
                     url="DERBY";
                 }
-                if (webContent.contains("DROOLS")) {
+                else if (webContent.contains("DROOLS")) {
 //                    session.setAttribute("name", "DROOLS");
                     url="DROOLS";
                 }
-                if (webContent.contains("GROOVY")) {
+                else if (webContent.contains("GROOVY")) {
 //                    session.setAttribute("name", "GROOVY");
                     url="GROOVY";
                 }
-                if (webContent.contains("ISPN")) {
+                else if (webContent.contains("ISPN")) {
  //                   session.setAttribute("name", "ISPN");
                     url="ISPN";
                 }
-                if (webContent.contains("MNG")) {
+                else if (webContent.contains("MNG")) {
  //                   session.setAttribute("name", "MNG");
                     url="MNG";
                 }
-                if (webContent.contains("PIG")) {
+                else if (webContent.contains("PIG")) {
 //                    session.setAttribute("name", "PIG");
                     url="PIG";
                 }
-                if (webContent.contains("JBSEAM")) {
+                else if (webContent.contains("JBSEAM")) {
  //                   session.setAttribute("name", "JBSEAM");//传递数据库名
                     url="JBSEAM";
                 }
-                if (webContent.contains("https://github.com")) {
+                else if (webContent.contains("https://github.com")) {
                     url=webContent;
                     /*爬取数据*/
                     if (da.getSameTypeIssue(webContent).size() == 0) {//如果数据库中没有记录则需要爬取
@@ -121,26 +121,39 @@ public class testController {
 
                     /*计算出年度top，月度top，monthchart*/
                     DealComment DC=new DealCommentImpl();
-                    ArrayList<ArrayList<String>> yeardata=new ArrayList<ArrayList<String>>();
-                    ArrayList<ArrayList<String>> monthdata=new ArrayList<ArrayList<String>>();
+                    ArrayList<Object> yeardata=new ArrayList<Object>();
+                    ArrayList<Object> monthdata=new ArrayList<Object>();
                     yeardata=DC.getGYearTop(url);//年度数据
+                    ArrayList<ArrayList<String>> issueNumber=(ArrayList<ArrayList<String>>)yeardata.get(0);
+                    ArrayList<ArrayList<String>> issueDescription=(ArrayList<ArrayList<String>>)yeardata.get(1);
                     monthdata=DC.getGMonthTop(url);//月度数据
+                    if(monthdata.size()==0){
+                        response.getWriter().print("<script> alert(\"请输入正确的检索项!\"); </script>");
+                        return "SearchView";
+                    }
+                    ArrayList<ArrayList<String>> issueNumber2=(ArrayList<ArrayList<String>>)monthdata.get(0);
+                    ArrayList<ArrayList<String>> issueDescription2=(ArrayList<ArrayList<String>>)monthdata.get(1);
                     da.connSQL();
                     for(int i=0;i<3;i++){
                         for(int j=0;j<10;j++){
-                            da.updateYear(Integer.parseInt(userid), url, time, yeardata.get(i).get(j), i*10+j+1);//更新历史年度top表
+                            da.updateYear(Integer.parseInt(userid), url, time, issueNumber.get(i).get(j), i*10+j+1, issueDescription.get(i).get(j));//更新历史年度top表
 
                          //   System.out.println("ok");
                         }
                         for(int m=0;m<24;m++){
-                            da.updateMonth(Integer.parseInt(userid), url, time, monthdata.get(i).get(m), i*24+m+1);//更新历史月度top表
+                            da.updateMonth(Integer.parseInt(userid), url, time, issueNumber2.get(i).get(m), i*24+m+1,issueDescription2.get(i).get(m));//更新历史月度top表
                         //     System.out.println("ok2");
                         }
                     }
                     da.deconnSQL();
                 }
+                else{
+                    response.getWriter().print("<script> alert(\"请输入正确的检索项!\"); </script>");
+                    return "SearchView";
+                }
                 da.connSQL();
                 da.updatehistory(Integer.parseInt(userid), url, time);//更新历史搜索表
+                da.insertHistoryComment(Integer.parseInt(userid), url, time,"","");//更新评论表
                 da.deconnSQL();
             }
         }catch (Exception ex) {
@@ -185,7 +198,8 @@ public class testController {
             session.setAttribute("url", issueweb);
             session.setAttribute("time", searchtime);
         }
-        return "details";
+        return "chooseType";
+ //       return "details";
     }
 
     @RequestMapping("/details")//年度模块
@@ -233,7 +247,8 @@ public class testController {
             DealComment DC=new DealCommentImpl();
             if(url.equals("DERBY") || url.equals("DROOLS") || url.equals("GROOVY") || url.equals("PIG") ||
                     url.equals("MNG") || url.equals("ISPN") || url.equals("JBSEAM") ){
-                res=((DealCommentImpl) DC).getLMdata(url);
+                res=DC.getLMdata(url);
+  //              System.out.println(res);
             }else {
                 res = DC.getHisMonth(userid, url, time);
             }
@@ -246,10 +261,11 @@ public class testController {
 
     @RequestMapping("/month_chart")//月度图
     @ResponseBody
-    public double[][] monthchart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ArrayList<Object> monthchart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=utf-8");
         request.setCharacterEncoding("UTF-8");
         double[][] res=new double[2][27];
+        ArrayList<Object> list=new ArrayList<Object>();
         try{
             HttpSession session=request.getSession();
             String webContent =(String)session.getAttribute("url");//搜索的数据库名
@@ -287,16 +303,16 @@ public class testController {
             }
             DealComment DC=new DealCommentImpl();
             if(name.equals("github")){
-                res=DC.getGChange(webContent);
+                list=DC.getGChange(webContent);
 //                System.out.println(res[0][0]);
             }else if(name.equals("DERBY") || name.equals("DROOLS") || name.equals("GROOVY") || name.equals("PIG") ||
                     name.equals("MNG") || name.equals("ISPN") || name.equals("JBSEAM") ){
-                res=DC.getLChange(name);
+                list=DC.getLChange(name);
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        return res;
+        return list;
 
     }
 
@@ -317,8 +333,8 @@ public class testController {
                 session.setAttribute("issueWeb", issueweb);
             }else if(name.equals("DERBY") || name.equals("DROOLS") || name.equals("GROOVY") || name.equals("PIG") ||
                     name.equals("MNG") || name.equals("ISPN") || name.equals("JBSEAM") ){
-                int startIndex=issueweb.indexOf(name);
-                issueweb=issueweb.substring(startIndex);
+                int startIndex=issueweb.lastIndexOf("/");
+                issueweb=issueweb.substring(startIndex+1);
                 session.setAttribute("issueWeb", issueweb);
 
             }
@@ -346,12 +362,144 @@ public class testController {
                 res = DC.getGIn_order(issueWeb);
             }else if(name.equals("DERBY") || name.equals("DROOLS") || name.equals("GROOVY") || name.equals("PIG") ||
                     name.equals("MNG") || name.equals("ISPN") || name.equals("JBSEAM") ){
-                int issueNo=Integer.parseInt(issueWeb.substring(issueWeb.indexOf("-")+1));
+                int issueNo=Integer.parseInt(issueWeb);
 //                System.out.println(issueNo);
                 res = da.getLIn_order(name, issueNo);
 //                System.out.println(res.get(0).get(2));
             }
 
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @RequestMapping("/yeartop")//年度页面
+    public String yeartop(HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String userid=(String)session.getAttribute("userid");
+        if(userid==null){
+            return "mylogin";
+        }
+        return "yeartop";
+    }
+
+    @RequestMapping("/monthtop")//月度页面
+    public String monthtop(HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String userid=(String)session.getAttribute("userid");
+        if(userid==null){
+            return "mylogin";
+        }
+        return "monthtop";
+    }
+
+    @RequestMapping("/monthchart")//月度图页面
+    public String monthchart(HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String userid=(String)session.getAttribute("userid");
+        if(userid==null){
+            return "mylogin";
+        }
+        return "monthchart";
+    }
+
+    @RequestMapping("/turnPage")//跳转
+    public String turnPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        try {
+            HttpSession session=request.getSession();
+            String userid=(String)session.getAttribute("userid");
+            if(userid==null){
+                return "mylogin";
+            }
+            String name =(String)session.getAttribute("url");//搜索的数据库名
+            String issueNo = request.getParameter("issueNo");//传递的参数
+            System.out.println(name);
+            if(name.contains("github")) {
+                issueNo = name+"/issues/" + issueNo;
+                System.out.println(issueNo);
+                session.setAttribute("issueWeb", issueNo);
+            }else if(name.equals("DERBY") || name.equals("DROOLS") || name.equals("GROOVY") || name.equals("PIG") ||
+                    name.equals("MNG") || name.equals("ISPN") || name.equals("JBSEAM") ){
+                session.setAttribute("issueWeb", issueNo);
+
+            }
+//        System.out.println(issueweb);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return "issueComments";
+    }
+
+    @RequestMapping("/choose")//选择issue, commit, contribute
+    public String choose(HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String userid=(String)session.getAttribute("userid");
+        if(userid==null){
+            return "mylogin";
+        }
+        return "chooseType";
+    }
+
+    @RequestMapping("/updateComment")//更新monthchart那里的用户评论
+    public String updateComment(HttpServletRequest request){
+        try {
+            String comment = request.getParameter("comment");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            String nowtime = df.format(new Date());// new Date()为获取当前系统时间
+            HttpSession session = request.getSession();
+            String userid = (String) session.getAttribute("userid");//搜索的数据库名
+            if(userid==null){
+                return "mylogin";
+            }
+            String url = (String) session.getAttribute("url");
+            String time = (String) session.getAttribute("time");
+            Database da = new DatabaseImpl();
+            comment=comment.replaceAll("'", "\\\\\'");
+            comment=comment.replaceAll("\"", "\\\\\"");
+            da.connSQL();
+            da.updateHistoryComment(Integer.parseInt(userid), url, time, comment, nowtime);
+            da.deconnSQL();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return "monthchart";
+    }
+
+    @RequestMapping("/historyComment")
+    @ResponseBody
+    public ArrayList<String> getComment(HttpServletRequest request){
+        ArrayList<String> res=new ArrayList<String>();
+        try{
+            HttpSession session = request.getSession();
+            String userid = (String) session.getAttribute("userid");//搜索的数据库名
+            String url = (String) session.getAttribute("url");
+            String time = (String) session.getAttribute("time");
+            Database da=new DatabaseImpl();
+            ArrayList<String> comment=da.getHistoryComment(Integer.parseInt(userid), url, time);
+            res=comment;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @RequestMapping("/Recent")
+    @ResponseBody
+    public ArrayList<ArrayList<String>> recent(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
+        try{
+            HttpSession session=request.getSession();
+            String userid=(String)session.getAttribute("userid");//userID在session里
+            Database da=new DatabaseImpl();
+            res=da.getRecent(Integer.parseInt(userid));
+/*            for(int i=0;i<3;i++){
+                System.out.println(res.get(i).get(2));
+            }*/
         }catch(Exception e){
             e.printStackTrace();
         }
