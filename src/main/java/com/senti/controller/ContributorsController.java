@@ -4,6 +4,7 @@ import com.senti.model.GithubUser;
 import com.senti.model.codeComment.Commits;
 import com.senti.model.codeComment.MessageSenti;
 import com.senti.model.codeComment.MessageSentihht;
+import com.senti.model.codeComment.author;
 import com.senti.serivce.GitService;
 import com.senti.serivce.GithubService;
 import org.json.simple.JSONArray;
@@ -15,9 +16,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -33,11 +32,21 @@ public class ContributorsController  {
 
     @Autowired
     GitService gitService;
-    @GetMapping("/contributors/{owner}/{repo}")
-    public String get(@PathVariable("owner") String owner,@PathVariable("repo") String repo, Model model){
 
-        List<MessageSentihht> messageSentis=gitService.getCommitSentihht(owner,repo);
-        Map<String,List<MessageSentihht>> map=gitService.getCommitSentiSortbyAuthor(owner,repo);
+    @GetMapping("/contributors/{owner}/{repo}")
+    public String getwithdate(@PathVariable("owner") String owner,@PathVariable("repo") String repo, Model model, @RequestParam(required=false) String date){
+        List<MessageSentihht> messageSentis;
+        Map<author, List<MessageSentihht>> map;
+        System.out.println(date);
+        if (date!=null) {
+
+            messageSentis= gitService.getCommitSentihht(owner, repo, date);
+
+           map = gitService.getCommitSentiSortbyAuthor(owner, repo, date);
+        }else{
+            messageSentis=gitService.getCommitSentihht(owner,repo);
+             map=gitService.getCommitSentiSortbyAuthor(owner,repo);
+        }
 
 
         model.addAttribute("messlist",messageSentis);
@@ -48,13 +57,17 @@ public class ContributorsController  {
         return "/contributors";
 
     }
+
+
+
     @GetMapping("/contributors/{owner}/{repo}/{author}")
     public String get(@PathVariable("owner") String owner,@PathVariable("repo") String repo,@PathVariable("author") String author, Model model){
         List<MessageSentihht> messageSentis=gitService.getCommitSentibyAuthor(owner,repo,author);
 
         model.addAttribute("list",messageSentis);
 
-
+        model.addAttribute("owner",owner);
+        model.addAttribute("repo",repo);
 
         return "/author";
     }

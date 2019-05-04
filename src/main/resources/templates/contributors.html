@@ -28,6 +28,15 @@
             var datas = [
                 ['Id', 'Positive', 'Negative']
             ];
+
+            if (theList.length==0){
+                var nodate=document.createElement("p");
+                nodate.textContent="没有数据, 请重新输入有效时间";
+                document.getElementById("contributors-master").append(nodate);
+
+
+                return;
+            }
             for (i = 0; i < theList.length; i++) {
                 date = new Date(theList[i].date);
                 var d = [date, theList[i].low, theList[i].high];
@@ -62,8 +71,6 @@
             var themap = [[${map}]];
             var owner=[[${owner}]];
             var repo=[[${repo}]];
-            console.log(owner);
-            console.log(repo);
 
 
 
@@ -86,7 +93,20 @@
 
                 var div_card_title=document.createElement("div");
                 div_card_title.classList.add('card-title');
-                div_card_title.textContent=k;
+                console.log(k);
+                var au = JSON.parse(k);
+                // console.log(au.name);
+
+                div_card_title.textContent=au.name;
+
+                var star=document.createElement("span");
+                star.style.cssFloat='right';
+                star.innerText='咨询推荐指数:';
+                for (i=0;i<au.star;i++)
+                star.innerText+='⭐';
+                div_card_title.append(star);
+
+
                 div_card_body.append(div_card_title);
 
 
@@ -96,12 +116,21 @@
 
                 div_card_body.append(div_chart);
 
+                var div_card_text=document.createElement("p");
+                div_card_text.classList.add("card-text");
+                div_card_text.innerText=au.description;
+                div_card_body.append(document.createElement("br"));
+                div_card_body.append(div_card_text);
+
+
+
 
                 var div_card_link=document.createElement("a");
                 div_card_link.classList.add('card-link');
-                div_card_link.setAttribute("href",'/contributors/'+owner+'/'+repo+'/'+k);
+                div_card_link.setAttribute("href",'/contributors/'+owner+'/'+repo+'/'+au.name);
                 div_card_link.textContent='details';
                 div_card_body.append(div_card_link);
+
 
 
 
@@ -124,8 +153,10 @@
                 ];
 
                 for (i = 0; i < theList.length; i++) {
-                    date = new Date(theList[i].date);
+                    date = new Date(theList[i].date.replace(/ /g,"T"));
+
                     var d = [date, theList[i].low, theList[i].high];
+
                     datas.push(d);
                 }
                 var data_contri = google.visualization.arrayToDataTable(datas);
@@ -170,7 +201,7 @@
           integrity="sha512-wJhnzAfXEZIRVozNeRj3om7LYMKNuN4/pWiws3GvDrVcYuSnHZVWzVFF0nocd7vibgFePdnbVtr/SgFIOP/FcA=="
           rel="stylesheet" href="https://github.githubassets.com/assets/github-038ca28f0d66963cc8fcdd04180ca5e0.css"/>
 
-    <title >贡献者</title>
+     <title >贡献者</title>
 
 </head>
 
@@ -265,62 +296,68 @@
                             <div class="graph-filter clearfix">
                                 <div class="Subhead">
                                     <h2 class="Subhead-heading js-date-range">Sentiment Analysis</h2>
-                                    <div class="Subhead-actions">
-                                        <details
-                                                class="details-reset details-overlay select-menu select-menu-modal-right js-contribution-container">
-                                            <summary class="btn btn-sm select-menu-button">
-                                                <i>Contributions:</i>
-                                                <span data-menu-button>Commits</span>
-                                            </summary>
-                                            <details-menu class="select-menu-modal position-absolute right-0"
-                                                          style="z-index: 99;">
-                                                <div class="select-menu-header">
-                                                    <span class="select-menu-title">Filter contributions</span>
-                                                </div>
-                                                <div class="select-menu-list">
-                                                    <button type="button" role="menuitemradio"
-                                                            class="select-menu-item width-full" aria-checked="false"
-                                                            value="a">
-                                                        <svg class="octicon octicon-check select-menu-item-icon"
-                                                             viewBox="0 0 12 16" version="1.1" width="12" height="16"
-                                                             aria-hidden="true">
-                                                            <path fill-rule="evenodd"
-                                                                  d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"/>
-                                                        </svg>
-                                                        <div class="select-menu-item-text" data-menu-button-text>
-                                                            Additions
-                                                        </div>
-                                                    </button>
-                                                    <button type="button" role="menuitemradio"
-                                                            class="select-menu-item width-full" aria-checked="false"
-                                                            value="d">
-                                                        <svg class="octicon octicon-check select-menu-item-icon"
-                                                             viewBox="0 0 12 16" version="1.1" width="12" height="16"
-                                                             aria-hidden="true">
-                                                            <path fill-rule="evenodd"
-                                                                  d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"/>
-                                                        </svg>
-                                                        <div class="select-menu-item-text" data-menu-button-text>
-                                                            Deletions
-                                                        </div>
-                                                    </button>
-                                                    <button type="button" role="menuitemradio"
-                                                            class="select-menu-item width-full" aria-checked="true"
-                                                            value="c">
-                                                        <svg class="octicon octicon-check select-menu-item-icon"
-                                                             viewBox="0 0 12 16" version="1.1" width="12" height="16"
-                                                             aria-hidden="true">
-                                                            <path fill-rule="evenodd"
-                                                                  d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"/>
-                                                        </svg>
-                                                        <div class="select-menu-item-text" data-menu-button-text>
-                                                            Commits
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            </details-menu>
-                                        </details>
-                                    </div>
+<!--                                    <div class="Subhead-actions">-->
+<!--                                        <details-->
+<!--                                                class="details-reset details-overlay select-menu select-menu-modal-right js-contribution-container">-->
+<!--                                            <summary class="btn btn-sm select-menu-button">-->
+<!--                                                <i>Contributions:</i>-->
+<!--                                                <span data-menu-button>Commits</span>-->
+<!--                                            </summary>-->
+<!--                                            <details-menu class="select-menu-modal position-absolute right-0"-->
+<!--                                                          style="z-index: 99;">-->
+<!--                                                <div class="select-menu-header">-->
+<!--                                                    <span class="select-menu-title">Filter contributions</span>-->
+<!--                                                </div>-->
+<!--                                                <div class="select-menu-list">-->
+<!--                                                    <button type="button" role="menuitemradio"-->
+<!--                                                            class="select-menu-item width-full" aria-checked="false"-->
+<!--                                                            value="a">-->
+<!--                                                        <svg class="octicon octicon-check select-menu-item-icon"-->
+<!--                                                             viewBox="0 0 12 16" version="1.1" width="12" height="16"-->
+<!--                                                             aria-hidden="true">-->
+<!--                                                            <path fill-rule="evenodd"-->
+<!--                                                                  d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"/>-->
+<!--                                                        </svg>-->
+<!--                                                        <div class="select-menu-item-text" data-menu-button-text>-->
+<!--                                                            Additions-->
+<!--                                                        </div>-->
+<!--                                                    </button>-->
+<!--                                                    <button type="button" role="menuitemradio"-->
+<!--                                                            class="select-menu-item width-full" aria-checked="false"-->
+<!--                                                            value="d">-->
+<!--                                                        <svg class="octicon octicon-check select-menu-item-icon"-->
+<!--                                                             viewBox="0 0 12 16" version="1.1" width="12" height="16"-->
+<!--                                                             aria-hidden="true">-->
+<!--                                                            <path fill-rule="evenodd"-->
+<!--                                                                  d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"/>-->
+<!--                                                        </svg>-->
+<!--                                                        <div class="select-menu-item-text" data-menu-button-text>-->
+<!--                                                            Deletions-->
+<!--                                                        </div>-->
+<!--                                                    </button>-->
+<!--                                                    <button type="button" role="menuitemradio"-->
+<!--                                                            class="select-menu-item width-full" aria-checked="true"-->
+<!--                                                            value="c">-->
+<!--                                                        <svg class="octicon octicon-check select-menu-item-icon"-->
+<!--                                                             viewBox="0 0 12 16" version="1.1" width="12" height="16"-->
+<!--                                                             aria-hidden="true">-->
+<!--                                                            <path fill-rule="evenodd"-->
+<!--                                                                  d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"/>-->
+<!--                                                        </svg>-->
+<!--                                                        <div class="select-menu-item-text" data-menu-button-text>-->
+<!--                                                            Commits-->
+<!--                                                        </div>-->
+<!--                                                    </button>-->
+<!--                                                </div>-->
+<!--                                            </details-menu>-->
+<!--                                        </details>-->
+<!--                                    </div>-->
+                                    <form th:action="@{'/contributors/'+${owner}+'/'+${repo}}" method="get" >
+
+                                        <input type="date" name="date">
+
+                                        <button type="submit">确认</button>
+                                    </form>
                                 </div>
                                 <p class="info">Contributions to master, excluding merge commits</p>
 

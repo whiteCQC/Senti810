@@ -4,6 +4,7 @@ import com.senti.dao.GitDao;
 import com.senti.dao.SentiDao;
 import com.senti.helper.GitHelper;
 import com.senti.helper.SentiCal;
+import com.senti.helper.SentiStrengthUtilhht;
 import com.senti.model.GithubUser;
 import com.senti.model.codeComment.*;
 import com.senti.serivce.GitService;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.util.Comparator.comparingInt;
@@ -86,10 +89,6 @@ public class GitServiceImpl implements GitService {
     @Override
     public List<MessageSentihht> getCommitSentihht(String owner, String repo) {
         List<MessageSentihht> list;
-//        int gid=gitDao.GetProjectId(owner,repo);
-//        mlist=sentiDao.GetMessages(gid);
-//        if(mlist.size()!=0)
-//            return mlist;
 
 
 
@@ -102,7 +101,6 @@ public class GitServiceImpl implements GitService {
 
         int[] score;
 
-        int standf=0;
 
         for (int i = clist.size() - 1; i >= 0;i--) {
             Commits c = clist.get(i);
@@ -127,21 +125,24 @@ public class GitServiceImpl implements GitService {
     }
 
     @Override
-    public Map<String, List<MessageSentihht>> getCommitSentiSortbyAuthor(String owner, String repo) {
+    public Map<author, List<MessageSentihht>> getCommitSentiSortbyAuthor(String owner, String repo) {
         List<Commits> commitsList=gh.getCommits(owner, repo);
-        Map<String, List<MessageSentihht>> map=new HashMap<>();
+        Map<author, List<MessageSentihht>> map=new HashMap<>();
         for (Commits commits:commitsList){
-            Set<String> keys=map.keySet();
-            if (!keys.contains(commits.getAuthor())){
+            Set<author> keys=map.keySet();
+            author a=new author();
+            a.setName(commits.getAuthor());
+            if (!keys.contains(a)){
 
                 List<MessageSentihht> list=new ArrayList<>();
                 int[] ints=sc.senti_strength(commits.getMessage());
                 MessageSentihht messageSenti=new MessageSentihht(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
                 list.add(messageSenti);
-                map.put(commits.getAuthor(),list);
+
+                map.put(a,list);
 
             }else{
-                List<MessageSentihht> list=map.get(commits.getAuthor());
+                List<MessageSentihht> list=map.get(a);
                 int[] ints=sc.senti_strength(commits.getMessage());
                 MessageSentihht messageSenti=new MessageSentihht(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
                 list.add(messageSenti);
@@ -156,7 +157,7 @@ public class GitServiceImpl implements GitService {
                 return o2.size()-o1.size();
             }
         };
-        Map<String, List<MessageSentihht>> sorted = map.entrySet().stream()
+        Map<author, List<MessageSentihht>> sorted = map.entrySet().stream()
                 .sorted(comparingByValue(comparator)).collect(toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
@@ -164,8 +165,75 @@ public class GitServiceImpl implements GitService {
                         LinkedHashMap::new
                 ));
 
+        for (Map.Entry<author, List<MessageSentihht>> item : map.entrySet()) {
+            author a=item.getKey();
+            List<MessageSentihht> list=item.getValue();
+            String description="";
+            if (list.size()==1){
+                a.setDescription("该参与者只贡献了一次。参考有限。");
+                a.setStar(1);
+                continue;
+            }
+            int star=1;
+            int low_count=0;
+            int high_count=0;
+
+            List<Double> neg=new ArrayList<>();
+            double avg1=0;
+
+            for (MessageSentihht m: list){
+                if (m.getLow()<-2) low_count++;
+
+                avg1+=m.getLow();
+
+                if (m.getHigh()>2) high_count++;
+                neg.add(m.getLow());
+            }
+            avg1/=list.size();
+
+            if (high_count>low_count){
+                description+="该参与者积极情绪较多。";
+                star++;
+                star++;
+            }else if (high_count==low_count){
+                description+="该参与者积极情绪与消极出现一致。";
+                star++;
+
+            }else{
+                description+="该参与者消极情绪较多。";
+            }
+
+            double t1=0;
+
+
+            for (int i=0;i<neg.size();i++){
+                t1+=(neg.get(i)-avg1)*(neg.get(i)-avg1);
+            }
+
+            t1/=neg.size();
+            t1=Math.sqrt(t1);
+
+            if (t1<0.5){
+                description+="该参与者消极情绪较为稳定。";
+                star++;
+            }else{
+                description+="该参与者消极情绪较为不稳定。";
+            }
+
+
+
+
+            a.setDescription(description);
+            a.setStar(star);
+
+
+
+        }
+
         return sorted;
     }
+
+
 
 
 
@@ -304,6 +372,9 @@ public class GitServiceImpl implements GitService {
             if (!commits.getAuthor().equals(author)) continue;
             int[] ints = sc.senti_strength(commits.getMessage());
             MessageSentihht messageSenti = new MessageSentihht(ints[0], ints[1], commits.getDate().toString(), commits.getMessage());
+            messageSenti.setSentiPairs(SentiStrengthUtilhht.analyzeKeywords(commits.getMessage()));
+
+            messageSenti.setAuthor(author);
             result.add(messageSenti);
 
         }
@@ -338,6 +409,167 @@ public class GitServiceImpl implements GitService {
         List<List<String>> l=new ArrayList<>();
 
         return l;
+    }
+
+    @Override
+    public List<MessageSentihht> getCommitSentihht(String owner, String repo, String date) {
+        List<MessageSentihht> list;
+
+
+
+        list = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+
+        List<Commits> clist= gh.getCommits(owner, repo);
+        double low = 0;
+        double high = 0;
+
+        int[] score;
+
+
+        for (int i = clist.size() - 1; i >= 0;i--) {
+            Commits c = clist.get(i);
+
+            if(!c.getMessage().startsWith("Merge")){
+                LocalDate target = c.getDate().toLocalDateTime().toLocalDate();
+
+                score = sc.senti_strength(c.getMessage());
+
+
+                high = score[0];
+                low = score[1];
+                LocalDate l=LocalDate.parse(date);
+                if (target.compareTo(l)<0) continue;
+                String d=sdf.format(c.getDate().getTime());
+                list.add(new MessageSentihht(high, low, d, c.getMessage()));
+//                mlist.add(new MessageSenti(gid, high, low,date, c.getMessage(),c.getSha()));
+            }
+        }
+//        sentiDao.insertMessages(mlist);
+
+
+        return list;
+    }
+
+    @Override
+    public Map<author, List<MessageSentihht>> getCommitSentiSortbyAuthor(String owner, String repo, String date) {
+        List<Commits> commitsList=gh.getCommits(owner, repo);
+        Map<author, List<MessageSentihht>> map=new HashMap<>();
+        for (Commits commits:commitsList){
+
+
+            LocalDate target = commits.getDate().toLocalDateTime().toLocalDate();
+            LocalDate l=LocalDate.parse(date);
+            if (target.compareTo(l)<0) continue;
+
+            Set<author> keys=map.keySet();
+            author a=new author();
+            a.setName(commits.getAuthor());
+            if (!keys.contains(a)){
+
+                List<MessageSentihht> list=new ArrayList<>();
+                int[] ints=sc.senti_strength(commits.getMessage());
+                MessageSentihht messageSenti=new MessageSentihht(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
+                list.add(messageSenti);
+
+                map.put(a,list);
+
+            }else{
+                List<MessageSentihht> list=map.get(a);
+                int[] ints=sc.senti_strength(commits.getMessage());
+                MessageSentihht messageSenti=new MessageSentihht(ints[0],ints[1],commits.getDate().toString(),commits.getMessage());
+                list.add(messageSenti);
+
+            }
+        }
+
+
+        for (Map.Entry<author, List<MessageSentihht>> item : map.entrySet()) {
+            author a=item.getKey();
+            List<MessageSentihht> list=item.getValue();
+            String description="";
+            if (list.size()==1){
+                a.setDescription("该参与者只贡献了一次。参考有限。");
+                a.setStar(1);
+                continue;
+            }
+            int star=1;
+            int low_count=0;
+            int high_count=0;
+
+            List<Double> neg=new ArrayList<>();
+            double avg1=0;
+
+            for (MessageSentihht m: list){
+                if (m.getLow()<-2) low_count++;
+
+                avg1+=m.getLow();
+
+                if (m.getHigh()>2) high_count++;
+                neg.add(m.getLow());
+            }
+            avg1/=list.size();
+
+            if (high_count>low_count){
+                description+="该参与者积极情绪较多。";
+                star++;
+                star++;
+            }else if (high_count==low_count){
+                description+="该参与者积极情绪与消极出现一致。";
+                star++;
+
+            }else{
+                description+="该参与者消极情绪较多。";
+            }
+
+            double t1=0;
+
+
+            for (int i=0;i<neg.size();i++){
+                t1+=(neg.get(i)-avg1)*(neg.get(i)-avg1);
+            }
+
+            t1/=neg.size();
+            t1=Math.sqrt(t1);
+
+            if (t1<0.5){
+                description+="该参与者消极情绪较为稳定。";
+                star++;
+            }else{
+                description+="该参与者消极情绪较为不稳定。";
+            }
+
+
+
+
+            a.setDescription(description);
+            a.setStar(star);
+
+
+
+        }
+
+
+
+        Comparator<List<MessageSentihht>> comparator=new Comparator<List<MessageSentihht>>() {
+
+
+            @Override
+            public int compare(List<MessageSentihht> o1, List<MessageSentihht> o2) {
+                return o2.size()-o1.size();
+            }
+        };
+
+
+        Map<author, List<MessageSentihht>> sorted = map.entrySet().stream()
+                .sorted(comparingByValue(comparator)).collect(toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (a,b) -> { throw new AssertionError(); },
+                        LinkedHashMap::new
+                ));
+
+        return sorted;
     }
 
     private double f(double i) {

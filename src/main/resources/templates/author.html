@@ -232,7 +232,8 @@
             item.setAttribute("href","#data-list-"+i);
             item.setAttribute("role","tab");
             item.setAttribute("aria-controls",i);
-            item.innerText=theList[i].date+"  \u00a0 \u00a0 \u00a0 \u00a0 \u00a0\u00a0\u00a0  "+theList[i].low+"   \u00a0 \u00a0 \u00a0 \u00a0          "+theList[i].high;
+            var d=new Date(theList[i].date);
+            item.innerText=theList[i].author+'  提交于 '+theList[i].date.substring(0,10)+"\n"+theList[i].comment.split('\n')[0];
 
             if (theList[i].low<-1) {
                 var neg=document.createElement("img");
@@ -261,6 +262,26 @@
             data.setAttribute("aria-labelledby","list-"+i+"-list");
             var text=document.createElement("p");
             text.textContent=theList[i].comment;
+
+            text.innerText+='\n情绪分析:\n \n消极情绪：'+theList[i].low+'\n\n积极情绪：'+theList[i].high+'\n\n修改的文件:\n\n';
+
+
+
+            var pairlist=theList[i].sentiPairs;
+            if (pairlist.length!=0)
+            text.innerText+='特殊词汇\n';
+            for (j=0;j<pairlist.length;j++){
+                text.innerText+=  pairlist[j].word+' \u00a0 \u00a0';
+                text.innerText+=  pairlist[j].score;
+                text.innerText+=  '\n';
+            }
+
+            var file_list=theList[i].filechanged;
+            for (i=0;i<file_list.length;i++){
+                var link=document.createElement("a");
+                link.textContent=file_list[i];
+                data.append(link);
+            }
             data.append(text);
 
             datalist.append(data);
@@ -282,6 +303,7 @@
             if (check==null) {
 
                 var loading=document.createElement("div");
+                loading.style.marginTop='90px';
                 loading.classList.add("spinner-border");
                 loading.setAttribute("id","loading_"+id.split('-')[1]);
                 loading.setAttribute("role","status");
@@ -308,18 +330,18 @@
                             var test_data = JSON.parse(json_data);
                             console.log(test_data['label']);
                             politeness.setAttribute("id", id.split('-')[1] + "politness");
-                            console.log(json_data);
+                            politeness.innerText='礼貌度分析：\n\n';
                             if (test_data['label']=='polite') {
-                                politeness.innerText = "礼貌的";
+                                politeness.innerText += "礼貌的";
                             }
                             else if (test_data['label']=='neutral'){
-                                politeness.innerText = "中性的";
+                                politeness.innerText += "中性的";
                             }else{
-                                politeness.innerText = "不礼貌的";
+                                politeness.innerText += "不礼貌的";
                             }
 
                             politeness.innerText+="\n\n置信度："+test_data['confidence'];
-                            politeness.style.marginTop="200px";
+                            politeness.style.marginTop="100px";
                             comment.append(politeness);
 
                             // console.log(json_data)
