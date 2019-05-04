@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>MonthTop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <script src="/js/local/common.js"></script>
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
+
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel='stylesheet' type='text/css' />
+
+    <!-- font-awesome icons CSS -->
+    <link href="/css/font-awesome.css" rel="stylesheet">
+    <!-- //font-awesome icons CSS -->
+
+    <!-- side nav css file -->
+    <link href='/css/SidebarNav.min.css' media='all' rel='stylesheet' type='text/css'/>
+    <!-- side nav css file -->
+
+    <!--webfonts-->
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+    <!--//webfonts-->
+
+    <!-- Metis Menu -->
+    <link href="/css/custom.css" rel="stylesheet">
+    <!--//Metis Menu -->
+
+</head>
+<body class="cbp-spmenu-push">
+<div class="main-content" id="Senti">
+    <div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+        <!--left-fixed -navigation-->
+        <aside class="sidebar-left">
+            <nav class="navbar navbar-inverse">
+                <div class="navbar-header">
+                    <h1><a class="navbar-brand" href="/search/input"><span class="fa fa-area-chart"></span> Senti</a></h1>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="sidebar-menu">
+                        <li class="header">GITHUB ANALYSE</li>
+                        <li class="treeview">
+                            <a href="/search/yeartop">
+                                <i class="fa fa-dashboard"></i> <span>YearTop</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="/search/monthtop">
+                                <i class="fa fa-dashboard"></i> <span>MonthTop</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="/search/monthchart">
+                                <i class="fa fa-dashboard"></i> <span>MonthChart</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </nav>
+        </aside>
+    </div>
+    <!--left-fixed -navigation-->
+
+    <!-- header-starts -->
+    <div class="sticky-header header-section ">
+        <div class="header-right">
+
+
+            <!--search-box-->
+            <div class="search-box">
+                <form class="input" action="/search/turnPage" method="post">
+                    <input class="sb-search-input input__field--madoka" placeholder="Input like: 123" type="search" id="input-31" name="issueNo"/>
+                    <label class="input__label" for="input-31">
+                        <svg class="graphic" width="100%" height="100%" viewBox="0 0 404 77" preserveAspectRatio="none">
+                            <path d="m0,0l404,0l0,77l-404,0l0,-77z"/>
+                        </svg>
+                    </label>
+                </form>
+            </div><!--//end-search-box-->
+
+            <div class="profile_details">
+                <ul>
+                    <li class="dropdown profile_details_drop">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <div class="profile_img">
+                                <span class="prfil-img"> </span>
+                                <div class="user-name">
+                                    <p>Admin Name</p>
+                                    <span>Administrator</span>
+                                </div>
+                                <i class="fa fa-angle-down lnr"></i>
+                                <i class="fa fa-angle-up lnr"></i>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu drp-mnu">
+                            <li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li>
+                            <li> <a href="#"><i class="fa fa-user"></i> My Account</a> </li>
+                            <li> <a href="#"><i class="fa fa-suitcase"></i> Profile</a> </li>
+                            <li> <a href="#"><i class="fa fa-sign-out"></i> Logout</a> </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+    <!-- //header-ends -->
+    <!-- main content start-->
+    <div id="page-wrapper">
+        <div class="main-page">
+            <div class="media">
+                <h2 class="title1">MonthTop</h2>
+                <div class="bs-example5 example_6 widget-shadow" data-example-id="media-list">
+                    <ul class="media-list">
+                        <li class="media">
+                            <div class="media-body">
+                                <div class="media">
+                                    <div class="media-left">
+                                    </div>
+                                    <div class="media-body">
+                                        <h3 class="media-heading">Select Year To Acquire Results</h3>
+                                        top1 of every month, including positive top and negative top
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+
+
+                <div class="media_1">
+                    <div class="col-md-6 media_1-left widget-shadow">
+                        <div class="panel_2">
+                            <h3 class="title1">Positive
+                                <select name="posYear" id="posYear" @change="changeYear">
+                                    <option value="2019">2019</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2017">2017</option>
+                                </select>
+                            </h3>
+                            <p>more top, more positive</p>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <td class="head">Month</td>
+                                    <td class="head">Issue</td>
+                                    <td class="head">Description</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="(item,index) in posData" v-if="nowYear1==2019&&index<3">
+                                    <tr>
+                                        <td><code>{{index+1}}</code></td>
+                                        <td>
+                                            <div class="demolayout padding-5">
+                                                <div class="demobox"><button style="border:none; background-color: #f0f0f0" @click = 'sendurl(posData[index])'>{{item}}</button></div>
+                                            </div>
+                                        </td>
+                                        <td>{{posDes[index]}}</td>
+                                    </tr>
+                                </template>
+                                <template v-for="(item,index) in posData" v-if="nowYear1!=2019">
+                                    <tr>
+                                        <td><code>{{index+1}}</code></td>
+                                        <td>
+                                            <div class="demolayout padding-5">
+                                                <div class="demobox"><button style="border:none; background-color: #f0f0f0" @click = 'sendurl(posData[index])'>{{item}}</button></div>
+                                            </div>
+                                        </td>
+                                        <td>{{posDes[index]}}</td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6 media_1-right widget-shadow">
+                        <div class="panel_2 panel_3">
+                            <h3 class="title1">Negative
+                                <select name="negYear" id="negYear" @change="changeYear2">
+                                    <option value="2019">2019</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2017">2017</option>
+                                </select>
+                            </h3>
+                            <p>more top, more negative</p>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <td class="head">Month</td>
+                                    <td class="head">Issue</td>
+                                    <td class="head">Description</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="(item,index) in negData" v-if="nowYear2==2019&&index<3">
+                                    <tr>
+                                        <td><code>{{index+1}}</code></td>
+                                        <td>
+                                            <div class="demolayout padding-5">
+                                                <div class="demobox"><button style="border:none; background-color: #f0f0f0" @click = 'sendurl(negData[index])'>{{item}}</button></div>
+                                            </div>
+                                        </td>
+                                        <td>{{negDes[index]}}</td>
+                                    </tr>
+                                </template>
+                                <template v-for="(item,index) in negData" v-if="nowYear2!=2019">
+                                    <tr>
+                                        <td><code>{{index+1}}</code></td>
+                                        <td>
+                                            <div class="demolayout padding-5">
+                                                <div class="demobox"><button style="border:none; background-color: #f0f0f0" @click = 'sendurl(negData[index])'>{{item}}</button></div>
+                                            </div>
+                                        </td>
+                                        <td>{{negDes[index]}}</td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--footer-->
+    <div class="footer">
+        <p> </p>
+    </div>
+    <!--//footer-->
+</div>
+
+
+
+
+<script src="/js/local/monthtop.js"></script>
+<script src="/js/bootstrap.js"> </script>
+</body>
+</html>

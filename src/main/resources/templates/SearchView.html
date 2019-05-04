@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Title</title>
+	<title>Workspace</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="" />
 	<script src="/js/local/common.js"></script>
-	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+	<!-- Bootstrap Core CSS -->
+	<link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
 
-	<link rel="stylesheet" href="/css/style.css" type="text/css"/>
-	<link rel="stylesheet" href="/css/bootstrap.css" type="text/css"/>
-	<link rel="stylesheet" href="/css/SidebarNav.min.css" type="text/css"/>
-	<link rel="stylesheet" href="/css/custom.css" type="text/css"/>
-	<link rel="stylesheet" href="/css/font-awesome.css" type="text/css"/>
-	<link rel="stylesheet" href="/css/graph.css">
-	<link rel="stylesheet" href="/css/export.css" type="text/css" media="all" />
+	<!-- Custom CSS -->
+	<link href="/css/style.css" rel='stylesheet' type='text/css' />
+
+	<!-- font-awesome icons CSS -->
+	<link href="/css/font-awesome.css" rel="stylesheet">
+	<!-- //font-awesome icons CSS -->
+
+	<!-- side nav css file -->
+	<link href='/css/SidebarNav.min.css' media='all' rel='stylesheet' type='text/css'/>
+	<!-- side nav css file -->
+
+	<!--webfonts-->
 	<link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+	<!--//webfonts-->
+
+	<!-- Metis Menu -->
+	<link href="/css/custom.css" rel="stylesheet">
+	<!--//Metis Menu -->
+	<link href="/css/loading.css" rel="stylesheet">
 	<style>
 		form {
 			position: relative;
@@ -47,6 +61,12 @@
 								<span>History</span>
 							</a>
 						</li>
+						<li class="treeview">
+							<a type="button" id="Recent" v-on:click="recent">
+								<i class="fa fa-table"></i>
+								<span>Recent</span>
+							</a>
+						</li>
 					</ul>
 				</div>
 				<!-- /.navbar-collapse -->
@@ -54,6 +74,33 @@
 		</aside>
 	</div>
 	<!--left-fixed -navigation-->
+
+	<!-- header-starts -->
+	<div class="sticky-header header-section ">
+		<div class="header-right">
+
+
+			<div class="profile_details">
+				<ul>
+					<li class="dropdown profile_details_drop">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							<div class="profile_img">
+								<div class="user-name">
+									<p>Log out</p>
+								</div>
+								<i class="fa fa-angle-down lnr"></i>
+								<i class="fa fa-angle-up lnr"></i>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+		<div class="clearfix"> </div>
+	</div>
+	<!-- //header-ends -->
 
 
 
@@ -64,15 +111,29 @@
 	<!-- main content start-->
 	<div id="page-wrapper">
 		<div class="main-page">
-			<div class="tables" id="searchdiv">
-				<h2 class="title1">YSearch</h2>
+			<div class="tables" id="loader" style="height:300px; display:none">
+				<h2 class="title1">Search</h2>
+				<div class="loadEffect">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</div>
+
+			<div class="tables" id="searchdiv" style="height:300px">
+				<h2 class="title1">Search</h2>
 				<form action="/search/history" method="post">
-					<input type="text" name="url" placeholder="请输入您要搜索的内容..."><input type="submit" value="搜索">
+					<input type="text" name="url" placeholder="请输入您要搜索的内容..."><input type="submit" value="搜索" id="sousuo" v-on:click="wait">
 				</form>
 			</div>
 
 			<div class="table" id="historySearch">
-				<h2 class="title1">YHistory</h2>
+				<h2 class="title1">History</h2>
 				<div class="panel-body widget-shadow" data-example-id="contextual-table">
 					<table class="table">
 						<thead>
@@ -102,7 +163,41 @@
 				</div>
 
 			</div>
-			<div class="clearfix" style="height:370px"> </div>
+			<div class="clearfix"></div>
+
+			<div class="table" id="RecentDiv">
+				<h2 class="title1">Recent Project</h2>
+				<div class="panel-body widget-shadow" data-example-id="contextual-table">
+					<table class="table">
+						<thead>
+						<tr>
+							<th>#</th>
+							<th>url</th>
+							<th>revise time</th>
+						</tr>
+						</thead>
+						<tbody>
+						<template v-for="(item,index) in recenttime" v-if="index<5">
+							<tr v-if="index%2==0" class="active">
+								<th scope="row">{{ index+1}}</th>
+								<td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(recenturl[index], realtime[index])'>{{recenturl[index]}}</button></td>
+								<td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(recenturl[index], realtime[index])'>{{item}}</button></td>
+								<td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(recenturl[index], realtime[index])'>more</button></td>
+							</tr>
+							<tr v-if="index%2!=0">
+								<th scope="row">{{ index+1}}</th>
+								<td><button style="border:none; background-color: white" @click = 'sendurl(recenturl[index], realtime[index])'>{{recenturl[index]}}</button></td>
+								<td><button style="border:none; background-color: white" @click = 'sendurl(recenturl[index], realtime[index])'>{{item}}</button></td>
+								<td><button style="border:none; background-color: white" @click = 'sendurl(recenturl[index], realtime[index])'>more</button></td>
+							</tr>
+						</template>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+			<div class="clearfix"> </div>
+			<div style="height:350px"></div>
 		</div>
 	</div>
 	<!--footer-->
@@ -113,8 +208,6 @@
 </div>
 
 <script src="/js/local/searchview.js"></script>
-<script src="/js/jquery.nicescroll.js"></script>
-<script src="/js/scripts.js"></script>
 <script src="/js/bootstrap.js"> </script>
 </body>
 </html>
