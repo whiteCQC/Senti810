@@ -26,7 +26,7 @@ $(document).ready(function() {
                         if(res=="not Exist"){
                             alert("account not exist or password wrong");
                         }else if(res=="success"){
-                            window.location.href="/view/main.html"
+                            window.location.href="/view/search.html"
                         }
                     })
                 }

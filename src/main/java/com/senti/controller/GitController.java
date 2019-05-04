@@ -58,7 +58,7 @@ public class GitController {
 
         Map<String,List<String>> relatedClass=gitService.getCommitRelatedClasses(owner,repo);
 
-        //gitService.getTopClasses(relatedClass,mlist,owner,repo);
+        List<List<String>> tops= gitService.getTopClasses(relatedClass,mlist,owner,repo);
 
         List<String> Commitdates=new ArrayList<>();
         List<String> highs=new ArrayList<>();
@@ -107,6 +107,8 @@ public class GitController {
         res.put("HighCount",HighCount);
         res.put("LowCount",LowCount);
         res.put("relatedClasses",relatedClasses);
+        res.put("topHigh",tops.get(0));
+        res.put("topLow",tops.get(1));
 
         return res;
     }
@@ -208,4 +210,16 @@ public class GitController {
 
         return res;
     }
+
+    @RequestMapping("/projectExist")
+    @ResponseBody
+    public String HasSearch(HttpServletRequest request){
+        HttpSession session = request.getSession(true);
+        if(null==session.getAttribute("owner"))
+            return "no";
+        else
+            return "yes";
+
+    }
+
 }

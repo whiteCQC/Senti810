@@ -314,7 +314,8 @@ public class GitServiceImpl implements GitService {
     public List<List<String>> getTopClasses(Map<String, List<String>> map, List<MessageSenti> mlist, String owner, String repo) {
         List<String> presentJava=gh.getPresentJava(owner,repo);
 
-        Map<String, Caltopsenti> res=new HashMap<>();
+        Map<String, CaltopHigh> res1=new HashMap<>();
+        Map<String, CaltopLow> res2=new HashMap<>();
 
         for(MessageSenti m:mlist){
             int high=(int)m.getHigh();
@@ -322,20 +323,35 @@ public class GitServiceImpl implements GitService {
 
             for(String c:map.get(m.getSha())){
                 if(presentJava.contains(c)){
-
-                    if(res.containsKey(c)){
-
+                    if(!res1.containsKey(c)){
+                        res1.put(c,new CaltopHigh(c,high));
+                        res2.put(c,new CaltopLow(c,low));
                     }else{
+                        res1.get(c).add(high);
+                        res2.get(c).add(low);
                     }
-                    res.get(c).add(high);
-                    res.get(c).add(low);
                 }
             }
         }
 
+
+
         List<String> topHigh=new ArrayList<>();
         List<String> topLow=new ArrayList<>();
+
+        List<CaltopHigh> cl1=new ArrayList<>(res1.values());
+        List<CaltopLow> cl2=new ArrayList<>(res2.values());
+        Collections.sort(cl1);
+        Collections.sort(cl2);
+
+        for(int i=0;i<10&&i<cl1.size();i++){
+            topHigh.add(cl1.get(i).getName());
+            topLow.add(cl2.get(i).getName());
+        }
+
         List<List<String>> l=new ArrayList<>();
+        l.add(topHigh);
+        l.add(topLow);
 
         return l;
     }
