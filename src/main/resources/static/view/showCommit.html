@@ -80,14 +80,14 @@
                         <h3>推荐关注类</h3>
                         <div><h5>高情绪值类（以下类可能为主要功能类/质量较高类）</h5>
                             <div v-for="item in topHigh">
-                                <a >{{item}}</a>
+                                <a v-bind:href="'showCode.html?selectClass='+item">{{item}}</a>
                                 <br>
                             </div>
 
                         </div>
                         <div><h5>低情绪值类（以下类可能质量存在问题/较多异常处理类）</h5>
                             <div v-for="item in topLow">
-                                <a >{{item}}</a>
+                                <a v-bind:href="'showCode.html?selectClass='+item">{{item}}</a>
                                 <br>
                             </div>
                         </div>

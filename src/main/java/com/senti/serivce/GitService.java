@@ -28,5 +28,5 @@ public interface GitService {
 
     List<MessageSentihht> getCommitSentibyAuthor(String owner, String repo, String author);
 
-    List<List<String>> getTopClasses(Map<String,List<String>> map,List<MessageSenti> mlist,String owner,String repo);
+    List<List<String>> getTopClasses(Map<String,List<String>> map,List<MessageSenti> mlist,List<String> classes);
 }

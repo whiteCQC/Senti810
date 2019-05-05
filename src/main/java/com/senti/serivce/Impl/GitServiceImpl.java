@@ -311,9 +311,7 @@ public class GitServiceImpl implements GitService {
 
     }
     @Override
-    public List<List<String>> getTopClasses(Map<String, List<String>> map, List<MessageSenti> mlist, String owner, String repo) {
-        List<String> presentJava=gh.getPresentJava(owner,repo);
-
+    public List<List<String>> getTopClasses(Map<String, List<String>> map, List<MessageSenti> mlist,List<String> classes) {
         Map<String, CaltopHigh> res1=new HashMap<>();
         Map<String, CaltopLow> res2=new HashMap<>();
 
@@ -322,7 +320,7 @@ public class GitServiceImpl implements GitService {
             int low=(int)m.getLow();
 
             for(String c:map.get(m.getSha())){
-                if(presentJava.contains(c)){
+                if(classes.contains(c)){
                     if(!res1.containsKey(c)){
                         res1.put(c,new CaltopHigh(c,high));
                         res2.put(c,new CaltopLow(c,low));
