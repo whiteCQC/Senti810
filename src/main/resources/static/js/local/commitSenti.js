@@ -205,8 +205,9 @@ $(document).ready(function () {
 
                 myChart1.on('click', function (params) {
                     $('#commitModal').modal();
-                    var toShow = comments[params.dataIndex] + "<br>" + rclasses[params.dataIndex];
-                    document.getElementById("commit-body").innerHTML = toShow;
+
+                    document.getElementById("commit-body").innerHTML = comments[params.dataIndex];
+                    document.getElementById("related").innerHTML = rclasses[params.dataIndex];
                 });
             })
         }

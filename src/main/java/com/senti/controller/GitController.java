@@ -60,8 +60,9 @@ public class GitController {
         List<MessageSenti> mlist = gitService.getCommitSenti(owner, repo);
 
         Map<String, List<String>> relatedClass = gitService.getCommitRelatedClasses(owner, repo);
+        List<String> dealClasses=new ArrayList<String>(map1.keySet());
 
-        List<List<String>> tops = gitService.getTopClasses(relatedClass, mlist, new ArrayList<String>(map1.keySet()));
+        List<List<String>> tops = gitService.getTopClasses(relatedClass, mlist, dealClasses);
 
         List<String> Commitdates = new ArrayList<>();
         List<String> highs = new ArrayList<>();
@@ -80,9 +81,12 @@ public class GitController {
             Commitdates.add(m.getDate());
 
             List<String> tempClasses = relatedClass.get(m.getSha());
-            String classes = "RelatedClasses:";
+            String classes = "";
             for (String s : tempClasses) {
-                classes = classes + "<br>" + s;
+                if(dealClasses.contains(s)){
+                    classes = classes+"<a href='showCode.html?selectClass="+s+"'>"+s+"</a>" + "<br>";
+                }
+
             }
             relatedClasses.add(classes);
 
