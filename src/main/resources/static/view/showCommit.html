@@ -45,6 +45,12 @@
                         </a>
                     </li>
                     <li class="treeview">
+                        <a type="button" id="returnback" v-on:click="returnback">
+                            <i class="fa fa-pie-chart"></i>
+                            <span>Return</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
                 </ul>
             </div>
 
@@ -54,12 +60,6 @@
     <!-- header-starts -->
     <div class="sticky-header header-section ">
             <!--search-box-->
-            <div class="search-box" style="margin-left: 500px">
-                <form v-on:submit.prevent="searchProject">
-                    <input type="text" id="search_text" placeholder="Search" v-model="toSearch">
-                    <input type="button" id="search_button">
-                </form>
-            </div><!--//end-search-box-->
 
     </div>
     <!-- //header-ends -->
@@ -76,16 +76,16 @@
             </div>
             <div class="row-one widgettable">
                 <div id="CommitMessage" style="display:none;">
-                    <div class="panel-info widget-shadow"  style="margin-left: 230px"> <!-- 推荐关注类 -->
+                    <div class="panel-info widget-shadow"  style="margin-left: 230px;height: 360px"> <!-- 推荐关注类 -->
                         <h3>推荐关注类</h3>
-                        <div><h5>高情绪值类（以下类可能为主要功能类/质量较高类）</h5>
+                        <div style="float: left"><h5>高情绪值类（以下类可能为主要功能类/质量较高类）</h5>
                             <div v-for="item in topHigh">
                                 <a v-bind:href="'showCode.html?selectClass='+item">{{item}}</a>
                                 <br>
                             </div>
 
                         </div>
-                        <div><h5>低情绪值类（以下类可能质量存在问题/较多异常处理类）</h5>
+                        <div style="float: left;margin-left: 100px"><h5>低情绪值类（以下类可能质量存在问题/较多异常处理类）</h5>
                             <div v-for="item in topLow">
                                 <a v-bind:href="'showCode.html?selectClass='+item">{{item}}</a>
                                 <br>

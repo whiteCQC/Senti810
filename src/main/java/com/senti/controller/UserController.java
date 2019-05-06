@@ -27,8 +27,8 @@ public class UserController {
         int id = userSerivce.Login(account,password);
         if (id!=-1) {
             HttpSession session = request.getSession(true);
-            session.setAttribute("userId", id);
-            session.setAttribute("Account",account);
+            session.setAttribute("userid", id);
+            session.setAttribute("username",account);
             return "success";
         }else{
             return "not Exist";

@@ -1,5 +1,6 @@
 package com.senti.controller;
 
+import com.senti.model.codeComment.ClassNote;
 import com.senti.model.codeComment.ClassSenti;
 import com.senti.model.codeComment.MessageSenti;
 import com.senti.serivce.GitService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.json.JsonObject;
@@ -50,6 +52,7 @@ public class GitController {
         HttpSession session = request.getSession(true);
         String owner = (String) session.getAttribute("owner");
         String repo = (String) session.getAttribute("repo");
+        int userid = (Integer) session.getAttribute("userid");
 
         Map<String, List<ClassSenti>> map1 = gitService.getClassSenti(owner, repo);
         if (null == session.getAttribute("ClassSenti"))
@@ -201,6 +204,12 @@ public class GitController {
 
         Map<String, List<ClassSenti>> map = (Map<String, List<ClassSenti>>) session.getAttribute("ClassSenti");
 
+        String owner = (String) session.getAttribute("owner");
+        String repo = (String) session.getAttribute("repo");
+        int userid = (Integer) session.getAttribute("userid");
+
+        Map<String,List<ClassNote>> allnotes=gitService.getNotes(owner,repo,userid);
+
         Map<String, List<String>> res = new HashMap<>();
         List<String> dates = new ArrayList<>();
         List<String> highs = new ArrayList<>();
@@ -232,6 +241,22 @@ public class GitController {
         res.put("codeLows", lows);
         res.put("codeComments", codeComments);
 
+        List<String> notes=new ArrayList<>();
+        List<String> times=new ArrayList<>();
+
+        if(allnotes.containsKey(path)){
+            List<ClassNote> list=allnotes.get(path);
+
+            for(ClassNote cn:list){
+                notes.add(cn.getNote());
+                String time=cn.getTime().replaceFirst("\\/","年").replace("/","月").replace(" ","日");
+                times.add(time);
+            }
+        }
+        res.put("notes",notes);
+        res.put("noteTimes",times);
+
+
         Map<String, List<String>> allCodes = (Map<String, List<String>>) session.getAttribute("Allcodes");
         List<String> codes = allCodes.get(path);
 
@@ -250,5 +275,27 @@ public class GitController {
             return "yes";
 
     }
+
+    @RequestMapping("/addNote/{timers}")
+    @ResponseBody
+    public void addNote(@PathVariable("timers") String time, @RequestParam("selectClass") String selectClass
+            , @RequestParam("note") String note,HttpServletRequest request) {
+        time=time.replace("日"," ").replace("月","/").replace("年","/");
+
+        selectClass = selectClass.replace("%20", " ");
+
+        HttpSession session = request.getSession(true);
+        Map<String, String> paths = (Map<String, String>) session.getAttribute("TreePaths");
+
+        String path = paths.get(selectClass);
+
+        String owner=(String)session.getAttribute("owner");
+        String repo=(String)session.getAttribute("repo");
+        int userid=(Integer)session.getAttribute("userid");
+        if(note.trim().length()>0&&selectClass.trim().length()>0)
+            gitService.addNote(note,time,path,owner,repo,userid);
+
+    }
+
 
 }

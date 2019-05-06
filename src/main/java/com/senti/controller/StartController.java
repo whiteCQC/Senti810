@@ -9,4 +9,9 @@ public class StartController {
     public String start(){
         return "index";
     }
+
+    @RequestMapping("/SearchView")
+    public String SearchView(){
+        return "SearchView";
+    }
 }

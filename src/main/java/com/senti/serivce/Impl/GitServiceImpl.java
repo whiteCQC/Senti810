@@ -62,8 +62,6 @@ public class GitServiceImpl implements GitService {
         double low = 0;
         int[] score;
 
-        int standf=0;
-
         for (int i = clist.size() - 1; i >= 0;i--) {
             Commits c = clist.get(i);
             if(!c.getMessage().startsWith("Merge")){
@@ -352,6 +350,34 @@ public class GitServiceImpl implements GitService {
         l.add(topLow);
 
         return l;
+    }
+
+    @Override
+    public void addNote(String note, String time, String classname, String owner, String repo,int userid) {
+        int gid=gitDao.GetProjectId(owner,repo);
+        ClassNote cn=new ClassNote(userid,gid,classname,note,time);
+
+        gitDao.addNote(cn);
+    }
+
+    @Override
+    public Map<String, List<ClassNote>> getNotes(String owner, String repo,int userid) {
+        int gid=gitDao.GetProjectId(owner,repo);
+        List<ClassNote> allnotes=gitDao.getNotes(userid,gid);
+
+        Map<String ,List<ClassNote>> notes=new HashMap<>();
+        for(ClassNote c:allnotes){
+            if(!notes.containsKey(c.getClassname())){
+                List<ClassNote> list=new ArrayList<>();
+                list.add(c);
+                notes.put(c.getClassname(),list);
+            }else {
+                notes.get(c.getClassname()).add(c);
+            }
+
+        }
+
+        return notes;
     }
 
     private double f(double i) {

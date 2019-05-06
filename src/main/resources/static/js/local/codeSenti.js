@@ -9,6 +9,9 @@ $(document).ready(function () {
             codeLows: [],
             codeComments: [],
 
+            notes:[],
+            noteTimes:[],
+
             codes: [],
 
             toSearch: ""
@@ -34,9 +37,84 @@ $(document).ready(function () {
                         window.location.href="/view/showCode.html"
                 })
             },
-            searchProject:function () {
+            returnback:function () {
+                window.location.href="SearchView"
+            },
+            SubmitNote:function () {
+                var oWrap=document.getElementsByClassName("wrap")[0];
+                var oTextarea=oWrap.getElementsByTagName("textarea")[0];
+                var oBtn=oWrap.getElementsByTagName("input")[0];
+                var oUl=oWrap.getElementsByTagName("ul")[0];
+                var errMsg=oWrap.getElementsByClassName("errmsg")[0];
+
+                var t=new Date();
+                var Year=t.getFullYear();
+                var Month=t.getMonth()+1;
+                var Day=t.getDate();
+                var Hours=t.getHours();
+                var Minutes=t.getMinutes();
+                var Scondes=t.getSeconds();
+                var timers=toString(Year)+"年"+toString(Month)+"月"+toString(Day)+"日"+toString(Hours)+":"+toString(Minutes)+":"+toString(Scondes);//将获取到的日期对象拼接。
+
+                function toString(n)//数字转字符串
+                {
+                    if(n<9)
+                    {
+                        n="0"+n;
+                    }
+                    else
+                    {
+                        n=""+n;
+                    }
+                    return n;
+                };
+                var self=this
+
+                oBtn.onclick=function()
+                {
+                    if(oTextarea.value=="")
+                    {
+                        startMove(errMsg,{opacity:100});
+                        //console.log(errMsg.style.opacity)
+                        oTextarea.select();
+                    }
+                    else
+                    {
+                        var noteInfo=[oTextarea.value,timers,self.selectClass];
+                        self.$http.get("http://localhost:8080/git/addNote/"+timers+"?selectClass="+self.selectClass+"&&note="+oTextarea.value).then(function (response) {
+
+                        })
+
+                        var aLi=document.createElement("li");
+                        var aSpan=document.createElement("span");
+                        aLi.innerHTML=oTextarea.value;
+                        aSpan.innerHTML=timers;
+                        if(oUl.children.length>0)
+                        {
+                            oUl.insertBefore(aLi,oUl.children[0]);
+                            aLi.appendChild(aSpan);
+                            oTextarea.value="";
+                        }
+                        else
+                        {
+                            oUl.appendChild(aLi);
+                            aLi.appendChild(aSpan);
+                            oTextarea.value="";
+                        };
+                        var aLiHeight=parseInt(getStyle(aLi,"height"));
+
+                        aLi.style.height="0";
+                        startMove(aLi,{height:aLiHeight},function(){
+                            startMove(aLi,{opacity:100});
+                        });
+
+                        aLi.style.opacity="1";
+                    }
+                };
+
 
             }
+
         },
         mounted(){
 
@@ -62,6 +140,44 @@ $(document).ready(function () {
                     this.codeHighs = res.codeHighs;
                     this.codeLows = res.codeLows;
                     this.codeComments = res.codeComments;
+
+                    this.notes=res.notes;
+                    this.noteTimes=res.noteTimes;
+
+                    console.log(this.notes);
+
+                    var oWrap=document.getElementsByClassName("wrap")[0];
+                    var oUl=oWrap.getElementsByTagName("ul")[0];
+
+                    oUl.innerHTML="";
+                    for(var i=0;i<this.notes.length;i++){
+                        var aLi=document.createElement("li");
+                        var aSpan=document.createElement("span");
+                        aLi.innerHTML=this.notes[i];
+                        aSpan.innerHTML=this.noteTimes[i];
+                        if(oUl.children.length>0)
+                        {
+                            oUl.insertBefore(aLi,oUl.children[0]);
+                            aLi.appendChild(aSpan);
+                        }
+                        else
+                        {
+                            oUl.appendChild(aLi);
+                            aLi.appendChild(aSpan);
+                        };
+                        var aLiHeight=parseInt(getStyle(aLi,"height"));
+
+                        aLi.style.height="0";
+                        startMove(aLi,{height:aLiHeight},function(){
+                            startMove(aLi,{opacity:100});
+                        });
+
+                    }
+                    var lis=oWrap.getElementsByTagName("li");
+                    for(var i=0;i<lis.length;i++){
+                        lis[i].style.opacity=1;
+                    }
+
 
                     var posData = [];
                     var negData = [];
@@ -169,6 +285,42 @@ $(document).ready(function () {
                                 self.codeLows = res.codeLows;
                                 self.codeComments = res.codeComments;
 
+                                self.notes=res.notes;
+                                self.noteTimes=res.noteTimes;
+
+                                console.log(self.notes);
+
+                                var oWrap=document.getElementsByClassName("wrap")[0];
+                                var oUl=oWrap.getElementsByTagName("ul")[0];
+
+                                oUl.innerHTML="";
+                                for(var i=0;i<self.notes.length;i++){
+                                    var aLi=document.createElement("li");
+                                    var aSpan=document.createElement("span");
+                                    aLi.innerHTML=self.notes[i];
+                                    aSpan.innerHTML=self.noteTimes[i];
+                                    if(oUl.children.length>0)
+                                    {
+                                        oUl.insertBefore(aLi,oUl.children[0]);
+                                        aLi.appendChild(aSpan);
+                                    }
+                                    else
+                                    {
+                                        oUl.appendChild(aLi);
+                                        aLi.appendChild(aSpan);
+                                    };
+                                    var aLiHeight=parseInt(getStyle(aLi,"height"));
+
+                                    aLi.style.height="0";
+                                    startMove(aLi,{height:aLiHeight},function(){
+                                        startMove(aLi,{opacity:100});
+                                    });
+                                }
+                                var lis=oWrap.getElementsByTagName("li");
+                                for(var i=0;i<lis.length;i++){
+                                    lis[i].style.opacity=1;
+                                }
+
                                 var posData = [];
                                 var negData = [];
                                 var comments = [];
@@ -249,3 +401,57 @@ $(document).ready(function () {
     })
 
 })
+
+//运动框架
+function startMove(obj,json,endFn){
+    clearInterval(obj.timer);
+    obj.timer=setInterval(
+        function(){
+
+            var iStop=true;
+            for(var curr in json)
+            {
+                var oNumber=0;
+                if(curr=="opacity")
+                {
+                    oNumber=Math.round(parseFloat(getStyle(obj,curr))*100);
+                }
+                else
+                {
+                    oNumber=parseInt(getStyle(obj,curr));
+                }
+                var speed=(json[curr]-oNumber)/6;
+                speed=speed>0?Math.ceil(speed):Math.floor(speed);
+                if(oNumber!=json[curr])
+                    iStop=false;
+                if(curr=="opacity")
+                {
+                    obj.style.filter="alpha(opacity:"+(oNumber+speed)+")";
+                    obj.style.opacity=(oNumber+speed)/100;
+                }
+                else
+                {
+                    obj.style[curr]=oNumber+speed+"px";
+                }
+            };
+            if(iStop)
+            {
+                clearInterval(obj.timer);
+                if(endFn)endFn();
+            }
+        },30);
+};
+
+//获取非行间样式
+function getStyle(obj,name)
+{
+    if(obj.currentStyle)
+    {
+        obj=currentStyle[name];
+    }
+    else
+    {
+        obj=getComputedStyle(obj,false)[name];
+    }
+    return obj;
+};

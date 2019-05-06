@@ -20,6 +20,7 @@
     <link href="/css/Loadingstyle.css" rel="stylesheet">
     <link href="/css/normalize.css" rel="stylesheet">
     <link href="/css/flatnav.css"  rel="stylesheet">
+    <link href="/css/note.css"  rel="stylesheet">
     <link rel="stylesheet" href="/css/themes/default/style.min.css" />
 </head>
 <body>
@@ -46,6 +47,12 @@
                         </a>
                     </li>
                     <li class="treeview">
+                        <a type="button" id="returnback" v-on:click="returnback">
+                            <i class="fa fa-pie-chart"></i>
+                            <span>Return</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
                 </ul>
             </div>
 
@@ -55,12 +62,6 @@
     <!-- header-starts -->
     <div class="sticky-header header-section ">
             <!--search-box-->
-            <div class="search-box" style="margin-left: 500px">
-                <form v-on:submit.prevent="searchProject">
-                    <input type="text" id="search_text" placeholder="Search" v-model="toSearch">
-                    <input type="button" id="search_button">
-                </form>
-            </div><!--//end-search-box-->
 
     </div>
     <!-- //header-ends -->
@@ -80,14 +81,28 @@
                     <div class="panel-info widget-shadow"  style="margin-left: 230px">
                         <table width="1600px" border="0">
                             <tr>
-                                <td rowspan="3"> <div id="allClasses" style="height: 1200px;width: 300px;"></div></td>
+                                <td rowspan="3"> <div id="allClasses" style="height: 1630px;width: 300px;"></div></td>
                                 <td><div id="CodeComment" style="width: 1000px; height: 350px;"></div><!--代码情绪图--></td>
                             </tr>
                             <tr>
                                 <td><textarea style="width: 800px;height: 400px;margin-left: 100px;" readonly="readonly" id="codes"></textarea></td>
                             </tr>
                             <tr>
-                                <td style="height: 400px"></td>
+                                <td style="height: 880px" id="notes">
+                                    <div class="wrap">
+                                        <div class="says">
+                                            <h1>Your Note</h1>
+                                            <form v-on:submit.prevent="SubmitNote">
+                                                <textarea></textarea><input type="submit"  value="Submit">
+                                            </form>
+                                            <div class="errmsg">Please input your note！</div>
+                                        </div>
+                                        <ul>
+                                        </ul>
+                                    </div>
+                                    <div style="text-align:center;margin:100px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+                                    </div>
+                                </td>
                             </tr>
                         </table>
                     </div>
