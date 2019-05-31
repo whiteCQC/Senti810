@@ -112,10 +112,11 @@ public class IssueController {
                 else if (webContent.contains("https://github.com")) {
                     url=webContent;
                     /*爬取数据*/
-                    if (da.getSameTypeIssue(webContent).size() == 0) {//如果数据库中没有记录则需要爬取
-                        CrawlCommentImpl crawler = new CrawlCommentImpl("crawl", webContent);
-                        crawler.start(2);
-                    }
+//                    if (da.getSameTypeIssue(webContent).size() == 0) {//如果数据库中没有记录则需要爬取
+                    CrawlCommentImpl crawler = new CrawlCommentImpl("crawl", webContent);
+                    crawler.start(2);
+                    crawler.start(2);
+ //                   }
 //                    session.setAttribute("url", url);
 //                    session.setAttribute("name","github");
 
@@ -191,12 +192,18 @@ public class IssueController {
         if(userid==null){
             return "mylogin";
         }
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String viewtime = df.format(new Date());// new Date()为获取当前系统时间
         String issueweb=request.getParameter("issueweb");//url
         String searchtime=request.getParameter("searchtime");//time
         if(issueweb!=null&&searchtime!=null) {
  //           HttpSession session = request.getSession();
             session.setAttribute("url", issueweb);
             session.setAttribute("time", searchtime);
+            Database da=new DatabaseImpl();
+            da.connSQL();
+            da.insertHistoryView(Integer.parseInt(userid), issueweb, searchtime, viewtime);
+            da.deconnSQL();
         }
         return "chooseType";
  //       return "details";
@@ -505,4 +512,74 @@ public class IssueController {
         }
         return res;
     }
+
+    @RequestMapping("/recenttop")
+    public String recenttop(HttpServletRequest request){
+        String fromtime=request.getParameter("fromtime");//开始时间
+        String totime=request.getParameter("totime");//结束时间
+        if((fromtime==null)||(totime==null)){//如果未设置开始和结束时间，则规定开始和结束时间
+            fromtime="2017-09-29";
+            totime="2018-10-10";
+        }
+        HttpSession session = request.getSession();
+        session.setAttribute("fromtime", fromtime);
+        session.setAttribute("totime", totime);
+        return "recenttop";
+    }
+
+    @RequestMapping("/recentdata")
+    @ResponseBody
+    public ArrayList<Object> getBodong(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        ArrayList<Object> res=new ArrayList<>();
+        try {
+            HttpSession session = request.getSession();
+            String userid = (String) session.getAttribute("userid");//搜索的数据库名
+            String url = (String) session.getAttribute("url");
+            String time = (String) session.getAttribute("time");
+            String fromtime=(String)session.getAttribute("fromtime");
+            System.out.println(url);
+            String totime=(String)session.getAttribute("totime");
+            if((fromtime==null)||(totime==null)){//如果未设置开始和结束时间，则规定开始和结束时间
+                fromtime="2017-09-29";
+                totime="2018-10-10";
+            }
+            DealComment dc=new DealCommentImpl() ;
+            if(url.equals("DERBY") || url.equals("DROOLS") || url.equals("GROOVY") || url.equals("PIG") ||
+                    url.equals("MNG") || url.equals("ISPN") || url.equals("JBSEAM") ){
+                ArrayList<Object> fangcha=dc.getVarL(fromtime, totime, url);
+                ArrayList<Object> bianhua=dc.getSelectChangeL(fromtime, totime, url);
+                res.add(fangcha);
+                res.add(bianhua);
+            }else {
+                ArrayList<Object> fangcha=dc.getVar(fromtime, totime, url);
+                ArrayList<Object> bianhua=dc.getSelectChange(fromtime, totime, url);
+                res.add(fangcha);
+                res.add(bianhua);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @RequestMapping("/recentview")
+    @ResponseBody
+    public ArrayList<ArrayList<String>> hisView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
+        try{
+            HttpSession session=request.getSession();
+            String userid=(String)session.getAttribute("userid");//userID在session里
+            Database da=new DatabaseImpl();
+            res=da.getRecentView(Integer.parseInt(userid));
+/*            for(int i=0;i<3;i++){
+                System.out.println(res.get(i).get(2));
+            }*/
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
 }

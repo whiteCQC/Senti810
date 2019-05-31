@@ -1,45 +1,76 @@
 new Vue({
     el: "#Senti",
     data: {
-        issueData:[],
-        usedData:[],
+        variancesP:[],
+        variancesN:[],
+        variancesPTitle:[],
+        variancesNTitle:[],
+        date:[],
+        sentiOfPos:[],
+        sentiOfNeg:[],
         issueWeb:"",
-        yourComment:""
+        issueData:[],
+        usedData:[]
     },
     mounted:function(){
-        this.monthchart();
-        this.getComment();
+        $("#loader").show();
+        this.recenttop();
+
     },
     methods:{
-        monthchart:function(){
-            $("#mainall").hide();
-            $("#loader").show();
-            self=this;
-            this.$http.get("http://localhost:8080/search/month_chart").then(function (response) {
+        recenttop: function () {
+            self = this;
+            this.$http.get("http://localhost:8080/search/recentdata").then(function (response) {
                 var res = response.data;
-                var posData=[];
-                var negData=[];
-                var datetime=[];
-                var data1=res[0];//double[][]
-                var data2=res[1];//ArrayList<ArrayList<String>>
-                for(var i=0;i<data2.length;i++){
-                    for(var j=0;j<data2[i].length;j++){
-                        var index=data2[i][j].lastIndexOf("/");
-                        data2[i][j]=data2[i][j].substring(index+1);
+                var variance=res[0];
+                var changes=res[1];
+                var posV=[];
+                var negV=[];
+                var dealposV=[];
+                var dealnegV=[];
+                var posVTitle=variance[2];
+                var negVTitle=variance[3];
+                this.variancesPTitle=posVTitle;
+                this.variancesNTitle=negVTitle;
+                var index=variance[0][0].lastIndexOf("/");
+                var issueWeb=variance[0][0].substring(0,index+1);
+                this.issueWeb=issueWeb;
+                for(var i=0;i<variance[0].length;i++){
+                    posV[i]=variance[0][i].substring(variance[0][i].lastIndexOf("/")+1);
+                    negV[i]=variance[1][i].substring(variance[1][i].lastIndexOf("/")+1);
+                }
+                if(posV.length>5){//如果大于5，则只截取前五,否则全部保留
+                    for(var i=0;i<5;i++){
+                        dealposV[i]=posV[i];
+                        dealnegV[i]=negV[i];
+                    }
+                }else{
+                    dealposV=posV;
+                    dealnegV=negV;
+                }
+
+                var dates=changes[0];
+                var sentiP=changes[1];
+                var sentiN=changes[2];
+                var relative=changes[3];
+                for(var i=0;i<relative.length;i++){
+                    for(var j=0;j<relative[i].length;j++){
+                        var ind=relative[i][j].lastIndexOf("/");
+                        relative[i][j]=relative[i][j].substring(ind+1);
                     }
                 }
-                this.issueData=data2;
-                this.usedData=data2[0];
-                this.issueWeb=res[2];
-                for(var i=0;i<27;i++){
-                    posData[i]=data1[0][i];
-                    negData[i]=data1[1][i];
-                }
-                console.log(posData);
+                this.issueData=relative;
+                this.usedData=relative[0];
+                this.variancesP=dealposV;
+                this.variancesN=dealnegV;
+                this.date=dates;
+                this.sentiOfPos=sentiP;
+                this.sentiOfNeg=sentiN;
+                console.log(this.date);
                 var myChart = echarts.init(document.getElementById('monthcharts'));
                 var option = {
                     title : {
-                        text : 'Issue Sentiment Monthly',
+                        text : 'Senti Change',
                         subtext: '注：数值为0表示该月没有评论'
                     },
                     tooltip: {
@@ -80,9 +111,7 @@ new Vue({
                         y2: 80
                     },
                     xAxis: {
-                        data:["17-01","17-02","17-03","17-04","17-05","17-06","17-07","17-08","17-09","17-10","17-11","17-02","17-12"
-                            ,"18-01","18-02","18-03","18-04","18-05","18-06","18-07","18-08","18-09","18-10","18-11","18-12","19-01","19-02","19-03"]
-
+                        data:dates
                     },
                     yAxis: {
                         type: 'value'
@@ -93,7 +122,7 @@ new Vue({
                         smooth:'true',
                         showAllSymbol: true,
                         symbolSize: 10,
-                        data:posData,
+                        data:sentiP,
                         markPoint : {
                             data : [
                                 {type : 'max', name: '最大值'},
@@ -111,7 +140,7 @@ new Vue({
                         type: 'line',
                         showAllSymbol: true,
                         symbolSize: 10,
-                        data:negData,
+                        data:sentiN,
                         markPoint : {
                             data : [
                                 {type : 'max', name: '最大值'},
@@ -130,13 +159,12 @@ new Vue({
                 myChart.setOption(option);
 
             })
-            $("#mainall").show();
             $("#loader").hide();
         },
         mousedown:function(){
 
-  //          console.log(Xindex);
-            for(var i=0;i<27;i++) {
+            //          console.log(Xindex);
+            for(var i=0;i<this.issueData.length;i++) {
                 if (Xindex == i) {
                     this.usedData = this.issueData[i];
                 }
@@ -146,17 +174,10 @@ new Vue({
 
         },
         sendurl:function(e){
-            var issueweb=this.issueWeb.substring(19)+"/issues/"+e;
+            var issueweb=this.issueWeb.substring(19)+e;
             console.log(issueweb);
             window.location.href="/search/issueComments?issueweb="+issueweb;
         },
-        getComment:function(){
-            self=this;
-            this.$http.get("http://localhost:8080/search/historyComment").then(function (response) {
-                var res=response.data;
-                this.yourComment=res[0];
-            })
-        }
 
 
     }

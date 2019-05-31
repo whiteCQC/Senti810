@@ -65,7 +65,13 @@ public interface Database {
     //更新monthchart的评论表
     public boolean updateHistoryComment(int userid, String url, String time, String comment, String commenttime);
 
+    //更新近期浏览表
+    public boolean insertHistoryView(int userid, String url, String time, String viewtime);
+
     //查找近期记录
     public ArrayList<ArrayList<String>> getRecent(int userid);
+
+    //查找最近浏览
+    public ArrayList<ArrayList<String>> getRecentView(int userid);
 
 }

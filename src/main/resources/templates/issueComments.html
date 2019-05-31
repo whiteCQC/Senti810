@@ -43,6 +43,11 @@
                     <ul class="sidebar-menu">
                         <li class="header">GITHUB ANALYSE</li>
                         <li class="treeview">
+                            <a href="/search/recenttop">
+                                <i class="fa fa-dashboard"></i> <span>Recent</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
                             <a href="/search/yeartop">
                                 <i class="fa fa-dashboard"></i> <span>YearTop</span>
                             </a>
@@ -89,11 +94,8 @@
                             <div class="profile_img">
                                 <span class="prfil-img"> </span>
                                 <div class="user-name">
-                                    <p>Admin Name</p>
-                                    <span>Administrator</span>
+                                    <p></p>
                                 </div>
-                                <i class="fa fa-angle-down lnr"></i>
-                                <i class="fa fa-angle-up lnr"></i>
                                 <div class="clearfix"></div>
                             </div>
                         </a>
@@ -114,27 +116,6 @@
     <!-- main content start-->
     <div id="page-wrapper">
         <h2 class="title1">{{ issueName }}</h2>
-        <div class="panel-group tool-tips widget-shadow" id="accordion" role="tablist" aria-multiselectable="true">
-            <h4 class="title2"> Issue comments :</h4>
-            <div class="panel panel-default">
-                <template v-for="(item,index) in name">
-                    <div class="panel-heading" role="tab" id="headingOne">
-                        <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                {{ item }}  added a comment on  {{ datetime[index] }}
-                            </a>
-                        </h4>
-                    </div>
-                    <div  class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                        <div class="panel-body">
-                            {{ comments[index] }}
-                        </div>
-                    </div>
-                </template>
-            </div>
-
-        </div>
-
         <div class="charts">
             <div class="col-md-4 charts-grids widget">
                 <div class="card-header">
@@ -156,6 +137,28 @@
 
             <div class="clearfix"> </div>
         </div>
+        <div class="panel-group tool-tips widget-shadow" id="accordion" role="tablist" aria-multiselectable="true">
+            <h4 class="title2"> Issue comments :</h4>
+            <div class="panel panel-default">
+                <template v-for="(item,index) in name">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                {{ item }}  added a comment on  {{ datetime[index] }}
+                            </a>
+                        </h4>
+                    </div>
+                    <div  class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            {{ comments[index] }}
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+        </div>
+
+
 
     </div>
     <!--footer-->

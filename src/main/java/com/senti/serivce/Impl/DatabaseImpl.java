@@ -76,9 +76,11 @@ public class DatabaseImpl implements Database {
             statement = conn.prepareStatement(sql);
             statement.executeUpdate();
 //            deconnSQL();
+//            System.out.println("成功存入");
             return true;
         }catch (Exception e) {
             System.out.println("数据已存在或数据存入数据库错误");
+            e.printStackTrace();
         }
         return false;
     }
@@ -554,6 +556,13 @@ public class DatabaseImpl implements Database {
         return false;
     }
 
+    public boolean insertHistoryView(int userid, String url, String time, String viewtime){
+        String sql="insert into historyofview values('"+userid+"', '"+url+"', '"+time+"', '"+viewtime+"')";
+        if(update(sql))
+            return true;
+        return false;
+    }
+
     //查找近期记录
     public ArrayList<ArrayList<String>> getRecent(int userid){
         ArrayList<ArrayList<String>> res= new ArrayList<ArrayList<String>>();
@@ -572,6 +581,29 @@ public class DatabaseImpl implements Database {
             deconnSQL();
         }catch(Exception e){
             System.out.println("获取近期项目失败");
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    //查找最近浏览
+    public ArrayList<ArrayList<String>> getRecentView(int userid){
+        ArrayList<ArrayList<String>> res= new ArrayList<ArrayList<String>>();
+        try{
+            connSQL();
+            String sql="select * from historyofview where userid ='"+userid+"' order by viewtime desc;";
+            ResultSet rs=selectSQL(sql);
+            while(rs.next()) {
+                ArrayList<String> result=new ArrayList<String>();
+                result.add(String.valueOf(rs.getInt("userid")));
+                result.add(rs.getString("url"));
+                result.add(rs.getString("time"));
+                result.add(rs.getString("viewtime"));
+                res.add(result);
+            }
+            deconnSQL();
+        }catch(Exception e){
+            System.out.println("获取近期浏览失败");
             e.printStackTrace();
         }
         return res;

@@ -35,5 +35,17 @@ public interface DealComment {
 
     public ArrayList<ArrayList<String>> getHisMonth(int userid, String url, String time);
 
+    //denby等方差
+    public ArrayList<Object> getVarL(String from, String to, String name);
+
+    //DERBY等选定区间内的时间轴和情绪值
+    public ArrayList<Object> getSelectChangeL(String from, String to, String name);
+
+    //方差
+    public ArrayList<Object> getVar(String from, String to, String url);
+
+    //选定区间内的时间轴和情绪值
+    public ArrayList<Object> getSelectChange(String from, String to, String url);
+
 }
 

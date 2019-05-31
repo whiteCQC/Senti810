@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>MonthChart</title>
+    <title>Recent</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="" />
@@ -119,7 +119,7 @@
     <div id="page-wrapper">
         <div class="main-page">
             <div class="tables" id="loader" style="height:300px; display:none">
-                <h2 class="title1">MonthChart</h2>
+                <h2 class="title1">Search</h2>
                 <div class="loadEffect">
                     <span></span>
                     <span></span>
@@ -131,14 +131,91 @@
                     <span></span>
                 </div>
             </div>
-            <div class="media" id="mainall">
-                <h2 class="title1">MonthChart</h2>
+            <div class="media">
+                <h2 class="title1">Recent</h2>
+                <div class="bs-example5 example_6 widget-shadow" data-example-id="media-list">
+                    <ul class="media-list">
+                        <li class="media">
+                            <div class="media-body">
+                                <div class="media">
+                                    <div class="media-left">
+                                    </div>
+                                    <div class="media-body">
+                                        <form action="/search/recenttop" method="post">
+                                            <h3 class="media-heading">Select Date From <input type="text" name="fromtime" style="width:125px"> To <input type="text" name="totime" style="width:125px"><input type="submit" value="Sure" style="background:#F2B33F"></h3>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
 
 
                 <div class="media_1">
-                    <div class="col-md-6 media_1-left widget-shadow" style="width:1000px">
+                    <div class="col-md-6 media_1-left widget-shadow">
+                        <div class="panel_2">
+                            <h3 class="title1">Positive</h3>
+                            <p>more top, more fluctuating</p>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <td class="head">Rank</td>
+                                    <td class="head">Issue</td>
+                                    <td class="head">Title</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="(item,index) in variancesP" >
+                                    <tr>
+                                        <td><code>{{index+1}}</code></td>
+                                        <td>
+                                            <div class="demolayout padding-5">
+                                                <div class="demobox"><button style="border:none; background-color: #f0f0f0" @click = 'sendurl(variancesP[index])'>{{item}}</button></div>
+                                            </div>
+                                        </td>
+                                        <td>{{variancesPTitle[index]}}</td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6 media_1-right widget-shadow">
+                        <div class="panel_2 panel_3">
+                            <h3 class="title1">Negative</h3>
+                            <p>more top, more fluctuating</p>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <td class="head">Rank</td>
+                                    <td class="head">Issue</td>
+                                    <td class="head">Title</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="(item,index) in variancesN" >
+                                    <tr>
+                                        <td><code>{{index+1}}</code></td>
+                                        <td>
+                                            <div class="demolayout padding-5">
+                                                <div class="demobox"><button style="border:none; background-color: #f0f0f0" @click = 'sendurl(variancesN[index])'>{{item}}</button></div>
+                                            </div>
+                                        </td>
+                                        <td>{{variancesNTitle[index]}}</td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
 
+
+                <div class="media_1">
+                    <div class="col-md-6 media_1-left widget-shadow" style="width:1000px">
                         <div class="panel_2" id="monthcharts" @click = "mousedown" style="width:1000px; height:750px">
 
                         </div>
@@ -153,23 +230,10 @@
                                 <template v-for="(item,index) in usedData">
                                     <li><button style="border:none; background-color: white" @click = 'sendurl(usedData[index])'>{{item}}</button></li>
                                 </template>
+
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 media_1-left widget-shadow" style="float:right; width:200px; height:375px">
-                        <div class="panel_2">
-                            <header class="widget-header">
-                                <h4 class="widget-title">Your Comments</h4>
-                            </header>
-                            <hr class="widget-separator">
-                            <textarea rows="10" cols="16" style="border:0px" name="comment" form="comments">{{yourComment}}</textarea>
-                            <form action="/search/updateComment" method="post" id="comments">
-                                <p><input type="submit" value="make sure" style="background-color:white; float:right; border-radius: 26px 6px;"></p>
-                            </form>
-
-                        </div>
-                    </div>
-                    <div class="clearfix"> </div>
                 </div>
 
             </div>
@@ -185,7 +249,7 @@
 
 
 
-<script src="/js/local/monthchart.js"></script>
+<script src="/js/local/recenttop.js"></script>
 <script src="/js/bootstrap.js"> </script>
 </body>
 </html>

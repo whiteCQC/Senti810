@@ -174,18 +174,23 @@ public class CrawlCommentImpl extends BreadthCrawler {
                     int comIndex=allInfor.indexOf("commented");
                     int commaIndex=allInfor.indexOf(",");
                     int[] score=SSA.getScore(allInfor.substring(commaIndex+6));//情绪得分
+                    String date=allInfor.substring(comIndex+9,commaIndex+6);
+                    date=changeDate(date);
                     System.out.println(url);
                     System.out.println(issueName);
                     System.out.println(allInfor.substring(0,comIndex));//人名
-                    System.out.println(allInfor.substring(comIndex+9,commaIndex+6));//时间
+//                    System.out.println(allInfor.substring(comIndex+9,commaIndex+6));//时间
+                    System.out.println(date);
                     System.out.println(allInfor.substring(commaIndex+6));//评论
                     System.out.println(url.substring(0, url.indexOf("issues")-1));
                     System.out.println(m);
                     String comments=allInfor.substring(commaIndex+6);
                     comments=comments.replaceAll("https://.*/"," ");//删除超链接
                     comments=comments.replaceAll("• edited","");
-                    String sql="insert into githubtable values ('"+url+"', '"+issueName+"', '"+allInfor.substring(0,comIndex)+"', '"+allInfor.substring(comIndex+9,commaIndex+6)+"', '"+comments+"', '"+url.substring(0, url.indexOf("issues")-1)+"', '"+m+"', '"+score[0]+"', '"+score[1]+"');";
-                    dao.update(sql);
+                    String sql="insert into githubtable values ('"+url+"', '"+issueName+"', '"+allInfor.substring(0,comIndex)+"', '"+date+"', '"+comments+"', '"+url.substring(0, url.indexOf("issues")-1)+"', '"+m+"', '"+score[0]+"', '"+score[1]+"');";
+                    if(!dao.update(sql)){
+                        dao.connSQL();
+                    }
                 }
             }
 
@@ -198,8 +203,44 @@ public class CrawlCommentImpl extends BreadthCrawler {
         return result;
     }
 
+    public String changeDate(String date){
+        String res = date.substring(date.length()-4); //年份
+        if(date.contains("Jan")){
+            res = res+"-01";
+        }else if(date.contains("Feb")){
+            res = res+"-02";
+        }else if(date.contains("Mar")){
+            res = res+"-03";
+        }else if(date.contains("Apr")){
+            res = res+"-04";
+        }else if(date.contains("May")){
+            res = res+"-05";
+        }else if(date.contains("Jun")){
+            res = res+"-06";
+        }else if(date.contains("Jul")){
+            res = res+"-07";
+        }else if(date.contains("Aug")){
+            res = res+"-08";
+        }else if(date.contains("Sep")){
+            res = res+"-09";
+        }else if(date.contains("Oct")){
+            res = res+"-10";
+        }else if(date.contains("Nov")){
+            res = res+"-11";
+        }else if(date.contains("Dec")){
+            res = res+"-12";
+        }
+        int comma = date.indexOf(",");
+        String day = date.substring(5, comma);
+        if(day.length()==1){
+            day="0"+day;
+        }
+        res = res+"-"+day;
+        return res;
+    }
+
     public static void main(String[] args) throws Exception {
-        CrawlCommentImpl crawler = new CrawlCommentImpl("crawl","https://github.com/TheAlgorithms/Scala");
+        CrawlCommentImpl crawler = new CrawlCommentImpl("crawl","https://github.com/TheAlgorithms/Go");
         crawler.start(2);
 
     }
