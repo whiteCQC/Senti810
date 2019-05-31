@@ -1,10 +1,7 @@
 package com.senti.serivce;
 
 import com.senti.model.GithubUser;
-import com.senti.model.codeComment.ClassSenti;
-import com.senti.model.codeComment.Commits;
-import com.senti.model.codeComment.MessageSenti;
-import com.senti.model.codeComment.MessageSentihht;
+import com.senti.model.codeComment.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,5 +25,9 @@ public interface GitService {
 
     List<MessageSentihht> getCommitSentibyAuthor(String owner, String repo, String author);
 
-    List<List<String>> getTopClasses(Map<String,List<String>> map,List<MessageSenti> mlist,String owner,String repo);
+    List<List<String>> getTopClasses(Map<String,List<String>> map,List<MessageSenti> mlist,List<String> classes);
+
+    void addNote(String note,String time,String classname,String owner,String repo,int userid);
+
+    Map<String,List<ClassNote>> getNotes(String owner, String repo, int userid);
 }

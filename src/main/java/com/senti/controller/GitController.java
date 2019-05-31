@@ -1,5 +1,6 @@
 package com.senti.controller;
 
+import com.senti.model.codeComment.ClassNote;
 import com.senti.model.codeComment.ClassSenti;
 import com.senti.model.codeComment.MessageSenti;
 import com.senti.serivce.GitService;
@@ -9,18 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
-@RequestMapping(value="/git")
+@RequestMapping(value = "/git")
 public class GitController {
 
     @Autowired
@@ -28,11 +27,11 @@ public class GitController {
 
     @RequestMapping("/search/{projectInfo}")
     @ResponseBody
-    public String searchProject(@PathVariable("projectInfo") ArrayList<String> projectInfo, HttpServletRequest request){
+    public String searchProject(@PathVariable("projectInfo") ArrayList<String> projectInfo, HttpServletRequest request) {
         String owner = projectInfo.get(0);
         String repo = projectInfo.get(1);
 
-        boolean res=gitService.ProjectDeal(owner,repo);
+        boolean res = gitService.ProjectDeal(owner, repo);
         if (res) {
             HttpSession session = request.getSession(true);
 
@@ -40,172 +39,263 @@ public class GitController {
             session.removeAttribute("ClassSenti");
 
             session.setAttribute("owner", owner);
-            session.setAttribute("repo",repo);
+            session.setAttribute("repo", repo);
             return "success";
-        }else{
+        } else {
             return "not Exist";
         }
     }
 
     @RequestMapping("/commitSenti")
     @ResponseBody
-    public Map<String,List<String>> commitSenti(HttpServletRequest request){
+    public Map<String, List<String>> commitSenti(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
-        String owner=(String)session.getAttribute("owner");
-        String repo=(String)session.getAttribute("repo");
+        String owner = (String) session.getAttribute("owner");
+        String repo = (String) session.getAttribute("repo");
+        int userid = (Integer) session.getAttribute("userid");
 
-        List<MessageSenti> mlist=gitService.getCommitSenti(owner, repo);
+        Map<String, List<ClassSenti>> map1 = gitService.getClassSenti(owner, repo);
+        if (null == session.getAttribute("ClassSenti"))
+            session.setAttribute("ClassSenti", map1);
+        if (null == session.getAttribute("Allcodes"))
+            session.setAttribute("Allcodes", gitService.getClassCode(owner, repo));
 
-        Map<String,List<String>> relatedClass=gitService.getCommitRelatedClasses(owner,repo);
+        List<MessageSenti> mlist = gitService.getCommitSenti(owner, repo);
 
-        //gitService.getTopClasses(relatedClass,mlist,owner,repo);
+        Map<String, List<String>> relatedClass = gitService.getCommitRelatedClasses(owner, repo);
+        List<String> dealClasses=new ArrayList<String>(map1.keySet());
 
-        List<String> Commitdates=new ArrayList<>();
-        List<String> highs=new ArrayList<>();
-        List<String> lows=new ArrayList<>();
-        List<String> messages=new ArrayList<>();
+        List<List<String>> tops = gitService.getTopClasses(relatedClass, mlist, dealClasses);
 
-        List<String> HighCount=new ArrayList<>();
-        List<String> LowCount=new ArrayList<>();
-        List<String> relatedClasses=new ArrayList<>();
-        int[] hightemp=new int[4];
-        int[] lowtemp=new int[4];
+        List<String> Commitdates = new ArrayList<>();
+        List<String> highs = new ArrayList<>();
+        List<String> lows = new ArrayList<>();
+        List<String> messages = new ArrayList<>();
 
-        MessageSenti m=null;
-        for(int i=0;i<mlist.size();i++) {
-            m=mlist.get(i);
+        List<String> HighCount = new ArrayList<>();
+        List<String> LowCount = new ArrayList<>();
+        List<String> relatedClasses = new ArrayList<>();
+        int[] hightemp = new int[4];
+        int[] lowtemp = new int[4];
+
+        MessageSenti m = null;
+        for (int i = 0; i < mlist.size(); i++) {
+            m = mlist.get(i);
             Commitdates.add(m.getDate());
 
-            List<String> tempClasses=relatedClass.get(m.getSha());
-            String classes="RelatedClasses:";
-            for(String s:tempClasses){
-                classes=classes+"<br>"+s;
+            List<String> tempClasses = relatedClass.get(m.getSha());
+            String classes = "";
+            for (String s : tempClasses) {
+                if(dealClasses.contains(s)){
+                    classes = classes+"<a href='showCode.html?selectClass="+s+"'>"+s+"</a>" + "<br>";
+                }
+
             }
             relatedClasses.add(classes);
 
             highs.add(String.valueOf(m.getHigh()));
-            hightemp[(int)m.getHigh()]++;
+            hightemp[(int) m.getHigh()]++;
             lows.add(String.valueOf(m.getLow()));
-            lowtemp[-(int)m.getLow()]++;
+            lowtemp[-(int) m.getLow()]++;
 
 
             messages.add(m.getComment());
         }
-        for(int i=0;i<4;i++){
+        for (int i = 0; i < 4; i++) {
             HighCount.add(String.valueOf(hightemp[i]));
             LowCount.add(String.valueOf(lowtemp[i]));
         }
 
 
+        Map<String, List<String>> res = new HashMap<>();
+        res.put("Commitdates", Commitdates);
+        res.put("highs", highs);
+        res.put("lows", lows);
+        res.put("commitMessage", messages);
+        res.put("HighCount", HighCount);
+        res.put("LowCount", LowCount);
+        res.put("relatedClasses", relatedClasses);
+        res.put("topHigh", tops.get(0));
+        res.put("topLow", tops.get(1));
 
-
-        Map<String,List<String>> res=new HashMap<>();
-        res.put("Commitdates",Commitdates);
-        res.put("highs",highs);
-        res.put("lows",lows);
-        res.put("commitMessage",messages);
-        res.put("HighCount",HighCount);
-        res.put("LowCount",LowCount);
-        res.put("relatedClasses",relatedClasses);
 
         return res;
     }
 
 
-    @RequestMapping("/codeSenti")
+    @RequestMapping("/codeSenti/{selectClass}")
     @ResponseBody
-    public String codeSenti(HttpServletRequest request){
+    public String codeSenti(@PathVariable("selectClass") String selectClass, HttpServletRequest request) {
         HttpSession session = request.getSession(true);
-        Map<String, List<ClassSenti>> map1=(Map<String, List<ClassSenti>>)session.getAttribute("ClassSenti");
+        Map<String, List<ClassSenti>> map1 = (Map<String, List<ClassSenti>>) session.getAttribute("ClassSenti");
         Map<String, List<String>> map2;
 
-        if(map1==null){
-            String owner=(String)session.getAttribute("owner");
-            String repo=(String)session.getAttribute("repo");
+        if (map1 == null) {
+            String owner = (String) session.getAttribute("owner");
+            String repo = (String) session.getAttribute("repo");
 
-            map1=gitService.getClassSenti(owner, repo);
-            map2=gitService.getClassCode(owner, repo);
+            map1 = gitService.getClassSenti(owner, repo);
+            map2 = gitService.getClassCode(owner, repo);
 
-            session.setAttribute("Allcodes",map2);
-            session.setAttribute("ClassSenti",map1);
+            session.setAttribute("Allcodes", map2);
+            session.setAttribute("ClassSenti", map1);
         }
 
-        JSONArray json=new JSONArray();
-        List<String> classes=new ArrayList<>(map1.keySet());
+        selectClass = selectClass.replace(".java", "");
+        selectClass = selectClass.replace(".", "/") + ".java";
+        List<String> toOpen = new ArrayList<>(Arrays.asList(selectClass.split("/")));
 
-        List<String> list=new ArrayList<>();
-        Map<String,String> paths=new HashMap<>();
+        JSONArray json = new JSONArray();
+        List<String> classes = new ArrayList<>(map1.keySet());
 
-        for(String s:classes){
+        List<String> list = new ArrayList<>();
+        Map<String, String> paths = new HashMap<>();
 
-            String[] temp= ("#/"+s).split("/");
-            int len=temp.length;
-            for(int i=0;i<len-2;i++){
-                String ss=temp[i]+"/"+temp[i+1];
-                if(!list.contains(ss)){
+        JSONObject n = new JSONObject();
+        n.put("opened", true);
+
+        for (String s : classes) {
+
+            String[] temp = ("#/" + s).split("/");
+            int len = temp.length;
+            for (int i = 0; i < len - 2; i++) {
+                String ss = temp[i] + "/" + temp[i + 1];
+                if (!list.contains(ss)) {
                     list.add(ss);
                     JSONObject node = new JSONObject();
-                    node.put("id",temp[i+1]);
-                    node.put("parent",temp[i]);
-                    node.put("text",temp[i+1]);
+                    node.put("id", temp[i + 1]);
+                    node.put("parent", temp[i]);
+                    node.put("text", temp[i + 1]);
+                    if (toOpen.contains(temp[i + 1])) {
+                        node.put("state", n);
+                    }
                     json.add(node);
                 }
             }
-            String ss=temp[len-2]+"/"+temp[len-1];
-            if(!list.contains(ss)){
+            String ss = temp[len - 2] + "/" + temp[len - 1];
+            if (!list.contains(ss)) {
                 list.add(ss);
                 JSONObject node = new JSONObject();
-                node.put("id",temp[len-1]);
-                node.put("parent",temp[len-2]);
-                node.put("text",temp[len-1]);
+                node.put("id", temp[len - 1]);
+                node.put("parent", temp[len - 2]);
+                node.put("text", temp[len - 1]);
+                if (toOpen.contains(temp[len - 1])) {
+                    node.put("state", n);
+                }
                 json.add(node);
-                paths.put(temp[len-1],s);
+                paths.put(temp[len - 1], s);
             }
 
         }
 
-        session.setAttribute("TreePaths",paths);
+        session.setAttribute("TreePaths", paths);
         return json.toString();
     }
 
     @RequestMapping("/getSingleSenti/{selectClass}")
     @ResponseBody
-    public Map<String,List<String>> getSingleSenti(@PathVariable("selectClass")String selectClass,HttpServletRequest request){
+    public Map<String, List<String>> getSingleSenti(@PathVariable("selectClass") String selectClass, HttpServletRequest request) {
+
+        selectClass = selectClass.replace("%20", " ");
+
         HttpSession session = request.getSession(true);
 
-//        selectClass=selectClass.replace(".java","");
-//        selectClass=selectClass.replace(".","/")+".java";
-        Map<String,String> paths=(Map<String,String>)session.getAttribute("TreePaths");
+        Map<String, String> paths = (Map<String, String>) session.getAttribute("TreePaths");
 
-        Map<String, List<ClassSenti>> map=(Map<String, List<ClassSenti>>)session.getAttribute("ClassSenti");
+        Map<String, List<ClassSenti>> map = (Map<String, List<ClassSenti>>) session.getAttribute("ClassSenti");
 
-        Map<String,List<String>> res=new HashMap<>();
-        List<String> dates=new ArrayList<>();
-        List<String> highs=new ArrayList<>();
-        List<String> lows=new ArrayList<>();
-        List<String> codeComments=new ArrayList<>();
+        String owner = (String) session.getAttribute("owner");
+        String repo = (String) session.getAttribute("repo");
+        int userid = (Integer) session.getAttribute("userid");
 
-        String path=paths.get(selectClass);
+        Map<String,List<ClassNote>> allnotes=gitService.getNotes(owner,repo,userid);
 
-        List<ClassSenti> lcs=map.get(path);
+        Map<String, List<String>> res = new HashMap<>();
+        List<String> dates = new ArrayList<>();
+        List<String> highs = new ArrayList<>();
+        List<String> lows = new ArrayList<>();
+        List<String> codeComments = new ArrayList<>();
 
-        for(ClassSenti c:lcs){
+        String path = "";
+
+        if (null != paths && null != paths.get(selectClass))
+            path = paths.get(selectClass);
+        else {
+            selectClass = selectClass.replace(".java", "");
+            path = selectClass.replace(".", "/") + ".java";
+        }
+
+
+        List<ClassSenti> lcs = map.get(path);
+
+        for (int i = 0; i < lcs.size(); i++) {
+            ClassSenti c = lcs.get(i);
             dates.add(c.getDate());
             highs.add(String.valueOf(c.getHigh()));
             lows.add(String.valueOf(c.getLow()));
             codeComments.add(c.getComment());
         }
 
-        res.put("dates",dates);
-        res.put("codeHighs",highs);
-        res.put("codeLows",lows);
-        res.put("codeComments",codeComments);
+        res.put("dates", dates);
+        res.put("codeHighs", highs);
+        res.put("codeLows", lows);
+        res.put("codeComments", codeComments);
 
-        Map<String, List<String>> allCodes=(Map<String, List<String>>)session.getAttribute("Allcodes");
-        List<String> codes=allCodes.get(path);
+        List<String> notes=new ArrayList<>();
+        List<String> times=new ArrayList<>();
 
-        res.put("codes",codes);
+        if(allnotes.containsKey(path)){
+            List<ClassNote> list=allnotes.get(path);
+
+            for(ClassNote cn:list){
+                notes.add(cn.getNote());
+                String time=cn.getTime().replaceFirst("\\/","年").replace("/","月").replace(" ","日");
+                times.add(time);
+            }
+        }
+        res.put("notes",notes);
+        res.put("noteTimes",times);
+
+
+        Map<String, List<String>> allCodes = (Map<String, List<String>>) session.getAttribute("Allcodes");
+        List<String> codes = allCodes.get(path);
+
+        res.put("codes", codes);
 
         return res;
     }
+
+    @RequestMapping("/projectExist")
+    @ResponseBody
+    public String HasSearch(HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        if (null == session.getAttribute("owner"))
+            return "no";
+        else
+            return "yes";
+
+    }
+
+    @RequestMapping("/addNote/{timers}")
+    @ResponseBody
+    public void addNote(@PathVariable("timers") String time, @RequestParam("selectClass") String selectClass
+            , @RequestParam("note") String note,HttpServletRequest request) {
+        time=time.replace("日"," ").replace("月","/").replace("年","/");
+
+        selectClass = selectClass.replace("%20", " ");
+
+        HttpSession session = request.getSession(true);
+        Map<String, String> paths = (Map<String, String>) session.getAttribute("TreePaths");
+
+        String path = paths.get(selectClass);
+
+        String owner=(String)session.getAttribute("owner");
+        String repo=(String)session.getAttribute("repo");
+        int userid=(Integer)session.getAttribute("userid");
+        if(note.trim().length()>0&&selectClass.trim().length()>0)
+            gitService.addNote(note,time,path,owner,repo,userid);
+
+    }
+
+
 }
