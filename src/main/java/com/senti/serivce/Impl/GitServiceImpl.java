@@ -157,14 +157,8 @@ public class GitServiceImpl implements GitService {
                 return o2.size()-o1.size();
             }
         };
-        Map<author, List<MessageSentihht>> sorted = map.entrySet().stream()
-                .sorted(comparingByValue(comparator)).collect(toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (a,b) -> { throw new AssertionError(); },
-                        LinkedHashMap::new
-                ));
 
+        int max=0;
         for (Map.Entry<author, List<MessageSentihht>> item : map.entrySet()) {
             author a=item.getKey();
             List<MessageSentihht> list=item.getValue();
@@ -174,6 +168,7 @@ public class GitServiceImpl implements GitService {
                 a.setStar(1);
                 continue;
             }
+            if (list.size()>max) max=list.size();
             int star=1;
             int low_count=0;
             int high_count=0;
@@ -182,11 +177,11 @@ public class GitServiceImpl implements GitService {
             double avg1=0;
 
             for (MessageSentihht m: list){
-                if (m.getLow()<-2) low_count++;
+                if (m.getLow()<-1) low_count++;
 
                 avg1+=m.getLow();
 
-                if (m.getHigh()>2) high_count++;
+                if (m.getHigh()>1) high_count++;
                 neg.add(m.getLow());
             }
             avg1/=list.size();
@@ -229,6 +224,21 @@ public class GitServiceImpl implements GitService {
 
 
         }
+
+        for (Map.Entry<author, List<MessageSentihht>> item : map.entrySet()) {
+            author a=item.getKey();
+            List<MessageSentihht> list=item.getValue();
+            a.setActivity(list.size()*4/max+1);
+        }
+
+
+        Map<author, List<MessageSentihht>> sorted = map.entrySet().stream()
+                .sorted(comparingByValue(comparator)).collect(toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (a,b) -> { throw new AssertionError(); },
+                        LinkedHashMap::new
+                ));
 
         return sorted;
     }
@@ -366,12 +376,19 @@ public class GitServiceImpl implements GitService {
     @Override
     public List<MessageSentihht> getCommitSentibyAuthor(String owner, String repo, String author) {
         List<Commits> commitsList = gh.getCommits(owner, repo);
+        Map<String,List<String>>map=gh.getCommitChangedFile(owner, repo);
         List<MessageSentihht> result = new ArrayList<>();
 
         for (Commits commits : commitsList) {
             if (!commits.getAuthor().equals(author)) continue;
             int[] ints = sc.senti_strength(commits.getMessage());
+
             MessageSentihht messageSenti = new MessageSentihht(ints[0], ints[1], commits.getDate().toString(), commits.getMessage());
+//            System.out.println(map.get(commits.getSha()));
+            List<String> filechange=map.get(commits.getSha());
+//            if  (filechange==null)
+//                filechange=new ArrayList<>();
+            messageSenti.setFilechanged(filechange);
             messageSenti.setSentiPairs(SentiStrengthUtilhht.analyzeKeywords(commits.getMessage()));
 
             messageSenti.setAuthor(author);
@@ -483,10 +500,11 @@ public class GitServiceImpl implements GitService {
             }
         }
 
-
+        int max=0;
         for (Map.Entry<author, List<MessageSentihht>> item : map.entrySet()) {
             author a=item.getKey();
             List<MessageSentihht> list=item.getValue();
+            if (list.size()>max) max=list.size();
             String description="";
             if (list.size()==1){
                 a.setDescription("该参与者只贡献了一次。参考有限。");
@@ -501,11 +519,11 @@ public class GitServiceImpl implements GitService {
             double avg1=0;
 
             for (MessageSentihht m: list){
-                if (m.getLow()<-2) low_count++;
+                if (m.getLow()<-1) low_count++;
 
                 avg1+=m.getLow();
 
-                if (m.getHigh()>2) high_count++;
+                if (m.getHigh()>1) high_count++;
                 neg.add(m.getLow());
             }
             avg1/=list.size();
@@ -545,8 +563,12 @@ public class GitServiceImpl implements GitService {
             a.setDescription(description);
             a.setStar(star);
 
+        }
 
-
+        for (Map.Entry<author, List<MessageSentihht>> item : map.entrySet()) {
+            author a=item.getKey();
+            List<MessageSentihht> list=item.getValue();
+            a.setActivity(list.size()*4/max+1);
         }
 
 
@@ -568,6 +590,8 @@ public class GitServiceImpl implements GitService {
                         (a,b) -> { throw new AssertionError(); },
                         LinkedHashMap::new
                 ));
+
+
 
         return sorted;
     }

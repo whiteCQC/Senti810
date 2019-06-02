@@ -37,7 +37,7 @@ public class ContributorsController  {
     public String getwithdate(@PathVariable("owner") String owner,@PathVariable("repo") String repo, Model model, @RequestParam(required=false) String date){
         List<MessageSentihht> messageSentis;
         Map<author, List<MessageSentihht>> map;
-        System.out.println(date);
+
         if (date!=null) {
 
             messageSentis= gitService.getCommitSentihht(owner, repo, date);

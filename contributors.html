@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="dns-prefetch" href="https://github.githubassets.com">
+    <link rel="dns-prefetch" href="https://avatars0.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://avatars1.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://avatars2.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://avatars3.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com">
+    <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(individual_chart);
+
+
+
+
+
+        function drawChart() {
+
+            /*<![CDATA[*/
+            var theList = [[${ messlist }]];
+
+            var datas = [
+                ['Id', 'Positive', 'Negative']
+            ];
+
+            if (theList.length == 0) {
+                var nodate = document.createElement("p");
+                nodate.textContent = "没有数据, 请重新输入有效时间";
+                document.getElementById("contributors-master").append(nodate);
+
+
+                return;
+            }
+            for (i = 0; i < theList.length; i++) {
+                date = new Date(theList[i].date);
+                var d = [date, theList[i].low, theList[i].high];
+                datas.push(d);
+            }
+
+            /*]]>*/
+
+            var data = google.visualization.arrayToDataTable(datas);
+
+            var options = {
+                title: 'Sentiment Analysis',
+                curveType: 'function',
+                legend: { position: 'bottom' }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+
+            chart.draw(data, options);
+
+        }
+
+        function individual_chart() {
+
+
+
+
+            var j = 0;
+
+            /*<![CDATA[*/
+            var themap = [[${ map }]];
+            var owner = [[${ owner }]];
+            var repo = [[${ repo }]];
+
+
+
+            var index = 0;
+            for (var k in themap) {
+
+
+                var div_col = document.createElement("div");
+                div_col.classList.add('col-sm-6');
+
+
+                var div_card = document.createElement("div");
+                div_card.classList.add('card');
+                div_col.append(div_card);
+
+
+                var div_card_body = document.createElement("div");
+                div_card_body.classList.add('card-body');
+                div_card.append(div_card_body);
+
+                var div_card_title = document.createElement("div");
+                div_card_title.classList.add('card-title');
+                console.log(k);
+                var au = JSON.parse(k);
+                // console.log(au.name);
+
+                div_card_title.textContent = au.name;
+
+                var star = document.createElement("span");
+                star.style.cssFloat = 'right';
+                star.innerText = '活跃指数:';
+                for (i = 0; i < au.activity; i++)
+                    star.innerText += '⭐';
+                div_card_title.append(star);
+
+                var activity = document.createElement("div");
+                activity.classList.add("card-title");
+                activity.setAttribute("align", "right");
+                activity.innerText = '情绪指数';
+                for (i = 0; i < au.star; i++)
+                    activity.innerText += '⭐';
+
+
+
+                div_card_body.append(div_card_title);
+
+                div_card_body.append(activity);
+
+
+
+                var div_chart = document.createElement('div');
+                div_chart.id = 'char' + index;
+
+                div_card_body.append(div_chart);
+
+                var div_card_text = document.createElement("p");
+                div_card_text.classList.add("card-text");
+                div_card_text.innerText = au.description;
+                div_card_body.append(document.createElement("br"));
+                div_card_body.append(div_card_text);
+
+
+
+
+                var div_card_link = document.createElement("a");
+                div_card_link.classList.add('card-link');
+                div_card_link.setAttribute("href", '/contributors/' + owner + '/' + repo + '/' + au.name);
+                div_card_link.textContent = 'details';
+                div_card_body.append(div_card_link);
+
+
+
+
+
+
+                // contributors_graph
+                document.getElementById("contributors_graph").append(div_col);
+                index++;
+            }
+
+            for (var k in themap) {
+
+
+
+
+                var theList = themap[k];
+
+                var datas = [
+                    ['Id', 'Positive', 'Negative']
+                ];
+
+                for (i = 0; i < theList.length; i++) {
+                    date = new Date(theList[i].date.replace(/ /g, "T"));
+
+                    var d = [date, theList[i].low, theList[i].high];
+
+                    datas.push(d);
+                }
+                var data_contri = google.visualization.arrayToDataTable(datas);
+                var chart = new google.visualization.LineChart(document.getElementById('char' + j));
+                var options = {
+                    // title: k,
+                    curveType: 'function',
+                    legend: { position: 'bottom' }
+                };
+                chart.draw(data_contri, options);
+                j++;
+
+            }
+
+
+        }
+
+
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <sript src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+    </sript>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+
+    <link crossorigin="anonymous" media="all"
+        integrity="sha512-OBabailf0Gja8rWVZO1xyYAw//CQdLOJF4riG050gTxsVqVD7az4Sq56hPWfv3AoaxuEhYXgQlGQcNxzZzDyVA=="
+        rel="stylesheet"
+        href="https://github.githubassets.com/assets/frameworks-d69542a4a3958db914b3bec3f757de26.css" />
+    <link crossorigin="anonymous" media="all"
+        integrity="sha512-9f3NsOQR/iafpq5oTq9iaNzpmB3VaUcvR6AtzwqKitGWmnCnxlp4dfbENMlnj8IgKSCuwyrZTQ6Rok0xkfeiLA=="
+        rel="stylesheet" href="https://github.githubassets.com/assets/site-e4d561c16b6b9aaadbf00c0559c20085.css" />
+    <link crossorigin="anonymous" media="all"
+        integrity="sha512-wJhnzAfXEZIRVozNeRj3om7LYMKNuN4/pWiws3GvDrVcYuSnHZVWzVFF0nocd7vibgFePdnbVtr/SgFIOP/FcA=="
+        rel="stylesheet" href="https://github.githubassets.com/assets/github-038ca28f0d66963cc8fcdd04180ca5e0.css" />
+
+    <title>贡献者</title>
+
+</head>
+
+<body class="logged-out env-production emoji-size-boost">
+
+
+
+
+    <div id="start-of-content" class="show-on-focus"></div>
+
+
+    <div id="js-flash-container">
+
+    </div>
+
+
+    <div class="application-main " data-commit-hovercards-enabled>
+        <div itemscope itemtype="http://schema.org/SoftwareSourceCode" class="">
+            <main id="js-repo-pjax-container" data-pjax-container>
+
+
+                <div class="pagehead repohead instapaper_ignore readability-menu experiment-repo-nav  ">
+                    <div class="repohead-details-container clearfix container">
+
+
+
+                        <h1 class="public ">
+                            <svg class="octicon octicon-repo" viewBox="0 0 12 16" version="1.1" width="12" height="16"
+                                aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z" />
+                            </svg>
+                            <span class="author" itemprop="author"><a class="url fn" rel="author"
+                                    data-hovercard-type="user" data-octo-click="hovercard-link-click"
+                                    data-octo-dimensions="link_type:self" href="/sirupsen"
+                                    th:text="${owner}">张三</a></span>
+                            <!-- <span class="path-divider">/</span> -->
+                            <!-- <strong itemprop="name"><a data-pjax="#js-repo-pjax-container"
+                                                   href="/sirupsen/logrus" th:text="${repo}">repo</a></strong> -->
+
+
+                        </h1>
+
+                    </div>
+
+                </div>
+                <div class="container new-discussion-timeline experiment-repo-nav  ">
+                    <div class="repository-content ">
+
+
+                        <div class="d-flex flex-row">
+                            <div class="col-3 pr-4">
+
+
+                                <nav class="menu" aria-label="Insights" data-pjax>
+                                    <a class="js-selected-navigation-item menu-item selected"
+                                        href="/sirupsen/logrus/pulse">历史项目</a>
+                                    <a class="js-selected-navigation-item  menu-item"
+                                        href="/sirupsen/logrus/graphs/contributors">最近查看</a>
+                                    <!-- <a class="js-selected-navigation-item menu-item"
+                                   href="/sirupsen/logrus/graphs/commit-activity"></a> -->
+                                    <a class="js-selected-navigation-item menu-item" href="/search/input">新项目</a>
+                                </nav>
+
+
+                            </div>
+                            <div class="col-9">
+
+
+                                <div class="graph-filter clearfix">
+                                    <div class="Subhead">
+                                        <h2 class="Subhead-heading js-date-range">历史项目</h2>
+                                        <!--                                    <div class="Subhead-actions">-->
+                                        <!--                                        <details-->
+                                        <!--                                                class="details-reset details-overlay select-menu select-menu-modal-right js-contribution-container">-->
+                                        <!--                                            <summary class="btn btn-sm select-menu-button">-->
+                                        <!--                                                <i>Contributions:</i>-->
+                                        <!--                                                <span data-menu-button>Commits</span>-->
+                                        <!--                                            </summary>-->
+                                        <!--                                            <details-menu class="select-menu-modal position-absolute right-0"-->
+                                        <!--                                                          style="z-index: 99;">-->
+                                        <!--                                                <div class="select-menu-header">-->
+                                        <!--                                                    <span class="select-menu-title">Filter contributions</span>-->
+                                        <!--                                                </div>-->
+                                        <!--                                                <div class="select-menu-list">-->
+                                        <!--                                                    <button type="button" role="menuitemradio"-->
+                                        <!--                                                            class="select-menu-item width-full" aria-checked="false"-->
+                                        <!--                                                            value="a">-->
+                                        <!--                                                        <svg class="octicon octicon-check select-menu-item-icon"-->
+                                        <!--                                                             viewBox="0 0 12 16" version="1.1" width="12" height="16"-->
+                                        <!--                                                             aria-hidden="true">-->
+                                        <!--                                                            <path fill-rule="evenodd"-->
+                                        <!--                                                                  d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"/>-->
+                                        <!--                                                        </svg>-->
+                                        <!--                                                        <div class="select-menu-item-text" data-menu-button-text>-->
+                                        <!--                                                            Additions-->
+                                        <!--                                                        </div>-->
+                                        <!--                                                    </button>-->
+                                        <!--                                                    <button type="button" role="menuitemradio"-->
+                                        <!--                                                            class="select-menu-item width-full" aria-checked="false"-->
+                                        <!--                                                            value="d">-->
+                                        <!--                                                        <svg class="octicon octicon-check select-menu-item-icon"-->
+                                        <!--                                                             viewBox="0 0 12 16" version="1.1" width="12" height="16"-->
+                                        <!--                                                             aria-hidden="true">-->
+                                        <!--                                                            <path fill-rule="evenodd"-->
+                                        <!--                                                                  d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"/>-->
+                                        <!--                                                        </svg>-->
+                                        <!--                                                        <div class="select-menu-item-text" data-menu-button-text>-->
+                                        <!--                                                            Deletions-->
+                                        <!--                                                        </div>-->
+                                        <!--                                                    </button>-->
+                                        <!--                                                    <button type="button" role="menuitemradio"-->
+                                        <!--                                                            class="select-menu-item width-full" aria-checked="true"-->
+                                        <!--                                                            value="c">-->
+                                        <!--                                                        <svg class="octicon octicon-check select-menu-item-icon"-->
+                                        <!--                                                             viewBox="0 0 12 16" version="1.1" width="12" height="16"-->
+                                        <!--                                                             aria-hidden="true">-->
+                                        <!--                                                            <path fill-rule="evenodd"-->
+                                        <!--                                                                  d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"/>-->
+                                        <!--                                                        </svg>-->
+                                        <!--                                                        <div class="select-menu-item-text" data-menu-button-text>-->
+                                        <!--                                                            Commits-->
+                                        <!--                                                        </div>-->
+                                        <!--                                                    </button>-->
+                                        <!--                                                </div>-->
+                                        <!--                                            </details-menu>-->
+                                        <!--                                        </details>-->
+                                        <!--                                    </div>-->
+                                        <!-- <form th:action="@{'/contributors/'+${owner}+'/'+${repo}}" method="get" >
+
+                                        <input type="date" name="date">
+
+                                        <button type="submit">确认</button>
+                                    </form> -->
+                                    </div>
+                                    <!-- <p class="info">Contributions to master, excluding merge commits</p> -->
+
+                                </div>
+
+                                <div class="graphs" data-repo-url="https://github.com/sirupsen/logrus">
+                                    <!--                                MARK1-->
+                                    <div id="contributors-master" class="tint-box graph-canvas">
+                                        <div id="curve_chart"></div>
+
+                                    </div>
+
+                                    <div id="contributors" class="clearfix js-graph graph-canvas"
+                                        data-graph-name="contributors" data-graph-width="335">
+
+
+                                        <ol class="contrib-data list-style-none">
+                                            <div class="row" id="contributors_graph">
+
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">URL</th>
+                                                            <th scope="col">时间</th>
+                                                            <th scope="col"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>https://github.com/TheAlgorithms/Java</td>
+                                                            <td>2019-05-13 10:23:51</td>
+                                                            <td><a href="#">more</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">2</th>
+                                                            <td>https://github.com/TheAlgorithms/C</td>
+                                                            <td>2019-05-13 10:32:27</td>
+                                                            <td><a href="#">more</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">3</th>
+                                                            <td>https://github.com/TheAlgorithms/Scala</td>
+                                                            <td>2019-05-13 10:50:39</td>
+                                                            <td><a href="#">more</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">4</th>
+                                                            <td>https://github.com/OGRECave/ogre</td>
+                                                            <td>2019-05-13 11:43:57</td>
+                                                            <td><a href="#">more</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">5</th>
+                                                            <td>https://github.com/OGRECave/evolution</td>
+                                                            <td>2019-05-13 11:50:25</td>
+                                                            <td><a href="#">more</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">6</th>
+                                                            <td>https://github.com/jlevy/the-art-of-command-line</td>
+                                                            <td>2019-05-13 11:53:42</td>
+                                                            <td><a href="#">more</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">7</th>
+                                                            <td>https://github.com/wangzheng0822/algo </td>
+                                                            <td>2019-05-13 12:10:05</td>
+                                                            <td><a href="#">more</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">8</th>
+                                                            <td>https://github.com/imfunniee/gitfolio </td>
+                                                            <td>2019-05-14 09:32:17</td>
+                                                            <td><a href="#">more</a></td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th scope="row">9   </th>
+                                                            <td>https://github.com/videoflow/videoflow</td>
+                                                            <td>2019-05-14 17:20:43</td>
+                                                            <td><a href="#">more</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th scope="row">10  </th>
+                                                                <td>https://github.com/vuejs/vue</td>
+                                                                <td>2019-05-14 18:03:25</td>
+                                                                <td><a href="#">more</a></td>
+                                                            </tr>
+
+                                                    </tbody>
+                                                </table>
+
+
+
+                                            </div>
+
+
+                                        </ol>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-backdrop js-touch-events"></div>
+                </div>
+
+            </main>
+        </div>
+
+
+    </div>
+
+
+    <div id="ajax-error-message" class="ajax-error-message flash flash-error">
+        <svg class="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">
+            <path fill-rule="evenodd"
+                d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z" />
+        </svg>
+        <button type="button" class="flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+            <svg class="octicon octicon-x" viewBox="0 0 12 16" version="1.1" width="12" height="16" aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48L7.48 8z" />
+            </svg>
+        </button>
+        You can’t perform that action at this time.
+    </div>
+
+
+    <script crossorigin="anonymous"
+        integrity="sha512-4ogGmCoGByNTJS1EuaHWf5OW9jaaUimTV7C1yWJY2cewmcDQ2BxWQA6/AULidNxvYt3uagTFcU1CQsobKN01XQ=="
+        type="application/javascript" src="https://github.githubassets.com/assets/frameworks-1f9870ed.js"></script>
+
+    <script crossorigin="anonymous" async="async"
+        integrity="sha512-ndUkGfxixq38E/uBsdXO4speen983F90aEEOnJrL67GsP+YOemia80Qo3NInrqoYqn5dDv5QpLvXcYlvUsyyTQ=="
+        type="application/javascript"
+        src="https://github.githubassets.com/assets/github-bootstrap-afe22710.js"></script>
+
+    <script crossorigin="anonymous" async="async"
+        integrity="sha512-LeUzHSepeq8+nVoGG7RSg6IXb9V59AkAJrSWfmYXXxL1pN/M50VQRfnBcCOofgUQhWvwacV2rpizNIwiBoSLpA=="
+        type="application/javascript" src="https://github.githubassets.com/assets/graphs-f5736adb.js"></script>
+
+
+    <div class="js-stale-session-flash stale-session-flash flash flash-warn flash-banner" hidden>
+        <svg class="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">
+            <path fill-rule="evenodd"
+                d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z" />
+        </svg>
+        <span class="signed-in-tab-flash">You signed in with another tab or window. <a href="">Reload</a> to refresh
+            your session.</span>
+        <span class="signed-out-tab-flash">You signed out in another tab or window. <a href="">Reload</a> to refresh
+            your session.</span>
+    </div>
+    <template id="site-details-dialog">
+        <details class="details-reset details-overlay details-overlay-dark lh-default text-gray-dark" open>
+            <summary aria-haspopup="dialog" aria-label="Close dialog"></summary>
+            <details-dialog class="Box Box--overlay d-flex flex-column anim-fade-in fast">
+                <button class="Box-btn-octicon m-0 btn-octicon position-absolute right-0 top-0" type="button"
+                    aria-label="Close dialog" data-close-dialog>
+                    <svg class="octicon octicon-x" viewBox="0 0 12 16" version="1.1" width="12" height="16"
+                        aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48L7.48 8z" />
+                    </svg>
+                </button>
+                <div class="octocat-spinner my-6 js-details-dialog-spinner"></div>
+            </details-dialog>
+        </details>
+    </template>
+
+    <div class="Popover js-hovercard-content position-absolute" style="display: none; outline: none;" tabindex="0">
+        <div class="Popover-message Popover-message--bottom-left Popover-message--large Box box-shadow-large"
+            style="width:360px;">
+        </div>
+    </div>
+
+    <div aria-live="polite" class="js-global-screen-reader-notice sr-only"></div>
+
+</body>
+
+</html>

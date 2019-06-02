@@ -8,6 +8,7 @@ public class author implements Serializable {
     private String name;
     private String description;
     private  int star;
+    private  int activity;
 
 
 
@@ -28,6 +29,13 @@ public class author implements Serializable {
         this.name = name;
     }
 
+    public int getActivity() {
+        return activity;
+    }
+
+    public void setActivity(int activity) {
+        this.activity = activity;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -59,6 +67,7 @@ public class author implements Serializable {
                 "\"name\":\"" + name + '\"' +
                 ", \"description\":\"" + description + '\"' +
                 ", \"star\":" + star +
+                ", \"activity\":" + activity +
                 '}';
     }
 }

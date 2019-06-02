@@ -333,6 +333,7 @@ public class GitHelper {
                 map.put(rv.get(i).getName(),list);
             }
         }
+
         return map;
     }
 
@@ -346,7 +347,7 @@ public class GitHelper {
                     .call();
             for (DiffEntry diff : diffs) {
                 String path=diff.getNewPath();
-                if(path.endsWith(".java"))
+//                if(path.endsWith(".java"))
                     list.add(path);
             }
         }catch (Exception e){
