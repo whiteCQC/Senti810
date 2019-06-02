@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/local/common.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script src="/js/macarons.js"></script>
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/SidebarNav.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/custom.css" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Anton" rel="stylesheet">
+    <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/flatnav.css"  rel="stylesheet">
+
+    <script src="/js/prefixfree.min.js"></script>
+    <script src="/js/modernizr.js"></script>
+
+    <link href="/css/Loadingstyle.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/themes/default/style.min.css" />
+    <link href="/css/bootstrap.min.css"  rel="stylesheet">
+    <link href="/css/bootstrap-datepicker3.css"  rel="stylesheet">
+
+
+    <style>
+        .toClass{
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="Senti">
+    <aside class="sidebar-left">
+        <nav class="navbar navbar-inverse">
+            <div class="navbar-header">
+                <h1><a class="navbar-brand" href="/view/show.html"><span class="fa fa-area-chart"></span> Senti</a></h1>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="sidebar-menu">
+                    <li class="header">GITHUB ANALYSE</li>
+                    <li class="treeview">
+                        <a type="button" id="showCommit" v-on:click="commitSenti">
+                            <i class="fa fa-dashboard"></i> <span>CommitSenti</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a type="button" id="showCode" v-on:click="codeSenti">
+                            <i class="fa fa-pie-chart"></i>
+                            <span>CodeSenti</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a type="button" id="SentimentSwings" v-on:click="SentimentSwings">
+                            <i class="fa fa-pie-chart"></i>
+                            <span>SentimentSwings</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a type="button" id="returnback" v-on:click="returnback">
+                            <i class="fa fa-pie-chart"></i>
+                            <span>Return</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                </ul>
+            </div>
+
+        </nav>
+    </aside>
+
+    <div id="page-wrapper">
+        <div class="main-page">
+
+            <div class="loader" id="loader" style="display:none;"><!--加载动画-->
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="row-one widgettable">
+                <div id="CommitMessage">
+                    <div class="panel-info widget-shadow"  style="margin-left: 230px;height: 460px"> <!-- 推荐关注类 -->
+                        <h3>推荐关注类</h3>
+                        <div style="float: left"><h5>高情绪波动类（质量可能较高且期间内改动较多）</h5>
+                            <div style="float: left;min-width: 150px">
+                                <h6>类名</h6>
+                                <div v-for="item in topHigh" class="toClass">
+                                    <a v-bind:href="'showCode.html?selectClass='+item">{{item}}</a>
+                                    <br>
+                                </div>
+                            </div>
+                            <div style="float: left">
+                                <h6>情绪值方差</h6>
+                                <div v-for="item in topHighScore" >
+                                    <p>&nbsp;{{item}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div style="float: left;margin-left: 100px"><h5>低情绪波动类（质量可能存在问题且期间内改动较多）</h5>
+                            <div style="float: left;min-width: 150px">
+                                <h6>类名</h6>
+                                <div v-for="item in topLow" class="toClass">
+                                    <a v-bind:href="'showCode.html?selectClass='+item">{{item}}</a>
+                                    <br>
+                                </div>
+                            </div>
+                            <div style="float: left">
+                                <h6>情绪值方差</h6>
+                                <div v-for="item in topLowScore">
+                                    <p>&nbsp;{{item}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="float: left;margin-left: 50px">
+                            <form v-on:submit.prevent="SwingbyTime">
+                                <div class="row"><!-- 日期选择  -->
+                                    <div class="col-md-5">
+                                        <h5>From</h5>
+                                        <div class="input-group date datepicker">
+                                            <input type="text" class="form-control" v-model="times.startTime" value=" ">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th "></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <h5>To</h5>
+                                        <div class="input-group date datepicker">
+                                            <input type="text" class="form-control" v-model="times.endTime" value=" ">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th "></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="submit" value="Confirm" style="margin-top:10px">
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
+<script type="text/javascript" src="/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-datepicker.zh-CN.min.js" charset="UTF-8"></script>
+<script src="/js/local/sentimentSwings.js"></script>
+
+
+<script type="text/javascript">
+    $(function(){
+        $('.datepicker').datepicker({
+            language: 'zh-CN'
+        });
+    })
+</script>
+</body>
+</html>

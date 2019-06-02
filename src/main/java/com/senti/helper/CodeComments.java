@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ *  提取代码中的注释
+ */
 public class CodeComments {
-    private final static String reg="[^0-9a-zA-Z\\u4e00-\\u9fa5.,!?: \\n]";
+    private final static String reg="[^0-9a-zA-Z\\u4e00-\\u9fa5.,!?: \\n]";//去掉特殊字符
 
     public List<String> getComment(List<String> list) {// get all comments in list
         List<String> res = new ArrayList<>();
@@ -83,6 +86,11 @@ public class CodeComments {
 
     }
 
+    /**
+     *
+     * @param list
+     * @return 仅考虑以//开头的注释
+     */
     public List<String> getCommentOnlyInMethod(List<String> list) {
         List<String> res = new ArrayList<>();
         String line = null;
@@ -90,7 +98,7 @@ public class CodeComments {
 
         for (int w = 0; w < list.size(); w++) {
             line = list.get(w).trim();
-            if (line.contains("//")&&!line.startsWith("*")&&!line.endsWith(";")&&!line.endsWith("}")) {
+            if (line.contains("//")&&!line.startsWith("*")&&!line.endsWith(";")&&!line.endsWith("}")) {//筛掉注释掉的代码，代码几乎都会以}或;结尾
 
                 int intIndex = line.indexOf("//");
                 String str = line.substring(intIndex+2).replaceAll(reg,"").trim();
@@ -106,7 +114,7 @@ public class CodeComments {
                         int priIndex = temp[j].indexOf("System.out.print");
                         String priStr = temp[j].substring(priIndex);
 
-                        Pattern p = Pattern.compile("\"(.*?)\"");
+                        Pattern p = Pattern.compile("\"(.*?)\"");//将输出的“”中的内容进行拼接
                         Matcher m = p.matcher(priStr);
 
                         StringBuilder complete = new StringBuilder("");

@@ -31,6 +31,9 @@ $(document).ready(function() {
                     })
                 }
 
+            },
+            toRegister:function () {
+                window.location.href="/view/register.html"
             }
         }
     })

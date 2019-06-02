@@ -5,6 +5,6 @@
         insert into gitproject(owner,repo) values(#{owner},#{repo})
   </insert>
     <select id="GetProjectId" resultType="Integer">
-        select gid from gitproject where owner=#{owner} and repo=#{repo}
+        select ifnull((select gid from gitproject where owner=#{owner} and repo=#{repo}),0)
     </select>
 </mapper>

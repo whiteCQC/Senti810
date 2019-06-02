@@ -14,7 +14,10 @@ $(document).ready(function () {
 
             codes: [],
 
-            toSearch: ""
+            toSearch: "",
+
+            CommitClasses:[],
+            CommitMessages:[]
         },
         methods: {
             commitSenti:function () {
@@ -37,6 +40,7 @@ $(document).ready(function () {
                         window.location.href="/view/showCode.html"
                 })
             },
+
             returnback:function () {
                 window.location.href="SearchView"
             },
@@ -144,7 +148,8 @@ $(document).ready(function () {
                     this.notes=res.notes;
                     this.noteTimes=res.noteTimes;
 
-                    console.log(this.notes);
+                    this.CommitClasses=res.CommitClasses;
+                    this.CommitMessages=res.CommitMessages;
 
                     var oWrap=document.getElementsByClassName("wrap")[0];
                     var oUl=oWrap.getElementsByTagName("ul")[0];
@@ -182,11 +187,18 @@ $(document).ready(function () {
                     var posData = [];
                     var negData = [];
                     var comments = [];
+                    var messages=[];
+                    var rclasses=[];
+                    console.log(this.dates)
+                    console.log(this.CommitMessages)
+                    console.log(this.CommitClasses)
 
                     for (var i = 0; i < this.dates.length; i++) {
                         posData[i] = [this.dates[i], this.codeHighs[i]];
                         negData[i] = [this.dates[i], this.codeLows[i]];
                         comments[i] = this.codeComments[i];
+                        messages[i]=this.CommitMessages[i];
+                        rclasses[i]=this.CommitClasses[i];
                     }
 
                     this.codes = res.codes;
@@ -197,7 +209,7 @@ $(document).ready(function () {
                     var myChart = echarts.init(document.getElementById('CodeComment'), 'macarons');
                     var option = {
                         title: {
-                            text: 'Code Sentiment',
+                            text: '代码情绪变化',
                             subtext: this.selectClass
                         },
                         tooltip: {
@@ -242,8 +254,9 @@ $(document).ready(function () {
                         myChart._$handlers.click.length = 0;
                     }
                     myChart.on('click', function (params) {
-                        $('#codeModal').modal();
-                        document.getElementById("code-body").innerHTML = comments[params.dataIndex];
+                        document.getElementById("commentVary").innerHTML = comments[params.dataIndex];
+                        document.getElementById("Commit_Message").innerHTML = messages[params.dataIndex];
+                        document.getElementById("CommitClasses").innerHTML = rclasses[params.dataIndex];
                     });
                 })
             }
@@ -277,7 +290,6 @@ $(document).ready(function () {
                         if (tree.is_leaf(id)) {
                             self.selectClass = id;
 
-                            // self.$options.methods.getValue()
                             self.$http.get("http://localhost:8080/git/getSingleSenti/" + self.selectClass).then(function (response) {
                                 var res = response.data;
                                 self.dates = res.dates;
@@ -287,8 +299,8 @@ $(document).ready(function () {
 
                                 self.notes=res.notes;
                                 self.noteTimes=res.noteTimes;
-
-                                console.log(self.notes);
+                                self.CommitClasses=res.CommitClasses;
+                                self.CommitMessages=res.CommitMessages;
 
                                 var oWrap=document.getElementsByClassName("wrap")[0];
                                 var oUl=oWrap.getElementsByTagName("ul")[0];
@@ -324,11 +336,15 @@ $(document).ready(function () {
                                 var posData = [];
                                 var negData = [];
                                 var comments = [];
+                                var messages=[];
+                                var rclasses=[];
 
                                 for (var i = 0; i < this.dates.length; i++) {
                                     posData[i] = [self.dates[i], self.codeHighs[i]];
                                     negData[i] = [self.dates[i], self.codeLows[i]];
                                     comments[i] = self.codeComments[i];
+                                    messages[i]=self.CommitMessages[i];
+                                    rclasses[i]=self.CommitClasses[i];
                                 }
 
                                 self.codes = res.codes;
@@ -339,7 +355,7 @@ $(document).ready(function () {
                                 var myChart = echarts.init(document.getElementById('CodeComment'), 'macarons');
                                 var option = {
                                     title: {
-                                        text: 'Code Sentiment',
+                                        text: '代码情绪变化',
                                         subtext: self.selectClass
                                     },
                                     tooltip: {
@@ -384,8 +400,9 @@ $(document).ready(function () {
                                     myChart._$handlers.click.length = 0;
                                 }
                                 myChart.on('click', function (params) {
-                                    $('#codeModal').modal();
-                                    document.getElementById("code-body").innerHTML = comments[params.dataIndex];
+                                    document.getElementById("commentVary").innerHTML = comments[params.dataIndex];
+                                    document.getElementById("Commit_Message").innerHTML = messages[params.dataIndex];
+                                    document.getElementById("CommitClasses").innerHTML = rclasses[params.dataIndex];
                                 });
                             })
                         }

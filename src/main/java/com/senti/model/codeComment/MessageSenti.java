@@ -1,12 +1,16 @@
 package com.senti.model.codeComment;
 
+/**
+ * 代码模块
+ * Commit的Message的情绪
+ */
 public class MessageSenti {
-    private int gid;
-    private double high;
-    private double low;
-    private String date;
-    private String comment;
-    private String sha;
+    private int gid;//项目ID
+    private double high;//正面情绪
+    private double low;//负面情绪
+    private String date;//commit提交日期
+    private String comment;//Commit的message
+    private String sha;//Commit的SHA
 
     public MessageSenti(){}
 

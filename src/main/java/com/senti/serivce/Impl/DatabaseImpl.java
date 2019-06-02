@@ -25,10 +25,10 @@ public class DatabaseImpl implements Database {
 
     //连接数据库
     public void connSQL() {
-        String url = "jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8&useSSL=false";
+        String url = "jdbc:mysql://localhost:3306/senti?characterEncoding=UTF-8&useSSL=false";
 
         String username = "root";
-        String password = "973348"; // 加载驱动程序以连接数据库
+        String password = "123456"; // 加载驱动程序以连接数据库
         try {
             Class.forName("com.mysql.jdbc.Driver" );
             conn = DriverManager.getConnection( url,username, password );

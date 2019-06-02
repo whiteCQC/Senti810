@@ -3,14 +3,14 @@
 <head>
     <title>MonthChart</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="keywords" content="" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content=""/>
     <script src="/js/local/common.js"></script>
     <!-- Bootstrap Core CSS -->
-    <link href="/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <link href="/css/bootstrap.css" rel='stylesheet' type='text/css'/>
 
     <!-- Custom CSS -->
-    <link href="/css/style.css" rel='stylesheet' type='text/css' />
+    <link href="/css/style.css" rel='stylesheet' type='text/css'/>
 
     <!-- font-awesome icons CSS -->
     <link href="/css/font-awesome.css" rel="stylesheet">
@@ -21,7 +21,8 @@
     <!-- side nav css file -->
 
     <!--webfonts-->
-    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext"
+          rel="stylesheet">
     <!--//webfonts-->
 
     <!-- Metis Menu -->
@@ -42,7 +43,8 @@
         <aside class="sidebar-left">
             <nav class="navbar navbar-inverse">
                 <div class="navbar-header">
-                    <h1><a class="navbar-brand" href="/search/input"><span class="fa fa-area-chart"></span> Senti</a></h1>
+                    <h1><a class="navbar-brand" href="/search/input"><span class="fa fa-area-chart"></span> Senti</a>
+                    </h1>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="sidebar-menu">
@@ -53,7 +55,7 @@
                             </a>
                         </li>
                         <li class="treeview">
-                            <a href="">
+                            <a type="button" id="showCommit" v-on:click="commitSenti">
                                 <i class="fa fa-dashboard"></i> <span>Commit</span>
                             </a>
                         </li>
@@ -88,17 +90,17 @@
                             </div>
                         </a>
                         <ul class="dropdown-menu drp-mnu">
-                            <li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li>
-                            <li> <a href="#"><i class="fa fa-user"></i> My Account</a> </li>
-                            <li> <a href="#"><i class="fa fa-suitcase"></i> Profile</a> </li>
-                            <li> <a href="#"><i class="fa fa-sign-out"></i> Logout</a> </li>
+                            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+                            <li><a href="#"><i class="fa fa-user"></i> My Account</a></li>
+                            <li><a href="#"><i class="fa fa-suitcase"></i> Profile</a></li>
+                            <li><a href="#"><i class="fa fa-sign-out"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
-            <div class="clearfix"> </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="clearfix"> </div>
+        <div class="clearfix"></div>
     </div>
     <!-- //header-ends -->
     <!-- main content start-->
@@ -117,16 +119,16 @@
                                 </div>
                                 <hr class="widget-separator">
                                 <p>包含：</p>
-                                <br></br>
+                                <br>
                                 <p>1.近期波动</p>
-                                <br></br>
+                                <br>
                                 <p>2.年度排名</p>
-                                <br></br>
+                                <br>
                                 <p>3.月度排名</p>
-                                <br></br>
+                                <br>
                                 <p>4.月度情绪变化图</p>
-                                <br></br>
-                                <br></br>
+                                <br>
+                                <br>
                                 <p><a href="/search/yeartop">查看Issue部分</a></p>
                             </div>
                         </div>
@@ -140,21 +142,22 @@
                             <div class="agileinfo-cdr">
 
                                 <div class="card-header">
-                                    <h3>Report</h3>
+                                    <h3>About</h3>
                                 </div>
                                 <hr class="widget-separator">
                                 <p>包含：</p>
-                                <br></br>
+                                <br>
                                 <p>1.近期波动</p>
-                                <br></br>
+                                <br>
                                 <p>2.年度排名</p>
-                                <br></br>
+                                <br>
                                 <p>3.月度排名</p>
-                                <br></br>
+                                <br>
                                 <p>4.月度情绪变化图</p>
-                                <br></br>
-                                <br></br>
+                                <br>
+                                <br>
                                 <p><a href="">这是Commit部分</a></p>
+                                <p>Calculating sentiment of Commit and Code Comment</p>
                             </div>
                         </div>
                     </div>
@@ -169,16 +172,16 @@
                                 </div>
                                 <hr class="widget-separator">
                                 <p>包含：</p>
-                                <br></br>
+                                <br>
                                 <p>1.近期波动</p>
-                                <br></br>
+                                <br>
                                 <p>2.年度排名</p>
-                                <br></br>
+                                <br>
                                 <p>3.月度排名</p>
-                                <br></br>
+                                <br>
                                 <p>4.月度情绪变化图</p>
-                                <br></br>
-                                <br></br>
+                                <br>
+                                <br>
                                 <p><a href="">这是Contributor部分</a></p>
                             </div>
                         </div>
@@ -190,13 +193,34 @@
     </div>
     <!--footer-->
     <div class="footer">
-        <p> </p>
+        <p></p>
     </div>
     <!--//footer-->
 </div>
+<script>
+    $(document).ready(function () {
+        new Vue({
+            el: "#Senti",
+            methods: {
+                commitSenti: function () {
+                    self = this;
+                    this.$http.get("http://localhost:8080/git/projectExist").then(function (response) {
+                        var res = response.bodyText;
+                        if (res == "no")
+                            alert("please search project first");
+                        else
+                            window.location.href = "/view/showCommit.html"
+                    })
+                }
+
+            }
+        })
+
+    })
+
+</script>
 
 
-
-<script src="/js/bootstrap.js"> </script>
+<script src="/js/bootstrap.js"></script>
 </body>
 </html>

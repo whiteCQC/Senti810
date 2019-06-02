@@ -4,18 +4,33 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class ClassVariation implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private String ClassName;
-    private Timestamp date;
-    private List<String> commentAdd;
-    private List<String> commentDelete;
+/**
+ *  代码模块
+ *  版本变更的Commit中类的信息
+ */
+public class ClassVariation{
+    private String ClassName;//类的具体路径
+    private Timestamp date;//变更时间
+    private List<String> commentAdd;//添加的注释
+    private List<String> commentDelete;//删除的注释
+    private String commit;//该次Commit的message
+    private String sha;//commit的SHA
 
-    public ClassVariation(String ClassName, Timestamp date, List<String> ca, List<String> cd) {
-        this.ClassName = ClassName;
+    public ClassVariation(String className, Timestamp date, List<String> commentAdd, List<String> commentDelete, String commit,String sha) {
+        ClassName = className;
         this.date = date;
-        this.commentAdd = ca;
-        this.commentDelete = cd;
+        this.commentAdd = commentAdd;
+        this.commentDelete = commentDelete;
+        this.commit = commit;
+        this.sha=sha;
+    }
+
+    public String getSha() {
+        return sha;
+    }
+
+    public void setSha(String sha) {
+        this.sha = sha;
     }
 
     public String getClassName() {
@@ -48,5 +63,13 @@ public class ClassVariation implements Serializable {
 
     public void setCommentDelete(List<String> commentDelete) {
         this.commentDelete = commentDelete;
+    }
+
+    public String getCommit() {
+        return commit;
+    }
+
+    public void setCommit(String commit) {
+        this.commit = commit;
     }
 }

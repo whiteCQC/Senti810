@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -20,7 +21,7 @@ public class UserController {
 
     @RequestMapping("/login/{loginInfo}")
     @ResponseBody
-    public String login(@PathVariable("loginInfo") ArrayList<String> loginInfo, HttpServletRequest request){
+    public String login(@PathVariable("loginInfo") List<String> loginInfo, HttpServletRequest request){
         String account = loginInfo.get(0);
         String password = loginInfo.get(1);
 
@@ -32,6 +33,20 @@ public class UserController {
             return "success";
         }else{
             return "not Exist";
+        }
+    }
+
+    @RequestMapping("/register/{registerInfo}")
+    @ResponseBody
+    public String register(@PathVariable("registerInfo") List<String> registerInfo){
+        String account = registerInfo.get(0);
+        String password = registerInfo.get(1);
+
+        if (!userSerivce.userExist(account)) {
+            userSerivce.register(account,password);
+            return "success";
+        }else{
+            return "Exist";
         }
     }
 }

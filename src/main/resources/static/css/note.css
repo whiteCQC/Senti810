@@ -3,8 +3,8 @@
     padding: 0;
 }
 #notes .wrap {
-    width: 1000px;
-    height: 880px;
+    width: 800px;
+    height: 600px;
     margin: 0 auto;
     border-radius: 2px;
     padding: 10px;
@@ -56,9 +56,9 @@
 }
 
 #notes ul {
-    width: 750px;
-    height: 640px;
-    position: absolute;
+    width: 760px;
+    height: 380px;
+    margin-top:210px;
     bottom: 0;
     overflow-x: hidden;
     overflow-y: scroll;

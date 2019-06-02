@@ -37,19 +37,19 @@
                     <li class="header">GITHUB ANALYSE</li>
                     <li class="treeview">
                         <a type="button" id="showCommit" v-on:click="commitSenti">
-                            <i class="fa fa-dashboard"></i> <span>CommitSenti</span>
+                            <i class="fa fa-dashboard"></i> <span>Commit情绪分析</span>
                         </a>
                     </li>
                     <li class="treeview">
                         <a type="button" id="showCode" v-on:click="codeSenti">
                             <i class="fa fa-pie-chart"></i>
-                            <span>CodeSenti</span>
+                            <span>代码类情绪分析</span>
                         </a>
                     </li>
                     <li class="treeview">
                         <a type="button" id="returnback" v-on:click="returnback">
                             <i class="fa fa-pie-chart"></i>
-                            <span>Return</span>
+                            <span>返 回</span>
                         </a>
                     </li>
                     <li class="treeview">
@@ -81,21 +81,39 @@
                     <div class="panel-info widget-shadow"  style="margin-left: 230px">
                         <table width="1600px" border="0">
                             <tr>
-                                <td rowspan="3"> <div id="allClasses" style="height: 1630px;width: 300px;"></div></td>
-                                <td><div id="CodeComment" style="width: 1000px; height: 350px;"></div><!--代码情绪图--></td>
+                                <td rowspan="4">
+                                    <div id="allClasses" style="height: 1630px;width: 300px;"></div>
+                                </td>
+                                <td>
+                                    <div id="CodeComment" style="width: 1000px; height: 350px;"></div><!--代码情绪图-->
+                                </td>
+                                <td rowspan="4">
+                                    <h4>注释变更</h4>
+                                    <div id="commentVary" style="height: 1630px;width: 300px;"></div>
+                                </td>
                             </tr>
                             <tr>
-                                <td><textarea style="width: 800px;height: 400px;margin-left: 100px;" readonly="readonly" id="codes"></textarea></td>
+                                <td>
+                                    <div style="margin-left: 90px;width: 820px">
+                                        <h5>当次Commit提交信息</h5>
+                                        <div style="overflow-y:scroll;height: 80px" id="Commit_Message"></div>
+                                        <h5>当次Commit所有修改类</h5>
+                                        <div style="overflow-y:scroll;height: 120px" id="CommitClasses"></div>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                <td style="height: 880px" id="notes">
-                                    <div class="wrap">
+                                <td><textarea style="width: 820px;height: 400px;margin-left: 90px;" readonly="readonly" id="codes"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td id="notes">
+                                    <div class="wrap" style="margin-left: 90px;">
                                         <div class="says">
-                                            <h1>Your Note</h1>
+                                            <h1>您的评论留言</h1>
                                             <form v-on:submit.prevent="SubmitNote">
-                                                <textarea></textarea><input type="submit"  value="Submit">
+                                                <textarea></textarea><input type="submit"  value="提交">
                                             </form>
-                                            <div class="errmsg">Please input your note！</div>
+                                            <div class="errmsg">请先输入评论内容！</div>
                                         </div>
                                         <ul>
                                         </ul>
@@ -111,28 +129,6 @@
         </div>
     </div>
 
-</div>
-
-<!--点击图的模态框-->
-<div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
-                <h4 class="modal-title">
-                    Code Comments
-                </h4>
-            </div>
-            <div class="modal-body" id="code-body">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-            </div>
-        </div>
-    </div>
 </div>
 <script src="/js/jstree.min.js"></script>
 <script src="/js/local/codeSenti.js"></script>

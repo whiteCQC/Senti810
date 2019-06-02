@@ -12,6 +12,18 @@ $(document).ready(function () {
             relatedClasses: [],
             topHigh:[],
             topLow:[],
+            topHighScore:[],
+            topLowScore:[],
+
+            topCombineHigh:[],
+            topCombineLow:[],
+            topCombineHighScore:[],
+            topCombineLowScore:[],
+
+            times:{
+                startTime:"",
+                endTime:""
+            },
 
             toSearch: ""
         },
@@ -38,6 +50,31 @@ $(document).ready(function () {
             },
             returnback:function () {
                 window.location.href="SearchView"
+            },
+
+            commitbyTime:function () {
+                self=this;
+
+                if(this.times.startTime==""||this.times.endTime==""){
+                    alert("please input the time");
+                }else{
+                    var timeInfo=[this.times.startTime,this.times.endTime]
+                    this.$http.get("http://localhost:8080/git/commitbyTime/"+timeInfo).then(function (response) {
+                        var res = response.data;
+
+                        this.topHigh=res.topHigh;
+                        this.topLow=res.topLow;
+                        this.topHighScore=res.topHighScore;
+                        this.topLowScore=res.topLowScore;
+
+                        this.topCombineHigh=res.topCombineHigh;
+                        this.topCombineLow=res.topCombineLow;
+                        this.topCombineHighScore=res.topCombineHighScore;
+                        this.topCombineLowScore=res.topCombineLowScore;
+                    })
+                }
+
+
             }
 
         },
@@ -60,7 +97,18 @@ $(document).ready(function () {
 
                 this.topHigh=res.topHigh;
                 this.topLow=res.topLow;
+                this.topHighScore=res.topHighScore;
+                this.topLowScore=res.topLowScore;
 
+                this.topCombineHigh=res.topCombineHigh;
+                this.topCombineLow=res.topCombineLow;
+                this.topCombineHighScore=res.topCombineHighScore;
+                this.topCombineLowScore=res.topCombineLowScore;
+
+                console.log(res.topCombineHigh)
+                console.log(res.topCombineLow)
+                console.log(res.topCombineHighScore)
+                console.log(res.topCombineLowScore)
 
                 var posData = [];
                 var negData = [];
@@ -76,7 +124,7 @@ $(document).ready(function () {
                 var option1 = {
                     title: {
                         text: 'Commit情绪总体情况',
-                        subtext: 'Senti-Strength',
+                        subtext: 'SentiStrength',
                     },
                     tooltip: {
                         trigger: 'item'
@@ -141,10 +189,10 @@ $(document).ready(function () {
                             radius: '55%',
                             center: ['50%', '60%'],
                             data: [
-                                {value: this.HighCount[0], name: '情绪平稳'},
-                                {value: this.HighCount[1], name: '略显积极'},
-                                {value: this.HighCount[2], name: '较为积极'},
-                                {value: this.HighCount[3], name: '非常积极'}
+                                {value: this.HighCount[1], name: '情绪平稳'},
+                                {value: this.HighCount[2], name: '略显积极'},
+                                {value: this.HighCount[3], name: '较为积极'},
+                                {value: this.HighCount[4], name: '非常积极'}
                             ],
                             itemStyle: {
                                 emphasis: {
@@ -179,10 +227,10 @@ $(document).ready(function () {
                             radius: '55%',
                             center: ['50%', '60%'],
                             data: [
-                                {value: this.LowCount[0], name: '情绪平稳'},
-                                {value: this.LowCount[1], name: '略显消极'},
-                                {value: this.LowCount[2], name: '较为消极'},
-                                {value: this.LowCount[3], name: '非常消极'}
+                                {value: this.LowCount[1], name: '情绪平稳'},
+                                {value: this.LowCount[2], name: '略显消极'},
+                                {value: this.LowCount[3], name: '较为消极'},
+                                {value: this.LowCount[4], name: '非常消极'}
                             ],
                             itemStyle: {
                                 emphasis: {
@@ -204,8 +252,6 @@ $(document).ready(function () {
                 $("#CommitMessage").show();
 
                 myChart1.on('click', function (params) {
-                    $('#commitModal').modal();
-
                     document.getElementById("commit-body").innerHTML = comments[params.dataIndex];
                     document.getElementById("related").innerHTML = rclasses[params.dataIndex];
                 });
