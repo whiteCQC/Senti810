@@ -46,39 +46,8 @@
             <div class="pagehead repohead instapaper_ignore readability-menu experiment-repo-nav  ">
                 <div class="repohead-details-container clearfix container">
 
-                    <ul class="pagehead-actions">
-
-
-
-                        <li>
-
-                            <!-- '"` -->
-                            <!-- </textarea></xmp> -->
-
-
-                            <details class="details-reset details-overlay select-menu float-left">
-                                <summary class="select-menu-button float-left btn btn-sm btn-with-count"
-                                         data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;WATCH_BUTTON&quot;,&quot;repository_id&quot;:24033806,&quot;client_id&quot;:&quot;1956716977.1556370267&quot;,&quot;originating_request_id&quot;:&quot;A5E0:8F62:108CFD:1A6D81:5CC57B10&quot;,&quot;originating_url&quot;:&quot;https://github.com/sudhof/politeness/commits/master&quot;,&quot;referrer&quot;:&quot;https://www.cs.cornell.edu/~cristian/Politeness.html&quot;,&quot;user_id&quot;:22998328}}"
-                                         data-hydro-click-hmac="4adf720f97e03480ebb776597a9e6410e9aed042f6c38ffdf2f3dda9b281aaf2"
-                                         data-ga-click="Repository, click Watch settings, action:commits#show"> <span data-menu-button>
-                      <svg class="octicon octicon-eye v-align-text-bottom" viewBox="0 0 16 16" version="1.1" width="16"
-                           height="16" aria-hidden="true">
-                        <path fill-rule="evenodd"
-                              d="M8.06 2C3 2 0 8 0 8s3 6 8.06 6C13 14 16 8 16 8s-3-6-7.94-6zM8 12c-2.2 0-4-1.78-4-4 0-2.2 1.8-4 4-4 2.22 0 4 1.8 4 4 0 2.22-1.78 4-4 4zm2-4c0 1.11-.89 2-2 2-1.11 0-2-.89-2-2 0-1.11.89-2 2-2 1.11 0 2 .89 2 2z" />
-                      </svg>
-                      Watch
-                    </span>
-                                </summary>
-
-                            </details>
-                            <a class="social-count js-social-count" href="/sudhof/politeness/watchers"
-                               aria-label="4 users are watching this repository">
-                                4
-                            </a>
-
-                        </li>
-                    </ul>
-
+<a th:href="@{'/contributors/'+${owner}+'/'+${repo}}" >返回</a>
+                    <br>
                     <h1 class="public ">
                         <svg class="octicon octicon-repo" viewBox="0 0 12 16" version="1.1" width="12" height="16"
                              aria-hidden="true">
@@ -86,12 +55,13 @@
                                   d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z" />
                         </svg>
                         <span class="author" itemprop="author"><a class="url fn" rel="author" data-hovercard-type="user"
-                                                                  data-octo-dimensions="link_type:self" href="/sudhof">sudhof</a></span>
+                                                                  data-octo-dimensions="link_type:self" href="#" th:text="${owner}"></a></span>
                         <!--
           --><span class="path-divider">/</span>
                         <!--
-          --><strong itemprop="name"><a data-pjax="#js-repo-pjax-container" href="/sudhof/politeness">politeness</a></strong>
-
+          --><strong itemprop="name"><a data-pjax="#js-repo-pjax-container" href="#" th:text="${repo}"></a></strong>
+                        <span class="path-divider">/</span>
+                        <strong itemprop="name"><a data-pjax="#js-repo-pjax-container" href="#" th:text="${author}"></a></strong>
 
                     </h1>
 

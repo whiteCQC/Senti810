@@ -59,6 +59,37 @@ public class ContributorsController  {
 
 
 
+
+    @GetMapping("/contributors/{owner}/{repo}")
+    public String doGet(@PathVariable("owner") String owner, @PathVariable("repo") String repo, Model model, @RequestParam(required=false) String date){
+
+        List<MessageSentihht> messageSentis;
+        Map<author, List<MessageSentihht>> map;
+
+        if (date!=null) {
+
+            messageSentis= gitService.getCommitSentihht(owner, repo, date);
+
+            map = gitService.getCommitSentiSortbyAuthor(owner, repo, date);
+        }else{
+
+            map=gitService.getCommitSentiSortbyAuthor(owner,repo);
+            messageSentis=gitService.getCommitSentihht(owner,repo);
+        }
+
+        model.addAttribute("owner",owner);
+        model.addAttribute("messlist",messageSentis);
+        model.addAttribute("map",map);
+
+        model.addAttribute("repo",repo);
+
+        return "/contributors";
+
+    }
+
+
+
+
     @GetMapping("/contributors/{owner}/{repo}/{author}")
     public String get(@PathVariable("owner") String owner,@PathVariable("repo") String repo,@PathVariable("author") String author, Model model){
         List<MessageSentihht> messageSentis=gitService.getCommitSentibyAuthor(owner,repo,author);
