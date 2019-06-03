@@ -1,6 +1,6 @@
 package com.senti.serivce;
 
-import com.senti.model.GithubUser;
+
 import com.senti.model.codeComment.*;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface GitService {
 
     Map<author,List<MessageSentihht>> getCommitSentiSortbyAuthor(String owner, String repo);
 
-    GithubUser findGithubUserbyName(String name);
+
 
     Map<String,List<String>> getCommitRelatedClasses(String owner, String repo);
 

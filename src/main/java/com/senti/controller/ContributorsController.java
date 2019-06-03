@@ -1,12 +1,12 @@
 package com.senti.controller;
 
-import com.senti.model.GithubUser;
+
 import com.senti.model.codeComment.Commits;
 import com.senti.model.codeComment.MessageSenti;
 import com.senti.model.codeComment.MessageSentihht;
 import com.senti.model.codeComment.author;
 import com.senti.serivce.GitService;
-import com.senti.serivce.GithubService;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -27,8 +27,7 @@ import java.util.Map;
 @Controller
 public class ContributorsController  {
 
-    @Autowired
-    GithubService githubService;
+
 
     @Autowired
     GitService gitService;

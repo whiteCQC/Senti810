@@ -5,7 +5,7 @@ import com.senti.dao.SentiDao;
 import com.senti.helper.GitHelper;
 import com.senti.helper.SentiCal;
 import com.senti.helper.SentiStrengthUtilhht;
-import com.senti.model.GithubUser;
+
 import com.senti.model.codeComment.*;
 import com.senti.serivce.GitService;
 import org.json.simple.JSONArray;
@@ -245,34 +245,6 @@ public class GitServiceImpl implements GitService {
 
 
 
-
-
-    @Override
-    public GithubUser findGithubUserbyName(String name) {
-
-        GithubUser githubUser;
-        try {
-            String url="https://api.github.com/search/users?q="+name+"+in:name";
-            Document doc = Jsoup.connect(url).ignoreContentType(true).get();
-            JSONParser parser = new JSONParser();
-
-            JSONObject json1 = (JSONObject) parser.parse(doc.body().text());
-            Integer count=Integer.parseInt(json1.get("total_count").toString());
-            if (count==0) return null;
-            JSONArray json2 = (JSONArray) json1.get("items");
-
-
-            JSONObject jsonObject=(JSONObject) json2.get(0);
-            String username=jsonObject.get("login").toString();
-            String avatar_url=jsonObject.get("avatar_url").toString();
-            githubUser= new GithubUser(name,username,avatar_url);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return githubUser;
-    }
 
     @Override
     public Map<String, List<String>> getCommitRelatedClasses(String owner, String repo) {
