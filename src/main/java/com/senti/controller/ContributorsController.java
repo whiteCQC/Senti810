@@ -1,26 +1,21 @@
 package com.senti.controller;
 
 
-import com.senti.model.codeComment.Commits;
-import com.senti.model.codeComment.MessageSenti;
+
+
 import com.senti.model.codeComment.MessageSentihht;
 import com.senti.model.codeComment.author;
 import com.senti.serivce.GitService;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 

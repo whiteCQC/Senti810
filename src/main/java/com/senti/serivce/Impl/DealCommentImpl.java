@@ -1,7 +1,11 @@
 package com.senti.serivce.Impl;
-
+/*
+该类是议题模块的方法实现类，分析包含github和七个数据库下的issue 评论
+ */
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.senti.serivce.Database;
 import com.senti.serivce.DealComment;
@@ -203,7 +207,7 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
-    /*17,18,19年度top5*/
+    /*七个数据库17,18,19年度top5*/
     public ArrayList<ArrayList<String>> getLYdata(String name){
         ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
         ArrayList<String> temp17=new ArrayList<String>();
@@ -790,7 +794,7 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
-    /*17,18,19月度top1*/
+    /*七个数据库17,18,19月度top1*/
     public ArrayList<ArrayList<String>> getLMdata(String name){
         ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
         ArrayList<String> temp17=new ArrayList<String>();
@@ -1358,7 +1362,7 @@ public class DealCommentImpl implements DealComment{
 
 
 
-    /*本地数据库的2017.1到2019.3的情绪变化*/
+    /*七个数据库的2017.1到2019.3的情绪变化*/
     public ArrayList<Object> getLChange(String name) {
         double[][] result=new double[2][27];
         int[] count=new int[27];//计次数
@@ -1661,18 +1665,17 @@ public class DealCommentImpl implements DealComment{
                     double negativeScore19=0;//2019年度消极分均值
                     int count19=0;//2019年的评论数
                     for(int j=0;j<singleIssue.size();j++) {
-                        int datelength=singleIssue.get(j).get(3).length();
-                        if(singleIssue.get(j).get(3).substring(datelength-4, datelength).equals("2017")) {//日期年份为2017的
+                        if(singleIssue.get(j).get(3).substring(0,4).equals("2017")) {//日期年份为2017的
                             count17++;
                             activeScore17+=Integer.parseInt(singleIssue.get(j).get(7));
                             negativeScore17+=Integer.parseInt(singleIssue.get(j).get(8));
                         }
-                        if(singleIssue.get(j).get(3).substring(datelength-4, datelength).equals("2018")) {//日期年份为2018的
+                        if(singleIssue.get(j).get(3).substring(0,4).equals("2018")) {//日期年份为2018的
                             count18++;
                             activeScore18+=Integer.parseInt(singleIssue.get(j).get(7));
                             negativeScore18+=Integer.parseInt(singleIssue.get(j).get(8));
                         }
-                        if(singleIssue.get(j).get(3).substring(datelength-4, datelength).equals("2019")) {//日期年份为2019的
+                        if(singleIssue.get(j).get(3).substring(0,4).equals("2019")) {//日期年份为2019的
                             count19++;
                             activeScore19+=Integer.parseInt(singleIssue.get(j).get(7));
                             negativeScore19+=Integer.parseInt(singleIssue.get(j).get(8));
@@ -1856,54 +1859,54 @@ public class DealCommentImpl implements DealComment{
                         count1=count2=count3=count4=count5=count6=count7=count8=count9=count10=count11=count12=0;
                         for(int j=0;j<singleIssue.size();j++) {
                             String datetime=singleIssue.get(j).get(3).replaceAll(" ", "");
-                            String month=datetime.substring(0, 3);//月份
-                            String year=datetime.substring(datetime.length()-4, datetime.length());//年份
+                            String month=datetime.substring(5, 7);//月份
+                            String year=datetime.substring(0,4);//年份
                             if(year.equals("20"+y)) {
-                                if(month.equals("Jan")) {//一月
+                                if(month.equals("01")) {//一月
                                     count1++;
                                     activeScore1+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore1+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Feb")) {
+                                }else if(month.equals("02")) {
                                     count2++;
                                     activeScore2+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore2+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Mar")) {
+                                }else if(month.equals("03")) {
                                     count3++;
                                     activeScore3+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore3+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Apr")) {
+                                }else if(month.equals("04")) {
                                     count4++;
                                     activeScore4+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore4+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("May")) {
+                                }else if(month.equals("05")) {
                                     count5++;
                                     activeScore5+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore5+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Jun")) {
+                                }else if(month.equals("06")) {
                                     count6++;
                                     activeScore6+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore6+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Jul")) {
+                                }else if(month.equals("07")) {
                                     count7++;
                                     activeScore7+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore7+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Aug")) {
+                                }else if(month.equals("08")) {
                                     count8++;
                                     activeScore8+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore8+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Sep")) {
+                                }else if(month.equals("09")) {
                                     count9++;
                                     activeScore9+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore9+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Oct")) {
+                                }else if(month.equals("10")) {
                                     count10++;
                                     activeScore10+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore10+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Nov")) {
+                                }else if(month.equals("11")) {
                                     count11++;
                                     activeScore11+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore11+=Integer.parseInt(singleIssue.get(j).get(8));
-                                }else if(month.equals("Dec")) {
+                                }else if(month.equals("12")) {
                                     count12++;
                                     activeScore12+=Integer.parseInt(singleIssue.get(j).get(7));
                                     negativeScore12+=Integer.parseInt(singleIssue.get(j).get(8));
@@ -2148,191 +2151,191 @@ public class DealCommentImpl implements DealComment{
                 String datetime=allInfor.get(i).get(3);//日期
                 String issueurl=allInfor.get(i).get(0);//相关的url
                 datetime=datetime.replaceAll(" ", "");
-                String month=datetime.substring(0,3);//月份
-                String year=datetime.substring(datetime.length()-4, datetime.length());//年份
-                if(month.equals("Jan")&&year.equals("2017")) {
+                String month=datetime.substring(5,7);//月份
+                String year=datetime.substring(0,4);//年份
+                if(month.equals("01")&&year.equals("2017")) {
                     count[0]++;
                     result[0][0]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][0]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_1.contains(issueurl))
                         issue_17_1.add(issueurl);
                 }
-                if(month.equals("Feb")&&year.equals("2017")) {
+                if(month.equals("02")&&year.equals("2017")) {
                     count[1]++;
                     result[0][1]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][1]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_2.contains(issueurl))
                         issue_17_2.add(issueurl);
                 }
-                if(month.equals("Mar")&&year.equals("2017")) {
+                if(month.equals("03")&&year.equals("2017")) {
                     count[2]++;
                     result[0][2]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][2]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_3.contains(issueurl))
                         issue_17_3.add(issueurl);
                 }
-                if(month.equals("Apr")&&year.equals("2017")) {
+                if(month.equals("04")&&year.equals("2017")) {
                     count[3]++;
                     result[0][3]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][3]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_4.contains(issueurl))
                         issue_17_4.add(issueurl);
                 }
-                if(month.equals("May")&&year.equals("2017")) {
+                if(month.equals("05")&&year.equals("2017")) {
                     count[4]++;
                     result[0][4]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][4]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_5.contains(issueurl))
                         issue_17_5.add(issueurl);
                 }
-                if(month.equals("Jun")&&year.equals("2017")) {
+                if(month.equals("06")&&year.equals("2017")) {
                     count[5]++;
                     result[0][5]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][5]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_6.contains(issueurl))
                         issue_17_6.add(issueurl);
                 }
-                if(month.equals("Jul")&&year.equals("2017")) {
+                if(month.equals("07")&&year.equals("2017")) {
                     count[6]++;
                     result[0][6]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][6]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_7.contains(issueurl))
                         issue_17_7.add(issueurl);
                 }
-                if(month.equals("Aug")&&year.equals("2017")) {
+                if(month.equals("08")&&year.equals("2017")) {
                     count[7]++;
                     result[0][7]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][7]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_8.contains(issueurl))
                         issue_17_8.add(issueurl);
                 }
-                if(month.equals("Sep")&&year.equals("2017")) {
+                if(month.equals("09")&&year.equals("2017")) {
                     count[8]++;
                     result[0][8]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][8]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_9.contains(issueurl))
                         issue_17_9.add(issueurl);
                 }
-                if(month.equals("Oct")&&year.equals("2017")) {
+                if(month.equals("10")&&year.equals("2017")) {
                     count[9]++;
                     result[0][9]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][9]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_10.contains(issueurl))
                         issue_17_10.add(issueurl);
                 }
-                if(month.equals("Nov")&&year.equals("2017")) {
+                if(month.equals("11")&&year.equals("2017")) {
                     count[10]++;
                     result[0][10]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][10]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_11.contains(issueurl))
                         issue_17_11.add(issueurl);
                 }
-                if(month.equals("Dec")&&year.equals("2017")) {
+                if(month.equals("12")&&year.equals("2017")) {
                     count[11]++;
                     result[0][11]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][11]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_17_12.contains(issueurl))
                         issue_17_12.add(issueurl);
                 }
-                if(month.equals("Jan")&&year.equals("2018")) {
+                if(month.equals("01")&&year.equals("2018")) {
                     count[12]++;
                     result[0][12]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][12]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_1.contains(issueurl))
                         issue_18_1.add(issueurl);
                 }
-                if(month.equals("Feb")&&year.equals("2018")) {
+                if(month.equals("02")&&year.equals("2018")) {
                     count[13]++;
                     result[0][13]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][13]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_2.contains(issueurl))
                         issue_18_2.add(issueurl);
                 }
-                if(month.equals("Mar")&&year.equals("2018")) {
+                if(month.equals("03")&&year.equals("2018")) {
                     count[14]++;
                     result[0][14]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][14]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_3.contains(issueurl))
                         issue_18_3.add(issueurl);
                 }
-                if(month.equals("Apr")&&year.equals("2018")) {
+                if(month.equals("04")&&year.equals("2018")) {
                     count[15]++;
                     result[0][15]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][15]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_4.contains(issueurl))
                         issue_18_4.add(issueurl);
                 }
-                if(month.equals("May")&&year.equals("2018")) {
+                if(month.equals("05")&&year.equals("2018")) {
                     count[16]++;
                     result[0][16]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][16]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_5.contains(issueurl))
                         issue_18_5.add(issueurl);
                 }
-                if(month.equals("Jun")&&year.equals("2018")) {
+                if(month.equals("06")&&year.equals("2018")) {
                     count[17]++;
                     result[0][17]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][17]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_6.contains(issueurl))
                         issue_18_6.add(issueurl);
                 }
-                if(month.equals("Jul")&&year.equals("2018")) {
+                if(month.equals("07")&&year.equals("2018")) {
                     count[18]++;
                     result[0][18]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][18]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_7.contains(issueurl))
                         issue_18_7.add(issueurl);
                 }
-                if(month.equals("Aug")&&year.equals("2018")) {
+                if(month.equals("08")&&year.equals("2018")) {
                     count[19]++;
                     result[0][19]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][19]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_8.contains(issueurl))
                         issue_18_8.add(issueurl);
                 }
-                if(month.equals("Sep")&&year.equals("2018")) {
+                if(month.equals("09")&&year.equals("2018")) {
                     count[20]++;
                     result[0][20]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][20]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_9.contains(issueurl))
                         issue_18_9.add(issueurl);
                 }
-                if(month.equals("Oct")&&year.equals("2018")) {
+                if(month.equals("10")&&year.equals("2018")) {
                     count[21]++;
                     result[0][21]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][21]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_10.contains(issueurl))
                         issue_18_10.add(issueurl);
                 }
-                if(month.equals("Nov")&&year.equals("2018")) {
+                if(month.equals("11")&&year.equals("2018")) {
                     count[22]++;
                     result[0][22]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][22]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_11.contains(issueurl))
                         issue_18_11.add(issueurl);
                 }
-                if(month.equals("Dec")&&year.equals("2018")) {
+                if(month.equals("12")&&year.equals("2018")) {
                     count[23]++;
                     result[0][23]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][23]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_18_12.contains(issueurl))
                         issue_18_12.add(issueurl);
                 }
-                if(month.equals("Jan")&&year.equals("2019")) {
+                if(month.equals("01")&&year.equals("2019")) {
                     count[24]++;
                     result[0][24]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][24]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_19_1.contains(issueurl))
                         issue_19_1.add(issueurl);
                 }
-                if(month.equals("Feb")&&year.equals("2019")) {
+                if(month.equals("02")&&year.equals("2019")) {
                     count[25]++;
                     result[0][25]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][25]+=Integer.parseInt(allInfor.get(i).get(8));
                     if(!issue_19_2.contains(issueurl))
                         issue_19_2.add(issueurl);
                 }
-                if(month.equals("Mar")&&year.equals("2019")) {
+                if(month.equals("03")&&year.equals("2019")) {
                     count[26]++;
                     result[0][26]+=Integer.parseInt(allInfor.get(i).get(7));
                     result[1][26]+=Integer.parseInt(allInfor.get(i).get(8));
@@ -2421,6 +2424,7 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
+    //获取存入数据库的年度排名数据
     public ArrayList<ArrayList<String>> getHisYear(int userid, String url, String time){
         ArrayList<ArrayList<String>> res = new ArrayList<ArrayList<String>>();
         try {
@@ -2455,6 +2459,7 @@ public class DealCommentImpl implements DealComment{
         return res;
     }
 
+    //获取存入数据库的月度排名数据
     public ArrayList<ArrayList<String>> getHisMonth(int userid, String url, String time){
         ArrayList<ArrayList<String>> res = new ArrayList<ArrayList<String>>();
         try {
@@ -2489,15 +2494,339 @@ public class DealCommentImpl implements DealComment{
         return res;
     }
 
-/*    public static void main(String[] args){
-        DealCommentImpl da=new DealCommentImpl();
-        ArrayList<ArrayList<String>> result= new ArrayList<>();
-        result=da.getLYearTop("DERBY");
-        for(int i=0;i<4;i++){
-            System.out.println(result.get(i));
+    //七个数据库方差
+    public ArrayList<Object> getVarL(String from, String to, String name){
+        ArrayList<Object> res= new ArrayList<>();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date fromtime=format.parse(from);//开始时间
+            Date totime=format.parse(to);//结束时间
+            ArrayList<ArrayList<String>> issueWeb = dao.getAllComment(name);//通过输入的网址获取其下所有信息
+            ArrayList<String> issueNos=new ArrayList<>();//存放所有issueNo
+            for(int i=0;i<issueWeb.size();i++){
+                if(!issueNos.contains(issueWeb.get(i).get(0))){
+                    issueNos.add(issueWeb.get(i).get(0));
+                }
+            }
+            double[][] var = new double[2][issueNos.size()];//存放方差
+            String[] issues=new String[issueNos.size()];//存放url
+            String[] issues2=new String[issueNos.size()];//存放url
+            String[] issuesTitle=new String[issues.length];
+            String[] issues2Title=new String[issues2.length];
+            for(int i=0;i<issueNos.size();i++) {
+                issues[i]=issueNos.get(i);
+                issues2[i]=issueNos.get(i);
+                double average=0;  //平均数
+                double variance=0; //方差
+                double average2=0;  //平均数
+                double variance2=0; //方差
+                ArrayList<ArrayList<String>> singleIssue=new ArrayList<>();
+                for(int j=0;j<issueWeb.size();j++){
+                    if(issueWeb.get(j).get(0).equals(issueNos.get(i))){
+                        singleIssue.add(issueWeb.get(j));
+                    }
+                }
+                boolean isadd=false;//是否加入计算的行列
+                int count=0;
+                for(int j=0;j<singleIssue.size();j++) {//equals改成大于小于
+                    Date times=format.parse(singleIssue.get(j).get(2));
+                    if((!times.before(fromtime)) && (!times.after(totime)) ){
+                        isadd=true;
+                    }else{
+                        isadd=false;
+                    }
+                    if(isadd){
+                        average=average+Integer.parseInt(singleIssue.get(j).get(4));
+                        variance=variance+Integer.parseInt(singleIssue.get(j).get(4))*Integer.parseInt(singleIssue.get(j).get(4));
+                        count++;
+                        average2=average2+Integer.parseInt(singleIssue.get(j).get(5));
+                        variance2=variance2+Integer.parseInt(singleIssue.get(j).get(5))*Integer.parseInt(singleIssue.get(j).get(5));
+                    }
+                }
+                if(count!=0) {
+                    average = average/count;
+                    variance=variance/count;
+                    variance=variance-average*average;
+                    average2 = average2/count;
+                    variance2=variance2/count;
+                    variance2=variance2-average2*average2;
+                }
+                var[0][i]=variance;
+                var[1][i]=variance2;
+
+            }
+            bubbleSort(var[0], issues);//排过序了(前五是积极波动最大)
+            bubbleSort(var[1], issues2);//排过序了(前五是消极波动最大)
+
+            res.add(issues);
+            res.add(issues2);
+
+            for(int i=0;i<issues.length;i++){
+                issuesTitle[i]=name+"-"+issues[i];
+                issues2Title[i]=name+"-"+issues2[i];
+            }
+            res.add(issuesTitle);
+            res.add(issues2Title);
+        }catch(Exception e){
+            e.printStackTrace();
         }
 
-    }*/
+        return res;
+    }
+
+    //derby等等选定区间内的时间轴和情绪值
+    public ArrayList<Object> getSelectChangeL(String from, String to, String name){
+        ArrayList<Object> res= new ArrayList<>();
+        try{
+            ArrayList<ArrayList<String>> issues = dao.getAllComment(name);
+            ArrayList<String> datetime = new ArrayList<>();//存放时间
+            for(int i=0;i<issues.size();i++) {
+                if(!datetime.contains(issues.get(i).get(2).substring(0,10))){
+                    datetime.add(issues.get(i).get(2).substring(0,10));
+                }
+            }
+            double[][] senti = new double[2][datetime.size()];//存放对应时间的情绪值
+            int[] count = new int[datetime.size()];
+            for(int i=0;i<datetime.size();i++){
+                for(int j=0;j<issues.size();j++){
+                    if(issues.get(j).get(2).substring(0,10).equals(datetime.get(i))){//如果时间对上了
+                        senti[0][i]=senti[0][i]+Integer.parseInt(issues.get(j).get(4));//积极
+                        senti[1][i]=senti[1][i]+Integer.parseInt(issues.get(j).get(5));//消极
+                        count[i]++;
+                    }
+                }
+            }
+            Date[] dates=new Date[datetime.size()];
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date fromtime=format.parse(from);//开始时间
+            Date totime=format.parse(to);//结束时间
+            for(int i=0;i<datetime.size();i++){
+                senti[0][i]=senti[0][i]/count[i];
+                senti[1][i]=senti[1][i]/count[i];
+                dates[i]=format.parse(datetime.get(i));
+//                System.out.println("未变动"+senti[0][i]+senti[1][i]+dates[i]);
+            }
+            for(int i=0;i<dates.length-1;i++){
+                for(int j=0;j<dates.length-1-i;j++){
+                    if(dates[j].after(dates[j+1])){
+                        Date temp=dates[j];
+                        dates[j]=dates[j+1];
+                        dates[j+1]=temp;
+                        double temP=senti[0][j];
+                        senti[0][j]=senti[0][j+1];
+                        senti[0][j+1]=temP;
+                        double temN=senti[1][j];
+                        senti[1][j]=senti[1][j+1];
+                        senti[1][j+1]=temN;
+                    }
+                }
+            }
+            ArrayList<Date> date=new ArrayList<>();
+            ArrayList<Double> sentip=new ArrayList<>();
+            ArrayList<Double> sentin=new ArrayList<>();
+            ArrayList<ArrayList<String>> relative=new ArrayList<>();
+            for(int i=0;i<dates.length;i++){
+                if((!dates[i].before(fromtime)) && (!dates[i].after(totime))){
+                    date.add(dates[i]);
+                    sentip.add(senti[0][i]);
+                    sentin.add(senti[1][i]);
+                }
+            }
+            for(int i=0;i<date.size();i++){
+                ArrayList<String> temp=new ArrayList<>();
+                for(int j=0;j<issues.size();j++){
+                    Date issueDate=format.parse(issues.get(j).get(2).substring(0,10));
+                    if(issueDate.equals(date.get(i))){//如果时间对上了
+                        if(!temp.contains(issues.get(j).get(0)))
+                            temp.add(issues.get(j).get(0));
+                    }
+                }
+                relative.add(temp);
+            }
+/*            for(int i=0;i<dates.length;i++){
+                System.out.println("YI变动"+senti[0][i]+senti[1][i]+dates[i]);
+            }*/
+            res.add(date);
+            res.add(sentip);
+            res.add(sentin);
+            res.add(relative);
+
+        }catch(Exception e){
+            System.out.println("选定区间内的时间轴和情绪值失败");
+            e.printStackTrace();
+        }
+        return  res;
+    }
+
+    //方差 from的类型是xxxx-xx-xx 获得的结果（波动最大,选定区间内的时间轴和情绪值数组）
+    public ArrayList<Object> getVar(String from, String to, String url){
+        ArrayList<Object> res= new ArrayList<>();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date fromtime=format.parse(from);//开始时间
+            Date totime=format.parse(to);//结束时间
+            ArrayList<ArrayList<String>> issueWeb = dao.getSameTypeIssue(url);//通过输入的网址获取其下的issue网址
+            double[][] var = new double[2][issueWeb.size()];//存放方差
+            ArrayList<String> issuename = new ArrayList<>();//存放url
+            String[] issues=new String[issueWeb.size()];//存放url
+            String[] issues2=new String[issueWeb.size()];//存放url
+            for(int i=0;i<issueWeb.size();i++) {
+                issuename.add(issueWeb.get(i).get(1));
+                issues[i]=issueWeb.get(i).get(1);
+                issues2[i]=issueWeb.get(i).get(1);
+                double average=0;  //平均数
+                double variance=0; //方差
+                double average2=0;  //平均数
+                double variance2=0; //方差
+                ArrayList<ArrayList<String>> singleIssue =getGIn_order(issueWeb.get(i).get(1));//精确到单个issue且按照顺序
+                boolean isadd=false;//是否加入计算的行列
+                int count=0;
+                for(int j=0;j<singleIssue.size();j++) {//需要更新，将equals改成大于小于
+                    Date times=format.parse(singleIssue.get(j).get(3));
+                    if((!times.before(fromtime)) && (!times.after(totime)) ){
+                        isadd=true;
+                    }else{
+                        isadd=false;
+                    }
+                    if(isadd){
+                        average=average+Integer.parseInt(singleIssue.get(j).get(7));
+                        variance=variance+Integer.parseInt(singleIssue.get(j).get(7))*Integer.parseInt(singleIssue.get(j).get(7));
+                        count++;
+                        average2=average2+Integer.parseInt(singleIssue.get(j).get(8));
+                        variance2=variance2+Integer.parseInt(singleIssue.get(j).get(8))*Integer.parseInt(singleIssue.get(j).get(8));
+                    }
+                }
+                if(count!=0) {
+                    average = average/count;
+                    variance=variance/count;
+                    variance=variance-average*average;
+                    average2 = average2/count;
+                    variance2=variance2/count;
+                    variance2=variance2-average2*average2;
+                }
+                var[0][i]=variance;
+                var[1][i]=variance2;
+
+            }
+            bubbleSort(var[0], issues);//排过序了(前五是积极波动最大)
+            bubbleSort(var[1], issues2);//排过序了(前五是消极波动最大)
+
+            res.add(issues);
+            res.add(issues2);
+            String[] issuesTitle=new String[issues.length];
+            String[] issues2Title=new String[issues2.length];
+            for(int i=0;i<issues.length;i++){
+                ArrayList<ArrayList<String>> needInfor=dao.getGithubComment(issues[i]);
+                ArrayList<ArrayList<String>> needInfor2=dao.getGithubComment(issues2[i]);
+                if(needInfor.size()!=0) {
+                    issuesTitle[i]=needInfor.get(0).get(1);
+                }else{
+                    issuesTitle[i]="no exist";
+                }
+                if(needInfor2.size()!=0) {
+                    issues2Title[i]=needInfor2.get(0).get(1);
+                }else{
+                    issues2Title[i]="no exist";
+                }
+            }
+            res.add(issuesTitle);
+            res.add(issues2Title);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return res;
+    }
+
+    //选定区间内的时间轴和情绪值
+    public ArrayList<Object> getSelectChange(String from, String to, String url){
+        ArrayList<Object> res= new ArrayList<>();
+        try{
+            ArrayList<ArrayList<String>> issues = dao.getAllGitComment(url);
+            ArrayList<String> datetime = new ArrayList<>();//存放时间
+            for(int i=0;i<issues.size();i++) {
+                if(!datetime.contains(issues.get(i).get(3))){
+                    datetime.add(issues.get(i).get(3));
+                }
+            }
+            double[][] senti = new double[2][datetime.size()];//存放对应时间的情绪值
+            int[] count = new int[datetime.size()];
+            for(int i=0;i<datetime.size();i++){
+                for(int j=0;j<issues.size();j++){
+                    if(issues.get(j).get(3).equals(datetime.get(i))){//如果时间对上了
+                        senti[0][i]=senti[0][i]+Integer.parseInt(issues.get(j).get(7));//积极
+                        senti[1][i]=senti[1][i]+Integer.parseInt(issues.get(j).get(8));//消极
+                        count[i]++;
+                    }
+                }
+            }
+            Date[] dates=new Date[datetime.size()];
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date fromtime=format.parse(from);//开始时间
+            Date totime=format.parse(to);//结束时间
+            for(int i=0;i<datetime.size();i++){
+                senti[0][i]=senti[0][i]/count[i];
+                senti[1][i]=senti[1][i]/count[i];
+                dates[i]=format.parse(datetime.get(i));
+//                System.out.println("未变动"+senti[0][i]+senti[1][i]+dates[i]);
+            }
+            for(int i=0;i<dates.length-1;i++){
+                for(int j=0;j<dates.length-1-i;j++){
+                    if(dates[j].after(dates[j+1])){
+                        Date temp=dates[j];
+                        dates[j]=dates[j+1];
+                        dates[j+1]=temp;
+                        double temP=senti[0][j];
+                        senti[0][j]=senti[0][j+1];
+                        senti[0][j+1]=temP;
+                        double temN=senti[1][j];
+                        senti[1][j]=senti[1][j+1];
+                        senti[1][j+1]=temN;
+                    }
+                }
+            }
+            ArrayList<Date> date=new ArrayList<>();
+            ArrayList<Double> sentip=new ArrayList<>();
+            ArrayList<Double> sentin=new ArrayList<>();
+            ArrayList<ArrayList<String>> relative=new ArrayList<>();
+            for(int i=0;i<dates.length;i++){
+                if((!dates[i].before(fromtime)) && (!dates[i].after(totime))){
+                    date.add(dates[i]);
+                    sentip.add(senti[0][i]);
+                    sentin.add(senti[1][i]);
+                }
+            }
+            for(int i=0;i<date.size();i++){
+                ArrayList<String> temp=new ArrayList<>();
+                for(int j=0;j<issues.size();j++){
+                    Date issueDate=format.parse(issues.get(j).get(3));
+                    if(issueDate.equals(date.get(i))){//如果时间对上了
+                        if(!temp.contains(issues.get(j).get(0)))
+                        temp.add(issues.get(j).get(0));
+                    }
+                }
+                relative.add(temp);
+            }
+/*            for(int i=0;i<dates.length;i++){
+                System.out.println("YI变动"+senti[0][i]+senti[1][i]+dates[i]);
+            }*/
+            res.add(date);
+            res.add(sentip);
+            res.add(sentin);
+            res.add(relative);
+
+        }catch(Exception e){
+            System.out.println("选定区间内的时间轴和情绪值失败");
+            e.printStackTrace();
+        }
+        return  res;
+    }
+
+
+    public static void main(String[] args){
+        DealCommentImpl dc=new DealCommentImpl();
+
+    }
 
 }
 

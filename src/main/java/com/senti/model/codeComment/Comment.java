@@ -2,11 +2,15 @@ package com.senti.model.codeComment;
 
 import java.sql.Timestamp;
 
+/**
+ *  代码模块
+ *  代码注释
+ */
 public class Comment {
-    private String comment;
-    private String className;
-    private Timestamp date;
-    private String type;
+    private String comment;//注释
+    private String className;//类路径
+    private Timestamp date;//修改日期
+    private String type;//增或删
 
     public Comment(String comment, String className, Timestamp date, String type) {
         this.comment=comment;

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/local/common.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script src="/js/macarons.js"></script>
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/SidebarNav.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/custom.css" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Anton" rel="stylesheet">
+    <script src="/js/prefixfree.min.js"></script>
+    <script src="/js/modernizr.js"></script>
+    <link href="/css/Loadingstyle.css" rel="stylesheet">
+    <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/flatnav.css"  rel="stylesheet">
+    <link href="/css/note.css"  rel="stylesheet">
+    <link rel="stylesheet" href="/css/themes/default/style.min.css" />
+</head>
+<body>
+
+
+<div id="Senti">
+    <aside class="sidebar-left">
+        <nav class="navbar navbar-inverse">
+            <div class="navbar-header">
+                <h1><a class="navbar-brand" href="/view/show.html"><span class="fa fa-area-chart"></span> Senti</a></h1>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="sidebar-menu">
+                    <li class="header">GITHUB ANALYSE</li>
+                    <li class="treeview">
+                        <a type="button" id="showCommit" v-on:click="commitSenti">
+                            <i class="fa fa-dashboard"></i> <span>Commit情绪分析</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a type="button" id="showCode" v-on:click="codeSenti">
+                            <i class="fa fa-pie-chart"></i>
+                            <span>代码类情绪分析</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a type="button" id="returnback" v-on:click="returnback">
+                            <i class="fa fa-pie-chart"></i>
+                            <span>返 回</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                </ul>
+            </div>
+
+        </nav>
+    </aside>
+
+    <!-- header-starts -->
+    <div class="sticky-header header-section ">
+            <!--search-box-->
+
+    </div>
+    <!-- //header-ends -->
+
+    <div id="page-wrapper">
+        <div class="main-page">
+
+            <div class="loader" id="loader" style="display:none;"><!--加载动画-->
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="row-one widgettable">
+                <div id="CodeSentis" style="display:none;">
+                    <div class="panel-info widget-shadow"  style="margin-left: 230px">
+                        <table width="1600px" border="0">
+                            <tr>
+                                <td rowspan="4">
+                                    <div id="allClasses" style="height: 1630px;width: 300px;"></div>
+                                </td>
+                                <td>
+                                    <div id="CodeComment" style="width: 1000px; height: 350px;"></div><!--代码情绪图-->
+                                </td>
+                                <td rowspan="4">
+                                    <h4>注释变更</h4>
+                                    <div id="commentVary" style="height: 1630px;width: 300px;"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="margin-left: 90px;width: 820px">
+                                        <h5>当次Commit提交信息</h5>
+                                        <div style="overflow-y:scroll;height: 80px" id="Commit_Message"></div>
+                                        <h5>当次Commit所有修改类</h5>
+                                        <div style="overflow-y:scroll;height: 120px" id="CommitClasses"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><textarea style="width: 820px;height: 400px;margin-left: 90px;" readonly="readonly" id="codes"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td id="notes">
+                                    <div class="wrap" style="margin-left: 90px;">
+                                        <div class="says">
+                                            <h1>您的评论留言</h1>
+                                            <form v-on:submit.prevent="SubmitNote">
+                                                <textarea></textarea><input type="submit"  value="提交">
+                                            </form>
+                                            <div class="errmsg">请先输入评论内容！</div>
+                                        </div>
+                                        <ul>
+                                        </ul>
+                                    </div>
+                                    <div style="text-align:center;margin:100px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="/js/jstree.min.js"></script>
+<script src="/js/local/codeSenti.js"></script>
+</body>
+</html>

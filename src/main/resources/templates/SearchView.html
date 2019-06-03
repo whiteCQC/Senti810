@@ -50,21 +50,22 @@
 					<ul class="sidebar-menu">
 						<li class="header">GITHUB ANALYSE</li>
 						<li class="treeview">
-							<a href="/search/input">
-								<i class="fa fa-table"></i>
-								<span>Search</span>
-							</a>
-						</li>
-						<li class="treeview">
 							<a type="button" id="History" v-on:click="history">
 								<i class="fa fa-table"></i>
-								<span>History</span>
+								<span>历史项目</span>
+
 							</a>
 						</li>
 						<li class="treeview">
 							<a type="button" id="Recent" v-on:click="recent">
 								<i class="fa fa-table"></i>
-								<span>Recent</span>
+								<span>最近项目</span>
+							</a>
+						</li>
+						<li class="treeview">
+							<a href="/search/input">
+								<i class="fa fa-table"></i>
+								<span>新建项目</span>
 							</a>
 						</li>
 					</ul>
@@ -86,10 +87,8 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 							<div class="profile_img">
 								<div class="user-name">
-									<p>Log out</p>
+									<p></p>
 								</div>
-								<i class="fa fa-angle-down lnr"></i>
-								<i class="fa fa-angle-up lnr"></i>
 								<div class="clearfix"></div>
 							</div>
 						</a>
@@ -101,10 +100,6 @@
 		<div class="clearfix"> </div>
 	</div>
 	<!-- //header-ends -->
-
-
-
-
 
 
 
@@ -123,10 +118,11 @@
 					<span></span>
 					<span></span>
 				</div>
+				<p align="center">正在下载中，请稍后...</p>
 			</div>
 
 			<div class="tables" id="searchdiv" style="height:300px">
-				<h2 class="title1">Search</h2>
+				<h2 class="title1">搜索</h2>
 				<form action="/search/history" method="post">
 					<input type="text" name="url" placeholder="请输入您要搜索的内容..."><input type="submit" value="搜索" id="sousuo" v-on:click="wait">
 				</form>
@@ -166,7 +162,7 @@
 			<div class="clearfix"></div>
 
 			<div class="table" id="RecentDiv">
-				<h2 class="title1">Recent Project</h2>
+				<h2 class="title1">Recent Revise</h2>
 				<div class="panel-body widget-shadow" data-example-id="contextual-table">
 					<table class="table">
 						<thead>
@@ -197,6 +193,39 @@
 
 			</div>
 			<div class="clearfix"> </div>
+
+			<div class="table" id="RecentView">
+				<h2 class="title1">Recent View</h2>
+				<div class="panel-body widget-shadow" data-example-id="contextual-table">
+					<table class="table">
+						<thead>
+						<tr>
+							<th>#</th>
+							<th>url</th>
+							<th>view time</th>
+						</tr>
+						</thead>
+						<tbody>
+						<template v-for="(item,index) in viewtime" v-if="index<5">
+							<tr v-if="index%2==0" class="active">
+								<th scope="row">{{ index+1}}</th>
+								<td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(viewurl[index], itstime[index])'>{{viewurl[index]}}</button></td>
+								<td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(viewurl[index], itstime[index])'>{{item}}</button></td>
+								<td><button style="border:none; background-color:#f6f6f6" @click = 'sendurl(viewurl[index], itstime[index])'>more</button></td>
+							</tr>
+							<tr v-if="index%2!=0">
+								<th scope="row">{{ index+1}}</th>
+								<td><button style="border:none; background-color: white" @click = 'sendurl(viewurl[index], itstime[index])'>{{viewurl[index]}}</button></td>
+								<td><button style="border:none; background-color: white" @click = 'sendurl(viewurl[index], itstime[index])'>{{item}}</button></td>
+								<td><button style="border:none; background-color: white" @click = 'sendurl(viewurl[index], itstime[index])'>more</button></td>
+							</tr>
+						</template>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+			<div class="clearfix"> </div>
 			<div style="height:350px"></div>
 		</div>
 	</div>
@@ -204,7 +233,9 @@
 	<div class="footer">
 		<p> </p>
 	</div>
+
 	<!--//footer-->
+
 </div>
 
 <script src="/js/local/searchview.js"></script>

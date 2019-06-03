@@ -12,6 +12,8 @@ new Vue({
     },
     methods:{
         monthchart:function(){
+            $("#mainall").hide();
+            $("#loader").show();
             self=this;
             this.$http.get("http://localhost:8080/search/month_chart").then(function (response) {
                 var res = response.data;
@@ -128,6 +130,8 @@ new Vue({
                 myChart.setOption(option);
 
             })
+            $("#mainall").show();
+            $("#loader").hide();
         },
         mousedown:function(){
 

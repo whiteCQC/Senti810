@@ -2,9 +2,11 @@ package com.senti.controller;
 
 import com.senti.serivce.Database;
 import com.senti.serivce.DealComment;
+import com.senti.serivce.GitService;
 import com.senti.serivce.Impl.CrawlCommentImpl;
 import com.senti.serivce.Impl.DatabaseImpl;
 import com.senti.serivce.Impl.DealCommentImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +23,11 @@ import java.util.Date;
 @Controller
 @RequestMapping("/search")
 public class IssueController {
+
+    @Autowired
+    GitService gitService;
+
+
     @RequestMapping("/home")
     public String login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {//登录模块
         response.setContentType("text/html;charset=utf-8");
@@ -33,7 +40,7 @@ public class IssueController {
             if(info.size()!=0 && info.get(2).equals(password)){//存在该用户
                 HttpSession session=request.getSession();
                 session.setAttribute("username",name);  //用户名存入session
-                session.setAttribute(("userid"),info.get(0));//用户名对应编号存入session
+                session.setAttribute(("userid"),Integer.parseInt(info.get(0)));//用户名对应编号存入session
                 System.out.println(name+info.get(0));
                 return "SearchView";
             }else{
@@ -43,21 +50,21 @@ public class IssueController {
         }catch(Exception e){
             e.printStackTrace();
         }
-        return "mylogin";
+        return "index";
     }
 
-    @RequestMapping("/login")//登录界面
-    public String login(){
-        return "mylogin";
-    }
+//    @RequestMapping("/login")//登录界面
+//    public String login(){
+//        return "mylogin";
+//    }
 
     @RequestMapping("/input")//主页搜索界面
     public String input(HttpServletRequest request){
         HttpSession session=request.getSession();
-        String userid=(String)session.getAttribute("userid");
-        if(userid==null){
-            return "mylogin";
+        if(session.getAttribute("userid").toString()==null){
+            return "index";
         }
+
         return "SearchView";
     }
 
@@ -74,10 +81,12 @@ public class IssueController {
 //            System.out.println(time);
             HttpSession session=request.getSession();
 //            session.setAttribute("time", time);                   //时间在session里1
-            String userid=(String)session.getAttribute("userid");//userID在session里
-            if(userid==null){
-                return "mylogin";
+
+            if(session.getAttribute("userid").toString()==null){
+                return "index";
             }
+            int userid=(int)session.getAttribute("userid");//userID在session里
+
             Database da= new DatabaseImpl();
             String url="";
             if(webContent!=null) {
@@ -112,12 +121,20 @@ public class IssueController {
                 else if (webContent.contains("https://github.com")) {
                     url=webContent;
                     /*爬取数据*/
-                    if (da.getSameTypeIssue(webContent).size() == 0) {//如果数据库中没有记录则需要爬取
-                        CrawlCommentImpl crawler = new CrawlCommentImpl("crawl", webContent);
-                        crawler.start(2);
-                    }
+//                    if (da.getSameTypeIssue(webContent).size() == 0) {//如果数据库中没有记录则需要爬取
+                    CrawlCommentImpl crawler = new CrawlCommentImpl("crawl", webContent);
+                    crawler.start(2);
+                    crawler.start(2);
+ //                   }
 //                    session.setAttribute("url", url);
 //                    session.setAttribute("name","github");
+
+                    String [] tempurl=webContent.split("/");
+                    String owner=tempurl[tempurl.length-2];
+                    String repo=tempurl[tempurl.length-1];
+                    gitService.ProjectDeal(owner,repo);
+                    gitService.getCommitSenti(owner,repo);
+                    gitService.getClassSenti(owner,repo);
 
                     /*计算出年度top，月度top，monthchart*/
                     DealComment DC=new DealCommentImpl();
@@ -136,12 +153,12 @@ public class IssueController {
                     da.connSQL();
                     for(int i=0;i<3;i++){
                         for(int j=0;j<10;j++){
-                            da.updateYear(Integer.parseInt(userid), url, time, issueNumber.get(i).get(j), i*10+j+1, issueDescription.get(i).get(j));//更新历史年度top表
+                            da.updateYear(userid, url, time, issueNumber.get(i).get(j), i*10+j+1, issueDescription.get(i).get(j));//更新历史年度top表
 
                          //   System.out.println("ok");
                         }
                         for(int m=0;m<24;m++){
-                            da.updateMonth(Integer.parseInt(userid), url, time, issueNumber2.get(i).get(m), i*24+m+1,issueDescription2.get(i).get(m));//更新历史月度top表
+                            da.updateMonth(userid, url, time, issueNumber2.get(i).get(m), i*24+m+1,issueDescription2.get(i).get(m));//更新历史月度top表
                         //     System.out.println("ok2");
                         }
                     }
@@ -152,8 +169,8 @@ public class IssueController {
                     return "SearchView";
                 }
                 da.connSQL();
-                da.updatehistory(Integer.parseInt(userid), url, time);//更新历史搜索表
-                da.insertHistoryComment(Integer.parseInt(userid), url, time,"","");//更新评论表
+                da.updatehistory(userid, url, time);//更新历史搜索表
+                da.insertHistoryComment(userid, url, time,"","");//更新评论表
                 da.deconnSQL();
             }
         }catch (Exception ex) {
@@ -171,10 +188,10 @@ public class IssueController {
         ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
         try{
             HttpSession session=request.getSession();
-            String userid=(String)session.getAttribute("userid");//userID在session里
+            int userid=(int)session.getAttribute("userid");//userID在session里
             System.out.println(userid);
             Database da=new DatabaseImpl();
-            res=da.getHistory(Integer.parseInt(userid));
+            res=da.getHistory(userid);
 /*            for(int i=0;i<3;i++){
                 System.out.println(res.get(i).get(2));
             }*/
@@ -187,16 +204,29 @@ public class IssueController {
     @RequestMapping("/more")//detail的页面
     public String turn(HttpServletRequest request){
         HttpSession session=request.getSession();
-        String userid=(String)session.getAttribute("userid");
-        if(userid==null){
-            return "mylogin";
+        if(session.getAttribute("userid").toString()==null){
+            return "index";
         }
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String viewtime = df.format(new Date());// new Date()为获取当前系统时间
         String issueweb=request.getParameter("issueweb");//url
         String searchtime=request.getParameter("searchtime");//time
+        int userid=(Integer)session.getAttribute("userid");
         if(issueweb!=null&&searchtime!=null) {
  //           HttpSession session = request.getSession();
+
+            String [] tempurl=issueweb.split("/");
+            String owner=tempurl[tempurl.length-2];
+            String repo=tempurl[tempurl.length-1];
+            session.setAttribute("owner",owner);
+            session.setAttribute("repo",repo);
+
             session.setAttribute("url", issueweb);
             session.setAttribute("time", searchtime);
+            Database da=new DatabaseImpl();
+            da.connSQL();
+            da.insertHistoryView(userid, issueweb, searchtime, viewtime);
+            da.deconnSQL();
         }
         return "chooseType";
  //       return "details";
@@ -211,7 +241,7 @@ public class IssueController {
         try {
             HttpSession session=request.getSession();
             String time =(String)session.getAttribute("time");//搜索的时间
-            int userid=Integer.parseInt((String)session.getAttribute("userid"));
+            int userid=(Integer)session.getAttribute("userid");
             String url=(String)session.getAttribute("url");
             DealComment DC=new DealCommentImpl() ;
             if(url.equals("DERBY") || url.equals("DROOLS") || url.equals("GROOVY") || url.equals("PIG") ||
@@ -242,7 +272,7 @@ public class IssueController {
         try {
             HttpSession session=request.getSession();
             String time =(String)session.getAttribute("time");//搜索的时间
-            int userid=Integer.parseInt((String)session.getAttribute("userid"));
+            int userid=(Integer)session.getAttribute("userid");
             String url=(String)session.getAttribute("url");
             DealComment DC=new DealCommentImpl();
             if(url.equals("DERBY") || url.equals("DROOLS") || url.equals("GROOVY") || url.equals("PIG") ||
@@ -322,9 +352,8 @@ public class IssueController {
         request.setCharacterEncoding("UTF-8");
         try {
             HttpSession session=request.getSession();
-            String userid=(String)session.getAttribute("userid");
-            if(userid==null){
-                return "mylogin";
+            if(session.getAttribute("userid").toString()==null){
+                return "index";
             }
             String name =(String)session.getAttribute("url");//搜索的数据库名
             String issueweb = request.getParameter("issueweb");//传递的参数
@@ -377,9 +406,8 @@ public class IssueController {
     @RequestMapping("/yeartop")//年度页面
     public String yeartop(HttpServletRequest request){
         HttpSession session=request.getSession();
-        String userid=(String)session.getAttribute("userid");
-        if(userid==null){
-            return "mylogin";
+        if(session.getAttribute("userid").toString()==null){
+            return "index";
         }
         return "yeartop";
     }
@@ -387,20 +415,20 @@ public class IssueController {
     @RequestMapping("/monthtop")//月度页面
     public String monthtop(HttpServletRequest request){
         HttpSession session=request.getSession();
-        String userid=(String)session.getAttribute("userid");
-        if(userid==null){
-            return "mylogin";
+        if(session.getAttribute("userid").toString()==null){
+            return "index";
         }
+
         return "monthtop";
     }
 
     @RequestMapping("/monthchart")//月度图页面
     public String monthchart(HttpServletRequest request){
         HttpSession session=request.getSession();
-        String userid=(String)session.getAttribute("userid");
-        if(userid==null){
-            return "mylogin";
+        if(session.getAttribute("userid").toString()==null){
+            return "index";
         }
+
         return "monthchart";
     }
 
@@ -410,10 +438,10 @@ public class IssueController {
         request.setCharacterEncoding("UTF-8");
         try {
             HttpSession session=request.getSession();
-            String userid=(String)session.getAttribute("userid");
-            if(userid==null){
-                return "mylogin";
+            if(session.getAttribute("userid").toString()==null){
+                return "index";
             }
+
             String name =(String)session.getAttribute("url");//搜索的数据库名
             String issueNo = request.getParameter("issueNo");//传递的参数
             System.out.println(name);
@@ -436,10 +464,10 @@ public class IssueController {
     @RequestMapping("/choose")//选择issue, commit, contribute
     public String choose(HttpServletRequest request){
         HttpSession session=request.getSession();
-        String userid=(String)session.getAttribute("userid");
-        if(userid==null){
-            return "mylogin";
+        if(session.getAttribute("userid").toString()==null){
+            return "index";
         }
+
         return "chooseType";
     }
 
@@ -450,17 +478,18 @@ public class IssueController {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
             String nowtime = df.format(new Date());// new Date()为获取当前系统时间
             HttpSession session = request.getSession();
-            String userid = (String) session.getAttribute("userid");//搜索的数据库名
-            if(userid==null){
-                return "mylogin";
+            if(session.getAttribute("userid").toString()==null){
+                return "index";
             }
+            int userid = (Integer) session.getAttribute("userid");//搜索的数据库名
+
             String url = (String) session.getAttribute("url");
             String time = (String) session.getAttribute("time");
             Database da = new DatabaseImpl();
             comment=comment.replaceAll("'", "\\\\\'");
             comment=comment.replaceAll("\"", "\\\\\"");
             da.connSQL();
-            da.updateHistoryComment(Integer.parseInt(userid), url, time, comment, nowtime);
+            da.updateHistoryComment(userid, url, time, comment, nowtime);
             da.deconnSQL();
         }catch(Exception e){
             e.printStackTrace();
@@ -474,11 +503,11 @@ public class IssueController {
         ArrayList<String> res=new ArrayList<String>();
         try{
             HttpSession session = request.getSession();
-            String userid = (String) session.getAttribute("userid");//搜索的数据库名
+            int userid = (Integer) session.getAttribute("userid");//搜索的数据库名
             String url = (String) session.getAttribute("url");
             String time = (String) session.getAttribute("time");
             Database da=new DatabaseImpl();
-            ArrayList<String> comment=da.getHistoryComment(Integer.parseInt(userid), url, time);
+            ArrayList<String> comment=da.getHistoryComment(userid, url, time);
             res=comment;
         }catch(Exception e){
             e.printStackTrace();
@@ -494,9 +523,9 @@ public class IssueController {
         ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
         try{
             HttpSession session=request.getSession();
-            String userid=(String)session.getAttribute("userid");//userID在session里
+            int userid=(Integer)session.getAttribute("userid");//userID在session里
             Database da=new DatabaseImpl();
-            res=da.getRecent(Integer.parseInt(userid));
+            res=da.getRecent(userid);
 /*            for(int i=0;i<3;i++){
                 System.out.println(res.get(i).get(2));
             }*/
@@ -505,4 +534,74 @@ public class IssueController {
         }
         return res;
     }
+
+    @RequestMapping("/recenttop")
+    public String recenttop(HttpServletRequest request){
+        String fromtime=request.getParameter("fromtime");//开始时间
+        String totime=request.getParameter("totime");//结束时间
+        if((fromtime==null)||(totime==null)){//如果未设置开始和结束时间，则规定开始和结束时间
+            fromtime="2017-09-29";
+            totime="2018-10-10";
+        }
+        HttpSession session = request.getSession();
+        session.setAttribute("fromtime", fromtime);
+        session.setAttribute("totime", totime);
+        return "recenttop";
+    }
+
+    @RequestMapping("/recentdata")
+    @ResponseBody
+    public ArrayList<Object> getBodong(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        ArrayList<Object> res=new ArrayList<>();
+        try {
+            HttpSession session = request.getSession();
+            int userid = (Integer) session.getAttribute("userid");//搜索的数据库名
+            String url = (String) session.getAttribute("url");
+            String time = (String) session.getAttribute("time");
+            String fromtime=(String)session.getAttribute("fromtime");
+            System.out.println(url);
+            String totime=(String)session.getAttribute("totime");
+            if((fromtime==null)||(totime==null)){//如果未设置开始和结束时间，则规定开始和结束时间
+                fromtime="2017-09-29";
+                totime="2018-10-10";
+            }
+            DealComment dc=new DealCommentImpl() ;
+            if(url.equals("DERBY") || url.equals("DROOLS") || url.equals("GROOVY") || url.equals("PIG") ||
+                    url.equals("MNG") || url.equals("ISPN") || url.equals("JBSEAM") ){
+                ArrayList<Object> fangcha=dc.getVarL(fromtime, totime, url);
+                ArrayList<Object> bianhua=dc.getSelectChangeL(fromtime, totime, url);
+                res.add(fangcha);
+                res.add(bianhua);
+            }else {
+                ArrayList<Object> fangcha=dc.getVar(fromtime, totime, url);
+                ArrayList<Object> bianhua=dc.getSelectChange(fromtime, totime, url);
+                res.add(fangcha);
+                res.add(bianhua);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @RequestMapping("/recentview")
+    @ResponseBody
+    public ArrayList<ArrayList<String>> hisView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
+        try{
+            HttpSession session=request.getSession();
+            String userid=(String)session.getAttribute("userid");//userID在session里
+            Database da=new DatabaseImpl();
+            res=da.getRecentView(Integer.parseInt(userid));
+/*            for(int i=0;i<3;i++){
+                System.out.println(res.get(i).get(2));
+            }*/
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
 }

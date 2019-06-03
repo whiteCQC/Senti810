@@ -10,4 +10,7 @@
   <select id="GetMessages" resultType="com.senti.model.codeComment.MessageSenti">
         select *from messagesenti where gid=#{gid}
   </select>
+  <select id="GetMessagesWithTime" resultType="com.senti.model.codeComment.MessageSenti"><![CDATA[
+        select *from messagesenti where gid=#{gid} and date>=#{start} and date<=#{end}
+  ]]></select>
 </mapper>

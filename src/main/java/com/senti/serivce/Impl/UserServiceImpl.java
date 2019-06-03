@@ -24,4 +24,16 @@ public class UserServiceImpl implements UserSerivce {
         else
             return u.getUserid();
     }
+
+    @Override
+    public boolean userExist(String name) {
+        if(-1==userDao.getUser(name))
+            return false;
+        return true;
+    }
+
+    @Override
+    public void register(String account, String password) {
+        userDao.register(new User(account,password));
+    }
 }

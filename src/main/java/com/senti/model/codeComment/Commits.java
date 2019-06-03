@@ -2,11 +2,15 @@ package com.senti.model.codeComment;
 
 import java.sql.Timestamp;
 
+/**
+ * 代码模块
+ * Commit信息
+ */
 public class Commits {
-    private String sha;
-    private String author;
-    private Timestamp date;
-    private String message;
+    private String sha;//Commit的SHA
+    private String author;//作者
+    private Timestamp date;//修改日期
+    private String message;//提交记录message
 
     public Commits(String sha, String author, String date, String message) {
         this.sha = sha;

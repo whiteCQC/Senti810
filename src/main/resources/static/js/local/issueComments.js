@@ -150,7 +150,7 @@ new Vue({
                         {
                             title : {
                                 text: '',
-                                subtext:'1表示积极占比，2表示消极占比'
+                                subtext:''
                             },
                             tooltip : {
                                 trigger: 'item',

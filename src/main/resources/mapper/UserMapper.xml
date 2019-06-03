@@ -9,4 +9,10 @@
   <select id="Login" parameterType="com.senti.model.User" resultType="com.senti.model.User">
         select *from user where name=#{name,jdbcType=VARCHAR} and password=#{password,jdbcType=VARCHAR}
   </select>
+  <insert id="register" parameterType="com.senti.model.User">
+    insert into user(name,password) values(#{name},#{password})
+  </insert>
+  <select id="getUser" resultType="Integer">
+    select ifnull((select userid from user where name=#{name}),-1)
+  </select>
 </mapper>
