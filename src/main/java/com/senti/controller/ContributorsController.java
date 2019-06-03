@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +29,11 @@ public class ContributorsController  {
     @Autowired
     GitService gitService;
 
-    @GetMapping("/contributors/{owner}/{repo}")
-    public String getwithdate(@PathVariable("owner") String owner,@PathVariable("repo") String repo, Model model, @RequestParam(required=false) String date){
+    @GetMapping("/contributors")
+    public String getwithdate(Model model, @RequestParam(required=false) String date, HttpServletRequest request){
+        HttpSession session=request.getSession();
+        String owner=(String)session.getAttribute("owner");
+        String repo=(String)session.getAttribute("repo");
         List<MessageSentihht> messageSentis;
         Map<author, List<MessageSentihht>> map;
 
