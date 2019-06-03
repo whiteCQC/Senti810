@@ -2,25 +2,24 @@ $(document).ready(function () {
     new Vue({
         el: "#Senti",
         data: {
-            Commitdates: [],
-            highs: [],
-            lows: [],
-            commitMessage: [],
-            HighCount: [],
-            LowCount: [],
-            ScoreCount: [],
-            relatedClasses: [],
-            topHigh:[],
-            topLow:[],
-            topHighScore:[],
+            Commitdates: [],//提交日期
+            highs: [],//正面情绪
+            lows: [],//负面情绪
+            commitMessage: [],//Commit的message
+            HighCount: [],//正面情绪饼图
+            LowCount: [],//负面情绪饼图
+            relatedClasses: [],//Commit涉及类
+            topHigh:[],//平均值正面情绪类推荐
+            topLow:[],//平均负面
+            topHighScore:[],//推荐的平均值
             topLowScore:[],
 
-            topCombineHigh:[],
-            topCombineLow:[],
-            topCombineHighScore:[],
+            topCombineHigh:[],//占比推荐正面情绪
+            topCombineLow:[],//占比负面
+            topCombineHighScore:[],//推荐的占比
             topCombineLowScore:[],
 
-            times:{
+            times:{//用于推荐的指定时间段
                 startTime:"",
                 endTime:""
             },
@@ -28,7 +27,7 @@ $(document).ready(function () {
             toSearch: ""
         },
         methods: {
-            commitSenti:function () {
+            commitSenti:function () {//下面是左边菜单栏中的三个按钮
                 self=this;
                 this.$http.get("http://localhost:8080/git/projectExist").then(function (response) {
                     var res=response.bodyText;
@@ -49,10 +48,10 @@ $(document).ready(function () {
                 })
             },
             returnback:function () {
-                window.location.href="SearchView"
+                window.location.href="/search/input"
             },
 
-            commitbyTime:function () {
+            commitbyTime:function () {//指定时间段推荐
                 self=this;
 
                 if(this.times.startTime==""||this.times.endTime==""){
@@ -91,7 +90,6 @@ $(document).ready(function () {
                 this.Scores = res.Scores;
                 this.relatedClasses = res.relatedClasses;
 
-                this.ScoreCount = res.ScoreCount;
                 this.HighCount = res.HighCount;
                 this.LowCount = res.LowCount;
 
@@ -105,10 +103,6 @@ $(document).ready(function () {
                 this.topCombineHighScore=res.topCombineHighScore;
                 this.topCombineLowScore=res.topCombineLowScore;
 
-                console.log(res.topCombineHigh)
-                console.log(res.topCombineLow)
-                console.log(res.topCombineHighScore)
-                console.log(res.topCombineLowScore)
 
                 var posData = [];
                 var negData = [];
@@ -251,7 +245,7 @@ $(document).ready(function () {
                 $("#loader").hide();
                 $("#CommitMessage").show();
 
-                myChart1.on('click', function (params) {
+                myChart1.on('click', function (params) {//点击散点图对应右边的message和涉及类
                     document.getElementById("commit-body").innerHTML = comments[params.dataIndex];
                     document.getElementById("related").innerHTML = rclasses[params.dataIndex];
                 });

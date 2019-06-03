@@ -2,22 +2,22 @@ $(document).ready(function () {
     new Vue({
         el: "#Senti",
         data: {
-            selectClass: "",
-            classes: "",
-            dates: [],
-            codeHighs: [],
-            codeLows: [],
-            codeComments: [],
+            selectClass: "",//当前选择查看的类
+            classes: "",//文件结构的树形结构
+            dates: [],//修改日期
+            codeHighs: [],//正面情绪
+            codeLows: [],//负面
+            codeComments: [],//注释
 
-            notes:[],
-            noteTimes:[],
+            notes:[],//留言
+            noteTimes:[],//留言时间
 
-            codes: [],
+            codes: [],//当前代码
 
             toSearch: "",
 
-            CommitClasses:[],
-            CommitMessages:[]
+            CommitClasses:[],//每次Commit涉及的类
+            CommitMessages:[]//commit的message
         },
         methods: {
             commitSenti:function () {
