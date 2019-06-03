@@ -40,7 +40,7 @@ public class IssueController {
             if(info.size()!=0 && info.get(2).equals(password)){//存在该用户
                 HttpSession session=request.getSession();
                 session.setAttribute("username",name);  //用户名存入session
-                session.setAttribute(("userid"),info.get(0));//用户名对应编号存入session
+                session.setAttribute(("userid"),Integer.parseInt(info.get(0)));//用户名对应编号存入session
                 System.out.println(name+info.get(0));
                 return "SearchView";
             }else{
@@ -211,7 +211,7 @@ public class IssueController {
         String viewtime = df.format(new Date());// new Date()为获取当前系统时间
         String issueweb=request.getParameter("issueweb");//url
         String searchtime=request.getParameter("searchtime");//time
-        String userid=(String)session.getAttribute("userid");
+        int userid=(Integer)session.getAttribute("userid");
         if(issueweb!=null&&searchtime!=null) {
  //           HttpSession session = request.getSession();
 
@@ -225,7 +225,7 @@ public class IssueController {
             session.setAttribute("time", searchtime);
             Database da=new DatabaseImpl();
             da.connSQL();
-            da.insertHistoryView(Integer.parseInt(userid), issueweb, searchtime, viewtime);
+            da.insertHistoryView(userid, issueweb, searchtime, viewtime);
             da.deconnSQL();
         }
         return "chooseType";
@@ -272,7 +272,7 @@ public class IssueController {
         try {
             HttpSession session=request.getSession();
             String time =(String)session.getAttribute("time");//搜索的时间
-            int userid=Integer.parseInt((String)session.getAttribute("userid"));
+            int userid=(Integer)session.getAttribute("userid");
             String url=(String)session.getAttribute("url");
             DealComment DC=new DealCommentImpl();
             if(url.equals("DERBY") || url.equals("DROOLS") || url.equals("GROOVY") || url.equals("PIG") ||
@@ -555,7 +555,7 @@ public class IssueController {
         ArrayList<Object> res=new ArrayList<>();
         try {
             HttpSession session = request.getSession();
-            String userid = (String) session.getAttribute("userid");//搜索的数据库名
+            int userid = (Integer) session.getAttribute("userid");//搜索的数据库名
             String url = (String) session.getAttribute("url");
             String time = (String) session.getAttribute("time");
             String fromtime=(String)session.getAttribute("fromtime");

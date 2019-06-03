@@ -1,5 +1,7 @@
 package com.senti.serivce.Impl;
-
+/*
+该类是议题模块的方法实现类，分析包含github和七个数据库下的issue 评论
+ */
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -205,7 +207,7 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
-    /*17,18,19年度top5*/
+    /*七个数据库17,18,19年度top5*/
     public ArrayList<ArrayList<String>> getLYdata(String name){
         ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
         ArrayList<String> temp17=new ArrayList<String>();
@@ -792,7 +794,7 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
-    /*17,18,19月度top1*/
+    /*七个数据库17,18,19月度top1*/
     public ArrayList<ArrayList<String>> getLMdata(String name){
         ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
         ArrayList<String> temp17=new ArrayList<String>();
@@ -1360,7 +1362,7 @@ public class DealCommentImpl implements DealComment{
 
 
 
-    /*本地数据库的2017.1到2019.3的情绪变化*/
+    /*七个数据库的2017.1到2019.3的情绪变化*/
     public ArrayList<Object> getLChange(String name) {
         double[][] result=new double[2][27];
         int[] count=new int[27];//计次数
@@ -2422,6 +2424,7 @@ public class DealCommentImpl implements DealComment{
         return result;
     }
 
+    //获取存入数据库的年度排名数据
     public ArrayList<ArrayList<String>> getHisYear(int userid, String url, String time){
         ArrayList<ArrayList<String>> res = new ArrayList<ArrayList<String>>();
         try {
@@ -2456,6 +2459,7 @@ public class DealCommentImpl implements DealComment{
         return res;
     }
 
+    //获取存入数据库的月度排名数据
     public ArrayList<ArrayList<String>> getHisMonth(int userid, String url, String time){
         ArrayList<ArrayList<String>> res = new ArrayList<ArrayList<String>>();
         try {
@@ -2490,6 +2494,7 @@ public class DealCommentImpl implements DealComment{
         return res;
     }
 
+    //七个数据库方差
     public ArrayList<Object> getVarL(String from, String to, String name){
         ArrayList<Object> res= new ArrayList<>();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
