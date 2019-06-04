@@ -592,9 +592,9 @@ public class IssueController {
         ArrayList<ArrayList<String>> res=new ArrayList<ArrayList<String>>();
         try{
             HttpSession session=request.getSession();
-            String userid=(String)session.getAttribute("userid");//userID在session里
+            int userid=(Integer)session.getAttribute("userid");//userID在session里
             Database da=new DatabaseImpl();
-            res=da.getRecentView(Integer.parseInt(userid));
+            res=da.getRecentView(userid);
 /*            for(int i=0;i<3;i++){
                 System.out.println(res.get(i).get(2));
             }*/
